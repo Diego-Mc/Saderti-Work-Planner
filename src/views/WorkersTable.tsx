@@ -1,27 +1,24 @@
 import { useState } from 'react'
-import { rowType, Worker } from '../main'
+import { Worker } from '../main'
 import { WorkerList } from '../cmps/WorkerList'
 import { Table } from '../cmps/Table'
 
 import React from 'react'
+import { useAppSelector } from '../hooks'
+import { selectWorkers } from '../features/workers/workersSlice'
+import { selectSchedules } from '../features/schedules/schedulesSlice'
 
-interface WorkersTableProps {
-  tableRaw: rowType[]
-  workersRaw: Worker[]
-}
+interface WorkersTableProps {}
 
-export const WorkersTable: React.FC<WorkersTableProps> = ({
-  tableRaw,
-  workersRaw,
-}) => {
-  const [table, setTable] = useState(tableRaw)
-  const [workers, setWorkers] = useState(workersRaw)
+export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
+  const { workers } = useAppSelector(selectWorkers)
+  const { schedules } = useAppSelector(selectSchedules)
 
   return (
     <div className="workers-table">
-      <Table table={table} setTable={setTable} />
+      <Table table={schedules[0].table} />
       <button className="generator-btn">מילוי אוטומטי</button>
-      <WorkerList workers={workers} setWorkers={setWorkers} />
+      {/* <WorkerList workers={workers}  /> */}
     </div>
   )
 }

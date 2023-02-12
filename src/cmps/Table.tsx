@@ -1,10 +1,25 @@
 import React from 'react'
-import { rowType } from '../main'
 import { Cell } from './Cell'
+
+export type rowType = {
+  machine: string
+  data: {
+    [key: string]: (string | null)[]
+    morning: (string | null)[]
+    evening: (string | null)[]
+    night: (string | null)[]
+  }
+  locked: {
+    [key: string]: boolean[]
+    morning: boolean[]
+    evening: boolean[]
+    night: boolean[]
+  }
+  workersAmount: number
+}
 
 interface TableProps {
   table: rowType[]
-  setTable: React.Dispatch<React.SetStateAction<rowType[]>>
 }
 
 type workerDetailsProps = {
@@ -20,42 +35,7 @@ export type moveWorkerFn = (
 
 export type setToggleLockFn = (details: workerDetailsProps) => void
 
-export const Table: React.FC<TableProps> = ({ table, setTable }) => {
-  const moveWorker: moveWorkerFn = (details, detailsTo) => {
-    if (!details || !detailsTo) return
-    const { machine, shiftTime, idx } = details
-    const { machine: machineTo, shiftTime: shiftTimeTo, idx: idxTo } = detailsTo
-    setTable((currTable) => {
-      const temp: typeof currTable = structuredClone(currTable)
-      const from = temp.find((row) => row.machine === machine)
-      const to = temp.find((row) => row.machine === machineTo)
-      if (to && from) {
-        ;[from.data[shiftTime][idx], to.data[shiftTimeTo][idxTo]] = [
-          to.data[shiftTimeTo][idxTo],
-          from.data[shiftTime][idx],
-        ]
-      }
-      return temp
-    })
-  }
-
-  const setToggleLock: setToggleLockFn = (details) => {
-    if (!details) return
-    const { machine, shiftTime, idx } = details
-    setTable((currTable) =>
-      currTable.map((row) => {
-        if (row.machine !== machine) return row
-        const updatedLockedInShiftTime = row.locked[shiftTime].map(
-          (val, _idx) => (_idx === idx ? !val : val)
-        )
-        return {
-          ...row,
-          locked: { ...row.locked, [shiftTime]: updatedLockedInShiftTime },
-        }
-      })
-    )
-  }
-
+export const Table: React.FC<TableProps> = ({ table }) => {
   return (
     <div className="main-table">
       <div className="row row-header">
@@ -71,22 +51,16 @@ export const Table: React.FC<TableProps> = ({ table, setTable }) => {
             data={row.data.morning}
             locked={row.locked.morning}
             details={{ machine: row.machine, shiftTime: 'morning' }}
-            moveWorker={moveWorker}
-            setToggleLock={setToggleLock}
           />
           <Cell
             data={row.data.evening}
             locked={row.locked.evening}
             details={{ machine: row.machine, shiftTime: 'evening' }}
-            moveWorker={moveWorker}
-            setToggleLock={setToggleLock}
           />
           <Cell
             data={row.data.night}
             locked={row.locked.night}
             details={{ machine: row.machine, shiftTime: 'night' }}
-            moveWorker={moveWorker}
-            setToggleLock={setToggleLock}
           />
         </div>
       ))}

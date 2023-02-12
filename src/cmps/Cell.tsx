@@ -6,17 +6,9 @@ interface CellProps {
   data: (string | null)[]
   locked: boolean[]
   details: { machine: string; shiftTime: string }
-  moveWorker: moveWorkerFn
-  setToggleLock: setToggleLockFn
 }
 
-export const Cell: React.FC<CellProps> = ({
-  data,
-  locked,
-  details,
-  moveWorker,
-  setToggleLock,
-}) => {
+export const Cell: React.FC<CellProps> = ({ data, locked, details }) => {
   return (
     <div className="cell">
       {data.map((worker, idx) => (
@@ -24,8 +16,6 @@ export const Cell: React.FC<CellProps> = ({
           worker={worker}
           isLocked={locked[idx]}
           details={{ ...details, idx }}
-          moveWorker={moveWorker}
-          setToggleLock={setToggleLock}
           key={worker}
         />
       ))}

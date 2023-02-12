@@ -9,7 +9,7 @@
   padding: 12px 36px;
   border-radius: 4px;
   position: relative;
-  cursor: move;
+  user-select: none;
   &.over {
     background-color: var(--acc-yellow);
   }
@@ -20,13 +20,16 @@
     display: flex;
     gap: 14px;
     color: var(--acc-dark-gray);
-    cursor: pointer;
+    cursor: auto;
     * {
+      cursor: pointer;
+      opacity: 0.5;
       &:hover {
         color: var(--acc-blue);
       }
     }
     .selected {
+      opacity: 1;
       color: var(--acc-blue);
     }
   }
