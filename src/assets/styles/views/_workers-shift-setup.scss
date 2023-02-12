@@ -1,0 +1,31 @@
+.workers-shift-setup-view {
+  .worker-shift-header {
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      padding: 16px 0;
+    }
+
+    .reset-btn {
+      outline: 2px solid tomato;
+      color: tomato;
+      border-radius: 4rem;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      &:hover {
+        background-color: tomato;
+        color: white;
+      }
+    }
+  }
+  .list-workers-shifts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+}

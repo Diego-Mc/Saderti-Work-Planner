@@ -1,0 +1,33 @@
+.worker-shift-item {
+  background-color: var(--acc-light-gray);
+  font-weight: 700;
+  width: 100%;
+  max-width: 400px;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding: 12px 36px;
+  border-radius: 4px;
+  position: relative;
+  cursor: move;
+  &.over {
+    background-color: var(--acc-yellow);
+  }
+  &.drag {
+    opacity: 0.5;
+  }
+  .icons {
+    display: flex;
+    gap: 14px;
+    color: var(--acc-dark-gray);
+    cursor: pointer;
+    * {
+      &:hover {
+        color: var(--acc-blue);
+      }
+    }
+    .selected {
+      color: var(--acc-blue);
+    }
+  }
+}

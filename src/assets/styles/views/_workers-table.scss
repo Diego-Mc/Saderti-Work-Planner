@@ -1,0 +1,21 @@
+.workers-table {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 32px;
+
+  .generator-btn {
+    color: var(--acc-blue);
+    outline: 1px solid var(--acc-blue);
+    padding: 16px 22px;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--acc-blue);
+      color: #fff;
+    }
+  }
+}

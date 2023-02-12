@@ -1,0 +1,39 @@
+.worker-item {
+  background-color: var(--acc-light-blue);
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding-inline: 22px;
+  height: 36px;
+  border-radius: 4px;
+  position: relative;
+  cursor: move;
+  &.empty {
+    background-color: var(--acc-gray);
+  }
+  &.locked {
+    cursor: not-allowed;
+    outline: 1px solid var(--acc-blue);
+  }
+  &.over {
+    background-color: var(--acc-yellow);
+  }
+  &.drag {
+    opacity: 0.5;
+  }
+  .icon-lock {
+    background-color: var(--acc-dark-gray);
+    color: var(--main-bg);
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-30%, -30%);
+    cursor: pointer;
+    &.active {
+      background-color: var(--acc-blue);
+    }
+  }
+}

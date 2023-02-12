@@ -14,6 +14,11 @@
 
 // Components
 @import 'cmps/table';
+@import 'cmps/cell';
+@import 'cmps/worker-item';
+@import 'cmps/worker-shift-item';
 
 // Views
 @import 'views/main-app';
+@import 'views/workers-table';
+@import 'views/workers-shift-setup';

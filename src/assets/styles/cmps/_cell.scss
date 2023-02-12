@@ -1,0 +1,14 @@
+.cell {
+  // outline: 1px solid #ff000022;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 16px 20px;
+  &.cell-title {
+    color: var(--acc-blue);
+    font-weight: 700;
+  }
+}
