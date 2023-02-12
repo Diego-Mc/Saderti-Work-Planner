@@ -1,0 +1,38 @@
+[
+  {
+    "machine": "16",
+    "data": {
+      "morning": ["אירוס", null],
+      "evening": ["הולא", "ליה"],
+      "night": ["זוהרה", "גלינה"]
+    },
+    "workersAmount": 2
+  },
+  {
+    "machine": "15",
+    "data": {
+      "morning": ["נאויל"],
+      "evening": ["אלה"],
+      "night": ["אמרץ"]
+    },
+    "workersAmount": 1
+  },
+  {
+    "machine": "11+12",
+    "data": {
+      "morning": ["רחל"],
+      "evening": ["רשא"],
+      "night": ["רותי"]
+    },
+    "workersAmount": 1
+  },
+  {
+    "machine": "6+7",
+    "data": {
+      "morning": ["שאדיה"],
+      "evening": [null],
+      "night": ["סבטלנה"]
+    },
+    "workersAmount": 1
+  }
+]

@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Arimo', sans-serif;
+  line-height: 1.6;
+  color: var(--main-fg);
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  background-color: var(--main-bg);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  line-height: 1;
+}
+
+p {
+  margin: 0;
+}
+
+img,
+video {
+  width: 100%;
+}
+
+a,
+a:visited {
+  color: unset;
+}
+
+button,
+.btn {
+  appearance: none;
+  border: none;
+  background-color: unset;
+  color: var(--main-fg);
+  font-family: 'Arimo', sans-serif;
+  font-weight: 700;
+
+  &.pill {
+    border-radius: 8rem;
+  }
+}

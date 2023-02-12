@@ -1,32 +1,71 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { row, Table } from './cmps/Table'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const tableRaw: row[] = [
+    {
+      machine: '16',
+      data: {
+        morning: ['אירוס', null],
+        evening: ['הולא', 'ליה'],
+        night: ['זוהרה', 'גלינה'],
+      },
+      locked: {
+        morning: [false, true],
+        evening: [false, false],
+        night: [true, false],
+      },
+      workersAmount: 2,
+    },
+    {
+      machine: '15',
+      data: {
+        morning: ['נאויל'],
+        evening: ['אלה'],
+        night: ['אמרץ'],
+      },
+      locked: {
+        morning: [false],
+        evening: [false],
+        night: [true],
+      },
+      workersAmount: 1,
+    },
+    {
+      machine: '11+12',
+      data: {
+        morning: ['רחל'],
+        evening: ['רשא'],
+        night: ['רותי'],
+      },
+      locked: {
+        morning: [false],
+        evening: [false],
+        night: [false],
+      },
+      workersAmount: 1,
+    },
+    {
+      machine: '6+7',
+      data: {
+        morning: ['שאדיה'],
+        evening: [null],
+        night: ['סבטלנה'],
+      },
+      locked: {
+        morning: [true],
+        evening: [true],
+        night: [false],
+      },
+      workersAmount: 1,
+    },
+  ]
+
+  const [table, setTable] = useState(tableRaw)
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Table table={table} setTable={setTable} />
     </div>
   )
 }
