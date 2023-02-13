@@ -1,0 +1,13 @@
+.main-header {
+  background-color: var(--acc-light-gray);
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+  }
+}

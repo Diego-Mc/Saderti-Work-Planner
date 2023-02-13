@@ -6,19 +6,26 @@ import { Table } from '../cmps/Table'
 import React from 'react'
 import { useAppSelector } from '../hooks'
 import { selectWorkers } from '../features/workers/workersSlice'
-import { selectSchedules } from '../features/schedules/schedulesSlice'
+import {
+  selectSchedules,
+  useGetScheduleQuery,
+} from '../features/schedules/schedulesSlice'
 
 interface WorkersTableProps {}
 
 export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
-  const { workers } = useAppSelector(selectWorkers)
-  const { schedules } = useAppSelector(selectSchedules)
+  // const { workers } = useAppSelector(selectWorkers)
+  // const { schedules } = useAppSelector(selectSchedules)
+
+  const { data, isLoading } = useGetScheduleQuery('63e9aa3afdd3ee76dc4c2a31')
+
+  console.log(data)
 
   return (
     <div className="workers-table">
-      <Table table={schedules[0].table} />
+      {data ? <Table table={data.table} /> : null}
       <button className="generator-btn">מילוי אוטומטי</button>
-      {/* <WorkerList workers={workers}  /> */}
+      {/* <WorkerList workers={workers} /> */}
     </div>
   )
 }

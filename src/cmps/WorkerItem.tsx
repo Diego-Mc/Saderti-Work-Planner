@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { ItemTypes } from '../constants'
-import { moveWorkers, toggleLock } from '../features/schedules/schedulesSlice'
+import {
+  moveWorkers,
+  toggleLock,
+  useMoveWorkersMutation,
+  useToggleLockMutation,
+} from '../features/schedules/schedulesSlice'
 import { useAppDispatch } from '../hooks'
 import { WorkerIdentifier } from '../types'
 import { moveWorkerFn, setToggleLockFn } from './Table'
@@ -19,7 +24,9 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
 }) => {
   const ref = useRef<HTMLElement>(null)
   const [showLock, setShowLock] = useState(isLocked)
-  const dispatch = useAppDispatch()
+
+  const [moveWorkers] = useMoveWorkersMutation()
+  const [toggleLock] = useToggleLockMutation()
 
   const handleOver = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (isLocked) return
@@ -30,7 +37,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
     setShowLock(false)
   }
   const handleLockToggle = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    dispatch(toggleLock(details))
+    toggleLock(details)
   }
 
   const [{ isDragging }, drag] = useDrag(
@@ -67,13 +74,13 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         // Don't replace items with themselves
         if (
           item.idx === details.idx &&
-          item.machine === details.machine &&
+          item.machineId === details.machineId &&
           item.shiftTime === details.shiftTime
         ) {
           return
         }
 
-        dispatch(moveWorkers({ from: details, to: item }))
+        moveWorkers({ from: details, to: item })
       },
     }),
     [isLocked]

@@ -1,0 +1,58 @@
+[
+  {
+    "machine": "16",
+    "data": {
+      "morning": ["אירוס", ""],
+      "evening": ["הולא", "ליה"],
+      "night": ["זוהרה", "גלינה"]
+    },
+    "locked": {
+      "morning": [false, true],
+      "evening": [false, false],
+      "night": [true, false]
+    },
+    "workersAmount": 2
+  },
+  {
+    "machine": "15",
+    "data": {
+      "morning": ["נאויל"],
+      "evening": ["אלה"],
+      "night": ["אמרץ"]
+    },
+    "locked": {
+      "morning": [false],
+      "evening": [false],
+      "night": [true]
+    },
+    "workersAmount": 1
+  },
+  {
+    "machine": "11+12",
+    "data": {
+      "morning": ["רחל"],
+      "evening": ["רשא"],
+      "night": ["רותי"]
+    },
+    "locked": {
+      "morning": [false],
+      "evening": [false],
+      "night": [false]
+    },
+    "workersAmount": 1
+  },
+  {
+    "machine": "6+7",
+    "data": {
+      "morning": ["שאדיה"],
+      "evening": [""],
+      "night": ["סבטלנה"]
+    },
+    "locked": {
+      "morning": [true],
+      "evening": [true],
+      "night": [false]
+    },
+    "workersAmount": 1
+  }
+]

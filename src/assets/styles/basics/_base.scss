@@ -39,16 +39,38 @@ a:visited {
   color: unset;
 }
 
-button,
-.btn {
+button {
   appearance: none;
   border: none;
-  background-color: unset;
-  color: var(--main-fg);
-  font-family: 'Arimo', sans-serif;
-  font-weight: 700;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  &.btn {
+    margin: 15px 0;
+    padding: 14px 25px;
+    background: var(--main-bg);
+    color: var(--main-fg);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    line-height: 100%;
+    border-radius: 3px;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
 
-  &.pill {
-    border-radius: 8rem;
+    &:hover {
+      opacity: 1;
+    }
+
+    &.primary {
+      background: var(--main-fg);
+      color: var(--main-bg);
+      border: 2px solid var(--main-fg);
+    }
+
+    &.outlined {
+      background: none;
+      border: 2px solid var(--main-fg);
+      color: var(--main-fg);
+    }
   }
 }

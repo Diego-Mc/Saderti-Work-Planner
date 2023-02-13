@@ -1,11 +1,12 @@
 import React from 'react'
+import { WorkerType } from '../types'
 import { moveWorkerFn, setToggleLockFn } from './Table'
 import { WorkerItem } from './WorkerItem'
 
 interface CellProps {
-  data: (string | null)[]
+  data: (WorkerType | null)[]
   locked: boolean[]
-  details: { machine: string; shiftTime: string }
+  details: { machineId: string; shiftTime: string }
 }
 
 export const Cell: React.FC<CellProps> = ({ data, locked, details }) => {
@@ -13,10 +14,14 @@ export const Cell: React.FC<CellProps> = ({ data, locked, details }) => {
     <div className="cell">
       {data.map((worker, idx) => (
         <WorkerItem
-          worker={worker}
+          worker={worker ? worker.name : null}
           isLocked={locked[idx]}
           details={{ ...details, idx }}
-          key={worker}
+          key={
+            worker
+              ? worker._id
+              : `${details.machineId}-${details.shiftTime} -${idx}`
+          }
         />
       ))}
     </div>

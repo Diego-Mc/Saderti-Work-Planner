@@ -40,28 +40,28 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
         {workers?.map((worker) => (
           <article
             className={`worker-shift-item ${
-              worker.currTimeShift ? 'selected' : ''
+              worker.shiftTime ? 'selected' : ''
             }`}
             key={worker.name}>
             {worker.name}
             <div className="icons">
               <span
                 className={`material-symbols-outlined ${
-                  worker.currTimeShift === 'morning' ? 'selected' : ''
+                  worker.shiftTime === 'morning' ? 'selected' : ''
                 }`}
                 onClick={(e) => handleToggleShift(worker._id, 'morning')}>
                 light_mode
               </span>
               <span
                 className={`material-symbols-outlined ${
-                  worker.currTimeShift === 'evening' ? 'selected' : ''
+                  worker.shiftTime === 'evening' ? 'selected' : ''
                 }`}
                 onClick={(e) => handleToggleShift(worker._id, 'evening')}>
                 nights_stay
               </span>
               <span
                 className={`material-symbols-outlined ${
-                  worker.currTimeShift === 'night' ? 'selected' : ''
+                  worker.shiftTime === 'night' ? 'selected' : ''
                 }`}
                 onClick={(e) => handleToggleShift(worker._id, 'night')}>
                 dark_mode

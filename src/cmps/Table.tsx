@@ -1,25 +1,9 @@
 import React from 'react'
+import { TableRow } from '../types'
 import { Cell } from './Cell'
 
-export type rowType = {
-  machine: string
-  data: {
-    [key: string]: (string | null)[]
-    morning: (string | null)[]
-    evening: (string | null)[]
-    night: (string | null)[]
-  }
-  locked: {
-    [key: string]: boolean[]
-    morning: boolean[]
-    evening: boolean[]
-    night: boolean[]
-  }
-  workersAmount: number
-}
-
 interface TableProps {
-  table: rowType[]
+  table: TableRow[]
 }
 
 type workerDetailsProps = {
@@ -45,22 +29,22 @@ export const Table: React.FC<TableProps> = ({ table }) => {
         <div className="cell cell-header">לילה</div>
       </div>
       {table.map((row) => (
-        <div className="row" key={row.machine}>
-          <div className="cell cell-title">{row.machine}</div>
+        <div className="row" key={row.machine._id}>
+          <div className="cell cell-title">{row.machine.name}</div>
           <Cell
             data={row.data.morning}
             locked={row.locked.morning}
-            details={{ machine: row.machine, shiftTime: 'morning' }}
+            details={{ machineId: row.machine._id, shiftTime: 'morning' }}
           />
           <Cell
             data={row.data.evening}
             locked={row.locked.evening}
-            details={{ machine: row.machine, shiftTime: 'evening' }}
+            details={{ machineId: row.machine._id, shiftTime: 'evening' }}
           />
           <Cell
             data={row.data.night}
             locked={row.locked.night}
-            details={{ machine: row.machine, shiftTime: 'night' }}
+            details={{ machineId: row.machine._id, shiftTime: 'night' }}
           />
         </div>
       ))}
