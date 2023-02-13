@@ -7,9 +7,7 @@ interface HeaderProps {}
 export const Header: React.FC<HeaderProps> = ({}) => {
   return (
     <header className="main-header">
-      <div className="logo">
-        <h1>סדר'תי</h1>
-      </div>
+      <div className="logo"></div>
       <nav className="nav">
         <Link to="/new">סידור חדש</Link>
         <Link to="/schedules">סידורים</Link>

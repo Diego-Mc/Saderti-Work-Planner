@@ -82,17 +82,17 @@ const schedulesApi = apiSlice.injectEndpoints({
             'getSchedule',
             scheduleId,
             (schedule) => {
-              const { machine, shiftTime, idx } = from
+              const { machineId, shiftTime, idx } = from
               const {
-                machine: machineTo,
+                machineId: machineIdTo,
                 shiftTime: shiftTimeTo,
                 idx: idxTo,
               } = to
               const fromRow = schedule.table.find(
-                (row) => row.machine === machine
+                (row) => row.machine._id === machineId
               )
               const toRow = schedule.table.find(
-                (row) => row.machine === machineTo
+                (row) => row.machine._id === machineIdTo
               )
               if (!toRow || !fromRow) return
               ;[fromRow.data[shiftTime][idx], toRow.data[shiftTimeTo][idxTo]] =
@@ -105,6 +105,51 @@ const schedulesApi = apiSlice.injectEndpoints({
         } catch (err) {
           console.log(
             'error move workers, invalidating {Schedules - scheduleId}',
+            err
+          )
+          dispatch(
+            schedulesApi.util.invalidateTags([
+              { type: 'Schedules', id: scheduleId },
+            ])
+          )
+        }
+      },
+    }),
+    placeWorker: builder.mutation({
+      query: ({ destinationDetails, worker, scheduleId }) => ({
+        url: `/schedules/${scheduleId}/place-worker`,
+        method: 'PATCH',
+        body: { destinationDetails, worker },
+      }),
+      async onQueryStarted(
+        { destinationDetails, worker, scheduleId },
+        { dispatch, queryFulfilled }
+      ) {
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedule',
+            scheduleId,
+            (schedule) => {
+              const { machineId, shiftTime, idx } = destinationDetails
+              const destinationRow = schedule.table.find(
+                (row) => row.machine._id === machineId
+              )
+              if (!destinationRow) return
+              destinationRow.data[shiftTime][idx] = worker
+
+              const unusedIdx = schedule.workers.unused.findIndex(
+                (w) => w._id === worker._id
+              )
+              schedule.workers.unused.splice(unusedIdx, 1)
+              schedule.workers.used.push(worker)
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error place worker, invalidating {Schedules - scheduleId}',
             err
           )
           dispatch(
@@ -206,6 +251,7 @@ export const {
   useMoveWorkersMutation,
   useToggleLockMutation,
   useSaveScheduleMutation,
+  usePlaceWorkerMutation,
 } = schedulesApi
 
 ////////////////////////////////////////////////////////////////

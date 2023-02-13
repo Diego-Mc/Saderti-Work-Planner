@@ -29,14 +29,45 @@ export type TableRow = {
   }
 }
 
-export interface ScheduleState extends ScheduleBase {
+export type BaseTableRow = {
+  //before backend population
+  machine: string
+  data: {
+    [key: string]: (WorkerType | null)[]
+    morning: (WorkerType | null)[]
+    evening: (WorkerType | null)[]
+    night: (WorkerType | null)[]
+  }
+  locked: {
+    [key: string]: boolean[]
+    morning: boolean[]
+    evening: boolean[]
+    night: boolean[]
+  }
+}
+
+export type ScheduleWorker = {
   _id: string
+  name: string
+  shiftTime: string
+}
+
+export interface ScheduleState extends Omit<ScheduleBase, 'workers'> {
+  _id: string
+  workers: {
+    used: ScheduleWorker[]
+    unused: ScheduleWorker[]
+  }
 }
 
 export type ScheduleBase = {
   ownerId: string
   date: number
   table: TableRow[]
+  workers: {
+    used: string[]
+    unused: string[]
+  }
 }
 
 export interface MachineState extends MachineBase {

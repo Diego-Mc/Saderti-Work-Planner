@@ -14,7 +14,7 @@ const workersApi = apiSlice.injectEndpoints({
         const result = await baseQuery('/workers/')
         const data = result.data as WorkerState[]
         data?.sort((a: WorkerState, b: WorkerState) =>
-          b.name.localeCompare(a.name)
+          a.name.localeCompare(b.name)
         )
         return { data }
       },
@@ -56,6 +56,71 @@ const workersApi = apiSlice.injectEndpoints({
           )
         } catch (err) {
           console.log('error adding worker, invalidating {Workers - LIST}', err)
+          dispatch(
+            workersApi.util.invalidateTags([{ type: 'Workers', id: 'LIST' }])
+          )
+        }
+      },
+    }),
+    setShiftTime: builder.mutation({
+      query: ({ shiftTime, workerId }) => ({
+        url: `/workers/${workerId}/set-shift-time`,
+        method: 'PATCH',
+        body: { shiftTime },
+      }),
+      async onQueryStarted(
+        { shiftTime, workerId },
+        { dispatch, queryFulfilled }
+      ) {
+        dispatch(
+          workersApi.util.updateQueryData('getWorker', workerId, (worker) => {
+            worker.shiftTime = shiftTime
+          })
+        )
+        dispatch(
+          workersApi.util.updateQueryData(
+            'getWorkers',
+            undefined,
+            (workers) => {
+              const foundWorker = workers.find(
+                (worker) => worker._id === workerId
+              )
+              if (foundWorker) foundWorker.shiftTime = shiftTime
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error toggle lock, invalidating {Workers - workerId}',
+            err
+          )
+          dispatch(
+            workersApi.util.invalidateTags([{ type: 'Workers', id: workerId }])
+          )
+        }
+      },
+    }),
+    resetShiftTimes: builder.mutation<void, void>({
+      query: () => ({
+        url: `/workers/reset-shift-times`,
+        method: 'PATCH',
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        dispatch(
+          workersApi.util.updateQueryData(
+            'getWorkers',
+            undefined,
+            (workers) => {
+              workers.forEach((w) => (w.shiftTime = ''))
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log('error toggle lock, invalidating {Workers - LIST}', err)
           dispatch(
             workersApi.util.invalidateTags([{ type: 'Workers', id: 'LIST' }])
           )
@@ -106,6 +171,8 @@ export const {
   useGetWorkerQuery,
   useGetWorkersQuery,
   useSaveWorkerMutation,
+  useSetShiftTimeMutation,
+  useResetShiftTimesMutation,
 } = workersApi
 
 ////////////////////////////////////////////////////////////////

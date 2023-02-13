@@ -1,17 +1,17 @@
-.workers-management-view {
+.management-view {
   display: grid;
   grid-template-columns: minmax(100px, 200px) 1fr;
   gap: 16px;
 
-  .workers-list {
+  .management-items-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 
     button.btn {
       margin: 0;
-      color: var(--fg);
-      border-color: var(--fg);
+      color: var(--main-fg);
+      border-color: var(--main-fg);
       transition: color 0.2s, background-color 0.2s;
       &:hover {
         color: var(--acc-blue);
@@ -19,7 +19,7 @@
       }
     }
 
-    .worker-link {
+    .management-item-link {
       border-radius: 4px;
       text-decoration: none;
       background-color: var(--acc-light-blue);

@@ -1,65 +1,87 @@
 import React from 'react'
-import { Worker } from '../main'
+import { ScheduleWorker, WorkerState } from '../types'
+import { BasicWorkerItem } from './BasicWorkerItem'
 
 interface WorkerListProps {
-  workers: Worker[]
-  setWorkers: React.Dispatch<React.SetStateAction<Worker[]>>
+  workers: {
+    used: ScheduleWorker[]
+    unused: ScheduleWorker[]
+  }
 }
 
-export const WorkerList: React.FC<WorkerListProps> = ({
-  workers,
-  setWorkers,
-}) => {
+export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
   return (
     <div className="worker-list">
       <h2 className="worker-list-title">שיוכים מקוריים</h2>
-      <div className="morning-list">
-        <h3 className="list-section-title">בוקר</h3>
-        {workers.map((worker) =>
-          worker.currTimeShift === 'morning' ? (
-            <article
-              className={`worker-item ${worker ? '' : 'empty'}`}
-              key={worker.name}>
-              {worker.name}
-            </article>
-          ) : null
-        )}
-      </div>
-      <div className="evening-list">
-        <h3 className="list-section-title">ערב</h3>
-        {workers.map((worker) =>
-          worker.currTimeShift === 'evening' ? (
-            <article
-              className={`worker-item ${worker ? '' : 'empty'}`}
-              key={worker.name}>
-              {worker.name}
-            </article>
-          ) : null
-        )}
-      </div>
-      <div className="night-list">
-        <h3 className="list-section-title">לילה</h3>
-        {workers.map((worker) =>
-          worker.currTimeShift === 'night' ? (
-            <article
-              className={`worker-item ${worker ? '' : 'empty'}`}
-              key={worker.name}>
-              {worker.name}
-            </article>
-          ) : null
-        )}
-      </div>
-      <div className="night-list">
-        <h3 className="list-section-title">ללא שיוך</h3>
-        {workers.map((worker) =>
-          worker.currTimeShift === undefined ? (
-            <article
-              className={`worker-item ${worker ? '' : 'empty'}`}
-              key={worker.name}>
-              {worker.name}
-            </article>
-          ) : null
-        )}
+      <div className="time-shifts-lists">
+        <div className="morning-list">
+          <h3 className="list-section-title">בוקר</h3>
+          {workers.unused.map((worker) =>
+            worker.shiftTime === 'morning' ? (
+              <BasicWorkerItem
+                isUsed={false}
+                worker={worker}
+                key={worker._id}
+              />
+            ) : null
+          )}
+          {workers.used.map((worker) =>
+            worker.shiftTime === 'morning' ? (
+              <BasicWorkerItem isUsed={true} worker={worker} key={worker._id} />
+            ) : null
+          )}
+        </div>
+        <div className="evening-list">
+          <h3 className="list-section-title">ערב</h3>
+          {workers.unused.map((worker) =>
+            worker.shiftTime === 'evening' ? (
+              <BasicWorkerItem
+                isUsed={false}
+                worker={worker}
+                key={worker._id}
+              />
+            ) : null
+          )}
+          {workers.used.map((worker) =>
+            worker.shiftTime === 'evening' ? (
+              <BasicWorkerItem isUsed={true} worker={worker} key={worker._id} />
+            ) : null
+          )}
+        </div>
+        <div className="night-list">
+          <h3 className="list-section-title">לילה</h3>
+          {workers.unused.map((worker) =>
+            worker.shiftTime === 'night' ? (
+              <BasicWorkerItem
+                isUsed={false}
+                worker={worker}
+                key={worker._id}
+              />
+            ) : null
+          )}
+          {workers.used.map((worker) =>
+            worker.shiftTime === 'night' ? (
+              <BasicWorkerItem isUsed={true} worker={worker} key={worker._id} />
+            ) : null
+          )}
+        </div>
+        <div className="night-list">
+          <h3 className="list-section-title">ללא שיוך</h3>
+          {workers.unused.map((worker) =>
+            !worker.shiftTime ? (
+              <BasicWorkerItem
+                isUsed={false}
+                worker={worker}
+                key={worker._id}
+              />
+            ) : null
+          )}
+          {workers.used.map((worker) =>
+            !worker.shiftTime ? (
+              <BasicWorkerItem isUsed={true} worker={worker} key={worker._id} />
+            ) : null
+          )}
+        </div>
       </div>
     </div>
   )

@@ -1,9 +1,11 @@
 import { BrowserRouter, useRoutes } from 'react-router-dom'
 import { Header } from './cmps/Header'
+import { MachineDashboard } from './cmps/MachineDashboard'
 import { WorkerDashboard } from './cmps/WorkerDashboard'
 import { addWorker } from './features/workers/workersSlice'
 import { useAppDispatch } from './hooks'
 import { Home } from './views/Home'
+import { MachinesManagement } from './views/MachinesManagement'
 import { WorkersManagement } from './views/WorkersManagement'
 // import { tableDemo } from './table-demo-data.json'
 import { WorkersShiftSetup } from './views/WorkersShiftSetup'
@@ -27,7 +29,17 @@ const App = () => {
         ],
       },
       {
-        path: '/schedule/:scheduleId',
+        path: '/machines',
+        element: <MachinesManagement />,
+        children: [
+          {
+            path: ':machineId',
+            element: <MachineDashboard />,
+          },
+        ],
+      },
+      {
+        path: '/schedules/:scheduleId',
         element: <WorkersTable />,
       },
       {

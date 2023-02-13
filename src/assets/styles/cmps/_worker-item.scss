@@ -7,9 +7,11 @@
   height: 36px;
   border-radius: 4px;
   position: relative;
+  color: var(--main-fg);
   cursor: move;
   &.empty {
     background-color: var(--acc-gray);
+    cursor: not-allowed;
   }
   &.locked {
     cursor: not-allowed;

@@ -19,9 +19,10 @@
 @import 'cmps/worker-shift-item';
 @import 'cmps/main-header';
 @import 'cmps/auth-btn';
+@import 'cmps/worker-list';
 
 // Views
 @import 'views/main-app';
-@import 'views/workers-management';
+@import 'views/management';
 @import 'views/workers-table';
 @import 'views/workers-shift-setup';

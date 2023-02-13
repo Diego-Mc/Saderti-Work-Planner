@@ -14,7 +14,7 @@ const machinesApi = apiSlice.injectEndpoints({
         const result = await baseQuery('/machines/')
         const data = result.data as MachineState[]
         data?.sort((a: MachineState, b: MachineState) =>
-          b.name.localeCompare(a.name)
+          a.name.localeCompare(b.name)
         )
         return { data }
       },

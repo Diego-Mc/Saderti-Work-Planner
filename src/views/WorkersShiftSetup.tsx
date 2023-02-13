@@ -1,10 +1,17 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useGetMachinesQuery } from '../features/machines/machinesSlice'
+import { useAddScheduleMutation } from '../features/schedules/schedulesSlice'
 import {
   resetTimeShifts,
   selectWorkers,
   setTimeShift,
+  useGetWorkersQuery,
+  useResetShiftTimesMutation,
+  useSetShiftTimeMutation,
 } from '../features/workers/workersSlice'
 import { useAppDispatch, useAppSelector } from '../hooks'
+import { BaseTableRow } from '../types'
 
 interface WorkersShiftSetupProps {
   //   workers: Worker[]
@@ -17,15 +24,50 @@ interface WorkersShiftSetupProps {
 //TODO: to change a selected shift after being grayed out hover on the icon
 
 export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
-  const { workers } = useAppSelector(selectWorkers)
-  const dispatch = useAppDispatch()
+  const { data: workers } = useGetWorkersQuery()
+  const { data: machines } = useGetMachinesQuery()
+  const [setTimeShift] = useSetShiftTimeMutation()
+  const [resetShiftTimes] = useResetShiftTimesMutation()
+  const [addSchedule] = useAddScheduleMutation()
+  const navigate = useNavigate()
 
-  const handleToggleShift = (_id: string, timeShift: string) => {
-    dispatch(setTimeShift({ _id, timeShift }))
+  const handleToggleShift = (workerId: string, shiftTime: string) => {
+    setTimeShift({ workerId, shiftTime })
   }
 
   const handleTimeShiftReset = (e: React.MouseEvent) => {
-    dispatch(resetTimeShifts())
+    resetShiftTimes()
+  }
+
+  const handleNewSchedule = async () => {
+    if (!machines || !workers) return //TODO: add toast to try again
+    const table: BaseTableRow[] = []
+    machines.forEach((machine) => {
+      table.push({
+        machine: machine._id,
+        data: {
+          morning: new Array(machine.amountOfWorkers).fill(null),
+          evening: new Array(machine.amountOfWorkers).fill(null),
+          night: new Array(machine.amountOfWorkers).fill(null),
+        },
+        locked: {
+          morning: new Array(machine.amountOfWorkers).fill(false),
+          evening: new Array(machine.amountOfWorkers).fill(false),
+          night: new Array(machine.amountOfWorkers).fill(false),
+        },
+      })
+    })
+    const addedSchedule = await addSchedule({
+      date: Date.now(),
+      table,
+      workers: {
+        used: [],
+        unused: workers,
+      },
+    })
+    if (!('data' in addedSchedule)) return //TODO: toast...
+    const scheduleId = addedSchedule.data._id as string
+    navigate(`/schedules/${scheduleId}`)
   }
 
   return (
@@ -37,38 +79,47 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
         </button>
       </header>
       <section className="list-workers-shifts">
-        {workers?.map((worker) => (
-          <article
-            className={`worker-shift-item ${
-              worker.shiftTime ? 'selected' : ''
-            }`}
-            key={worker.name}>
-            {worker.name}
-            <div className="icons">
-              <span
-                className={`material-symbols-outlined ${
-                  worker.shiftTime === 'morning' ? 'selected' : ''
+        {workers ? (
+          <>
+            {workers?.map((worker) => (
+              <article
+                className={`worker-shift-item ${
+                  worker.shiftTime ? 'selected' : ''
                 }`}
-                onClick={(e) => handleToggleShift(worker._id, 'morning')}>
-                light_mode
-              </span>
-              <span
-                className={`material-symbols-outlined ${
-                  worker.shiftTime === 'evening' ? 'selected' : ''
-                }`}
-                onClick={(e) => handleToggleShift(worker._id, 'evening')}>
-                nights_stay
-              </span>
-              <span
-                className={`material-symbols-outlined ${
-                  worker.shiftTime === 'night' ? 'selected' : ''
-                }`}
-                onClick={(e) => handleToggleShift(worker._id, 'night')}>
-                dark_mode
-              </span>
-            </div>
-          </article>
-        ))}
+                key={worker.name}>
+                {worker.name}
+                <div className="icons">
+                  <span
+                    className={`material-symbols-outlined ${
+                      worker.shiftTime === 'morning' ? 'selected' : ''
+                    }`}
+                    onClick={(e) => handleToggleShift(worker._id, 'morning')}>
+                    light_mode
+                  </span>
+                  <span
+                    className={`material-symbols-outlined ${
+                      worker.shiftTime === 'evening' ? 'selected' : ''
+                    }`}
+                    onClick={(e) => handleToggleShift(worker._id, 'evening')}>
+                    nights_stay
+                  </span>
+                  <span
+                    className={`material-symbols-outlined ${
+                      worker.shiftTime === 'night' ? 'selected' : ''
+                    }`}
+                    onClick={(e) => handleToggleShift(worker._id, 'night')}>
+                    dark_mode
+                  </span>
+                </div>
+              </article>
+            ))}
+          </>
+        ) : null}
+        <button
+          className="btn outlined continue-btn"
+          onClick={handleNewSchedule}>
+          המשך
+        </button>
       </section>
     </section>
   )

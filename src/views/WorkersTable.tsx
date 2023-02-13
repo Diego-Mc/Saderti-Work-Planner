@@ -10,22 +10,22 @@ import {
   selectSchedules,
   useGetScheduleQuery,
 } from '../features/schedules/schedulesSlice'
+import { useParams } from 'react-router-dom'
 
 interface WorkersTableProps {}
 
 export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
-  // const { workers } = useAppSelector(selectWorkers)
-  // const { schedules } = useAppSelector(selectSchedules)
+  const params = useParams()
 
-  const { data, isLoading } = useGetScheduleQuery('63e9aa3afdd3ee76dc4c2a31')
-
-  console.log(data)
+  const { data: schedule, isLoading } = useGetScheduleQuery(
+    params.scheduleId as string
+  )
 
   return (
     <div className="workers-table">
-      {data ? <Table table={data.table} /> : null}
-      <button className="generator-btn">מילוי אוטומטי</button>
-      {/* <WorkerList workers={workers} /> */}
+      {schedule ? <Table table={schedule.table} /> : null}
+      <button className="btn outlined">מילוי אוטומטי</button>
+      {schedule ? <WorkerList workers={schedule.workers} /> : null}
     </div>
   )
 }

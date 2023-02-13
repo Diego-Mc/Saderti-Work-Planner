@@ -1,15 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+import { useParams } from 'react-router-dom'
 import { ItemTypes } from '../constants'
 import {
-  moveWorkers,
-  toggleLock,
   useMoveWorkersMutation,
+  usePlaceWorkerMutation,
   useToggleLockMutation,
 } from '../features/schedules/schedulesSlice'
-import { useAppDispatch } from '../hooks'
 import { WorkerIdentifier } from '../types'
-import { moveWorkerFn, setToggleLockFn } from './Table'
 
 interface WorkerItemProps {
   worker: string | null
@@ -25,8 +23,11 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
   const ref = useRef<HTMLElement>(null)
   const [showLock, setShowLock] = useState(isLocked)
 
+  const params = useParams()
+
   const [moveWorkers] = useMoveWorkersMutation()
   const [toggleLock] = useToggleLockMutation()
+  const [placeWorker] = usePlaceWorkerMutation()
 
   const handleOver = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (isLocked) return
@@ -37,7 +38,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
     setShowLock(false)
   }
   const handleLockToggle = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    toggleLock(details)
+    toggleLock({ workerDetails: details, scheduleId: params.scheduleId })
   }
 
   const [{ isDragging }, drag] = useDrag(
@@ -50,10 +51,10 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         return details
       },
       canDrag() {
-        return !isLocked
+        return !isLocked && !!worker
       },
     }),
-    [isLocked]
+    [isLocked, worker]
   )
   const [{ isOver }, drop] = useDrop(
     () => ({
@@ -68,6 +69,17 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         return !isLocked
       },
       drop(item: any) {
+        console.log('HEYY!!', item, details)
+        if ('_id' in item) {
+          //the item is a worker
+          placeWorker({
+            destinationDetails: details,
+            worker: item,
+            scheduleId: params.scheduleId,
+          })
+          return
+        }
+
         if (!ref.current) {
           return
         }
@@ -80,7 +92,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
           return
         }
 
-        moveWorkers({ from: details, to: item })
+        moveWorkers({ from: details, to: item, scheduleId: params.scheduleId })
       },
     }),
     [isLocked]

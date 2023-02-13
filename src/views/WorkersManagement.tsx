@@ -21,12 +21,12 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
       confirmButtonColor: '#545454',
     })
 
-    addWorker(workerName)
+    if (workerName) addWorker(workerName)
   }
 
   return (
-    <section className="workers-management-view">
-      <section className="workers-list">
+    <section className="workers-management-view management-view">
+      <section className="workers-list management-items-list">
         <button className="btn outlined" onClick={openAddWorkerModal}>
           הוסף עובד חדש
         </button>
@@ -34,7 +34,7 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
           <>
             {data.map((worker) => (
               <NavLink
-                className="worker-link"
+                className="worker-link management-item-link"
                 to={`/workers/${worker._id}`}
                 key={worker._id}>
                 {worker.name}
