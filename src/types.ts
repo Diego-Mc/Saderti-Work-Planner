@@ -99,16 +99,29 @@ export type WorkerBase = {
 }
 
 export type StatisticsState = {
-  lastInMachine: {
+  machineTimeShiftsPerWorker: {
+    [key: string]: {
+      [key: string]: {
+        [key: string]: number[]
+      }
+    }
+  }
+  timeShiftsPerWorker: {
+    [key: string]: {
+      [key: string]: number[] | undefined
+      morning?: number[]
+      evening?: number[]
+      night?: number[]
+    }
+  }
+  amountWorkedInMachinePerWorker: {
     [key: string]: {
       [key: string]: number[]
     }
   }
-  timeShifts: {
+  amountWorkedPerMachine: {
     [key: string]: {
-      morning?: number[]
-      evening?: number[]
-      night?: number[]
+      [key: string]: number[]
     }
   }
 }
