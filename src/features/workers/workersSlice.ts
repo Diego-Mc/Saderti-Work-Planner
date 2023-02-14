@@ -7,7 +7,7 @@ import type { RootState } from '../../store'
 import { apiSlice } from './../api/apiSlice'
 import { WorkerState } from '../../types'
 
-const workersApi = apiSlice.injectEndpoints({
+export const workersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getWorkers: builder.query<WorkerState[], void>({
       queryFn: async (query, queryApi, extraOptions, baseQuery) => {

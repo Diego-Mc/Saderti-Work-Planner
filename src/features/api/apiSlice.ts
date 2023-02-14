@@ -9,7 +9,7 @@ export const apiSlice = createApi({
         : 'http://localhost:3001/api',
     credentials: 'include',
   }),
-  tagTypes: ['Machines', 'Schedules', 'Workers', 'Auth'],
+  tagTypes: ['Machines', 'Schedules', 'Workers', 'Auth', 'Statistics'],
   endpoints: (builder) => ({
     /* AUTH */
     register: builder.mutation({

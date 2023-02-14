@@ -1,3 +1,4 @@
+import moment from 'moment'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGetMachinesQuery } from '../features/machines/machinesSlice'
@@ -58,7 +59,10 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
       })
     })
     const addedSchedule = await addSchedule({
-      date: Date.now(),
+      date: {
+        from: +moment().day(6),
+        to: +moment().day(5 + 7),
+      },
       table,
       workers: {
         used: [],
@@ -67,7 +71,7 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
     })
     if (!('data' in addedSchedule)) return //TODO: toast...
     const scheduleId = addedSchedule.data._id as string
-    navigate(`/schedules/${scheduleId}`)
+    navigate(`/edit/${scheduleId}`)
   }
 
   return (

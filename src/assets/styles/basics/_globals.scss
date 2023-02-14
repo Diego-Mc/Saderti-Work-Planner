@@ -1,0 +1,43 @@
+//reset package styles:
+:root {
+  --rs-btn-primary-bg: var(--acc-blue);
+  --rs-picker-value: var(--acc-dark-gray);
+}
+
+.rs-picker {
+  transform: scale(120%);
+  transform-origin: right;
+}
+
+.rs-picker-menu {
+  transform: scale(110%);
+  transform-origin: left top;
+}
+
+.rs-picker-daterange-menu
+  .rs-picker-daterange-panel-show-one-calendar
+  .rs-picker-toolbar-ranges {
+  display: none;
+}
+
+.rs-picker-has-value .rs-btn .rs-picker-toggle-value,
+.rs-picker-has-value .rs-picker-toggle .rs-picker-toggle-value {
+  font-weight: 700;
+}
+
+.rs-picker-toolbar.rs-stack {
+  .rs-stack-item:first-of-type {
+    display: none;
+  }
+  .rs-stack-item:last-of-type {
+    width: 100%;
+  }
+  .rs-stack-item {
+    .rs-picker-toolbar-right {
+      width: 100%;
+      .rs-btn {
+        width: 100% !important;
+      }
+    }
+  }
+}

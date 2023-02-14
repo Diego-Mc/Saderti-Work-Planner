@@ -7,7 +7,7 @@ import { MachineState } from '../../types'
 
 import { apiSlice } from './../api/apiSlice'
 
-const machinesApi = apiSlice.injectEndpoints({
+export const machinesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMachines: builder.query<MachineState[], void>({
       queryFn: async (query, queryApi, extraOptions, baseQuery) => {

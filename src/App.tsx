@@ -1,11 +1,15 @@
+import { useEffect } from 'react'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
 import { Header } from './cmps/Header'
 import { MachineDashboard } from './cmps/MachineDashboard'
+import { ScheduleDashboard } from './cmps/ScheduleDashboard'
 import { WorkerDashboard } from './cmps/WorkerDashboard'
+import { usePrefetch } from './features/statistics/statisticsSlice'
 import { addWorker } from './features/workers/workersSlice'
 import { useAppDispatch } from './hooks'
 import { Home } from './views/Home'
 import { MachinesManagement } from './views/MachinesManagement'
+import { SchedulesManagement } from './views/SchedulesManagement'
 import { WorkersManagement } from './views/WorkersManagement'
 // import { tableDemo } from './table-demo-data.json'
 import { WorkersShiftSetup } from './views/WorkersShiftSetup'
@@ -39,7 +43,17 @@ const App = () => {
         ],
       },
       {
-        path: '/schedules/:scheduleId',
+        path: '/schedules',
+        element: <SchedulesManagement />,
+        children: [
+          {
+            path: ':scheduleId',
+            element: <ScheduleDashboard />,
+          },
+        ],
+      },
+      {
+        path: '/edit/:scheduleId',
         element: <WorkersTable />,
       },
       {
@@ -49,6 +63,12 @@ const App = () => {
     ])
     return router
   }
+
+  const prefetchStatistics = usePrefetch('getStatistics')
+
+  useEffect(() => {
+    prefetchStatistics()
+  })
 
   return (
     <div className="App">

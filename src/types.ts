@@ -62,7 +62,10 @@ export interface ScheduleState extends Omit<ScheduleBase, 'workers'> {
 
 export type ScheduleBase = {
   ownerId: string
-  date: number
+  date: {
+    from: number
+    to: number
+  }
   table: TableRow[]
   workers: {
     used: string[]
@@ -93,4 +96,19 @@ export type WorkerBase = {
   ownerId: string
   name: string
   shiftTime: string
+}
+
+export type StatisticsState = {
+  lastInMachine: {
+    [key: string]: {
+      [key: string]: number[]
+    }
+  }
+  timeShifts: {
+    [key: string]: {
+      morning?: number[]
+      evening?: number[]
+      night?: number[]
+    }
+  }
 }

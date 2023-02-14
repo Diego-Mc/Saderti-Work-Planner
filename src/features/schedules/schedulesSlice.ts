@@ -7,13 +7,15 @@ import { ScheduleState, WorkerIdentifier } from '../../types'
 
 import { apiSlice } from './../api/apiSlice'
 
-const schedulesApi = apiSlice.injectEndpoints({
+export const schedulesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getSchedules: builder.query<ScheduleState[], void>({
       queryFn: async (query, queryApi, extraOptions, baseQuery) => {
         const result = await baseQuery('/schedules/')
         const data = result.data as ScheduleState[]
-        data?.sort((a: ScheduleState, b: ScheduleState) => b.date - a.date)
+        data?.sort(
+          (a: ScheduleState, b: ScheduleState) => b.date.from - a.date.from
+        )
         return { data }
       },
       providesTags: (res) =>
@@ -199,6 +201,38 @@ const schedulesApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    setDate: builder.mutation({
+      query: ({ date, scheduleId }) => ({
+        url: `/schedules/${scheduleId}/set-date`,
+        method: 'PATCH',
+        body: { date },
+      }),
+      async onQueryStarted({ date, scheduleId }, { dispatch, queryFulfilled }) {
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedule',
+            scheduleId,
+            (schedule) => {
+              schedule.date.to = date.to
+              schedule.date.from = date.from
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error set date, invalidating {Schedules - scheduleId}',
+            err
+          )
+          dispatch(
+            schedulesApi.util.invalidateTags([
+              { type: 'Schedules', id: scheduleId },
+            ])
+          )
+        }
+      },
+    }),
     saveSchedule: builder.mutation({
       query: ({ scheduleDetails, scheduleId }) => ({
         url: `/schedules/${scheduleId}`,
@@ -252,6 +286,7 @@ export const {
   useToggleLockMutation,
   useSaveScheduleMutation,
   usePlaceWorkerMutation,
+  useSetDateMutation,
 } = schedulesApi
 
 ////////////////////////////////////////////////////////////////

@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Worker } from '../main'
 import { WorkerList } from '../cmps/WorkerList'
 import { Table } from '../cmps/Table'
 
-import React from 'react'
-import { useAppSelector } from '../hooks'
-import { selectWorkers } from '../features/workers/workersSlice'
+import React, { useEffect } from 'react'
 import {
-  selectSchedules,
   useGetScheduleQuery,
+  useSetDateMutation,
 } from '../features/schedules/schedulesSlice'
 import { useParams } from 'react-router-dom'
+
+import { DateRangePicker } from 'rsuite'
+import { DateRange } from 'rsuite/esm/DateRangePicker'
+import moment from 'moment'
 
 interface WorkersTableProps {}
 
@@ -21,8 +21,42 @@ export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
     params.scheduleId as string
   )
 
+  const [value, setValue] = React.useState<[Date, Date] | null>()
+
+  const [setDate] = useSetDateMutation()
+
+  const handleSetDate = (date: DateRange | null) => {
+    if (!date) return
+    console.log(date)
+    setValue(date)
+    setDate({
+      scheduleId: params.scheduleId,
+      date: { from: +moment(date[0]), to: +moment(date[1]) },
+    })
+  }
+
+  useEffect(() => {
+    if (!schedule) return
+    setValue([new Date(schedule.date.from), new Date(schedule.date.to)])
+  }, [schedule])
+
   return (
     <div className="workers-table">
+      <h2>
+        סידור שבועי לתאריכים{' '}
+        <DateRangePicker
+          showOneCalendar
+          cleanable={false}
+          size="lg"
+          character=" - "
+          editable={false}
+          appearance="subtle"
+          format="dd/MM/yyyy"
+          value={value}
+          onChange={handleSetDate}
+        />
+      </h2>
+
       {schedule ? <Table table={schedule.table} /> : null}
       <button className="btn outlined">מילוי אוטומטי</button>
       {schedule ? <WorkerList workers={schedule.workers} /> : null}
