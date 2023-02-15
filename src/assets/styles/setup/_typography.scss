@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&display=swap');
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  &.outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+  }
 }

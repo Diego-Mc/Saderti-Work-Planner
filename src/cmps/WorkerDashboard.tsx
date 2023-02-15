@@ -20,6 +20,32 @@ import { StatisticsState } from '../types'
 
 //TODO: remove "any" types...
 
+const CustomLabel = (props: any) => (
+  <g>
+    <VictoryLabel {...props} />
+    <VictoryTooltip
+      {...props}
+      style={{
+        labels: { opacity: 1 },
+        fill: 'white',
+        fontWeight: 700,
+        fontFamily: 'Arimo',
+        fontSize: 20,
+      }}
+      x={200}
+      y={250}
+      orientation="top"
+      pointerLength={0}
+      cornerRadius={50}
+      flyoutWidth={100}
+      flyoutHeight={100}
+      flyoutStyle={{ fill: 'black' }}
+    />
+  </g>
+)
+
+CustomLabel.defaultEvents = VictoryTooltip.defaultEvents
+
 interface WorkerDashboardProps {}
 
 export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
@@ -150,7 +176,7 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
   return (
     <section className="worker-dashboard dashboard">
       {worker ? (
-        <>
+        <div className="dashboard-header">
           <h2 className="title">{worker.name}</h2>
           <div className="actions">
             <button className="pill-btn" onClick={handleNameChange}>
@@ -160,13 +186,18 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
               מחיקה
             </button>
           </div>
-        </>
+        </div>
       ) : null}
 
       {worker && statistics ? (
         <div className="stat">
           <div className="main-stat">
-            <VictoryChart domainPadding={20}>
+            <h3 className="stat-title">
+              סבבי עבודה בכל מכונה בפילוג לפי זמן משמרת
+            </h3>
+            <VictoryChart
+              padding={{ top: 30, left: 50, right: 50, bottom: 50 }}
+              domainPadding={20}>
               <VictoryAxis
                 style={{
                   tickLabels: {
@@ -240,34 +271,51 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
           </div>
 
           <div className="sec-stat">
-            <VictoryPie
-              data={workerTimesStats}
-              colorScale={['#ffa600', '#a05195', '#003f5c']}
-              padding={100}
-              x="time"
-              y="amountWorked"
-              labels={({ datum }) =>
-                datum._y > 0
-                  ? `${
-                      datum.time === 'morning'
-                        ? 'בוקר'
-                        : datum.time === 'evening'
-                        ? 'ערב'
-                        : 'לילה'
-                    }`
-                  : ''
-              }
-              labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
-            />
-
-            <VictoryPie
-              data={workedInMachineStats}
-              padding={100}
-              x="machine"
-              y="amountWorked"
-              labels={({ datum }) => (datum._y > 0 ? `${datum.machine}` : '')}
-              labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
-            />
+            <div className="worker-time-stat">
+              <h3 className="stat-title">פילוח עבודה לפי זמן משמרת</h3>
+              <div className="stat-graph">
+                <VictoryPie
+                  style={{ labels: { opacity: 1, fontWeight: 700 } }}
+                  colorScale={['#ffa600', '#a05195', '#003f5c']}
+                  innerRadius={100}
+                  labelRadius={120}
+                  // padding={{ top: 50, right: 50, left: 50, bottom: 50 }}
+                  labels={({ datum }) =>
+                    datum._y > 0
+                      ? `${
+                          datum.time === 'morning'
+                            ? 'בוקר'
+                            : datum.time === 'evening'
+                            ? 'ערב'
+                            : 'לילה'
+                        }`
+                      : ''
+                  }
+                  labelComponent={<CustomLabel />}
+                  data={workerTimesStats}
+                  x="time"
+                  y="amountWorked"
+                />
+              </div>
+            </div>
+            <div className="worker-machine-stat">
+              <h3 className="stat-title">פילוח עבודה לפי מכונה</h3>
+              <div className="stat-graph">
+                <VictoryPie
+                  style={{ labels: { opacity: 1, fontWeight: 700 } }}
+                  colorScale={['#ffa600', '#a05195', '#003f5c']}
+                  innerRadius={100}
+                  labelRadius={120}
+                  labels={({ datum }) =>
+                    datum._y > 0 ? `${datum.machine}` : ''
+                  }
+                  labelComponent={<CustomLabel />}
+                  data={workedInMachineStats}
+                  x="machine"
+                  y="amountWorked"
+                />
+              </div>
+            </div>
           </div>
         </div>
       ) : null}

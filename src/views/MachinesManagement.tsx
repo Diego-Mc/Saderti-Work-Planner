@@ -27,21 +27,34 @@ export const MachinesManagement: React.FC<MachinesManagementProps> = ({}) => {
   return (
     <section className="machines-management-view management-view">
       <section className="machines-list management-items-list">
-        <button className="btn outlined" onClick={openAddMachineModal}>
-          הוסף מכונה חדשה
-        </button>
-        {data ? (
-          <>
-            {data.map((machine) => (
-              <NavLink
-                className="machine-link management-item-link"
-                to={`/machines/${machine._id}`}
-                key={machine._id}>
-                {machine.name}
-              </NavLink>
-            ))}
-          </>
-        ) : null}
+        <div className="side-links">
+          <button
+            className="management-item-link add-btn"
+            onClick={openAddMachineModal}>
+            <span className="material-symbols-outlined">add</span>
+            הוסף מכונה
+          </button>
+          {data
+            ? data.map((machine) => (
+                <NavLink
+                  className="machine-link management-item-link"
+                  to={`/machines/${machine._id}`}
+                  key={machine._id}>
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`material-symbols-outlined ${
+                          isActive ? '' : 'outlined'
+                        }`}>
+                        business_center
+                      </span>
+                      {machine.name}
+                    </>
+                  )}
+                </NavLink>
+              ))
+            : null}
+        </div>
       </section>
       <section className="machine-dashboard">
         <Outlet />

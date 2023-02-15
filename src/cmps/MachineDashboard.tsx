@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import {
@@ -15,6 +15,7 @@ import {
 } from '../features/machines/machinesSlice'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 import { useGetWorkersQuery } from '../features/workers/workersSlice'
+import { useWindowSize } from '../hooks/useWindowSize'
 
 interface MachineDashboardProps {}
 
@@ -28,6 +29,10 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
   const [saveMachine] = useSaveMachineMutation()
   const [deleteMachine] = useDeleteMachineMutation()
 
+  const statWrapper = useRef<HTMLDivElement>(null)
+
+  const size = useWindowSize()
+
   const workersAmountWorked: any = []
 
   if (statistics && workers && machine) {
@@ -39,7 +44,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
       })
     })
     workersAmountWorked.sort(
-      (a: any, b: any) => b.amountWorked - a.amountWorked
+      (a: any, b: any) => a.amountWorked - b.amountWorked
     )
   }
 
@@ -48,7 +53,6 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
     const { value: amountOfWorkers } = await Swal.fire({
       title: 'לכמה עובדים המכונה מיועדת?',
       input: 'number',
-      // inputLabel: 'מה שם המכונה?',
       inputPlaceholder: 'הכנס את מספר העובדים',
       confirmButtonColor: '#545454',
     })
@@ -121,18 +125,20 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
   return (
     <section className="machine-dashboard dashboard">
       {machine ? (
-        <>
-          <h2 className="title">{machine.name}</h2>
-          <p>
-            המכונה מיועדת ל
-            <span className="workers-amount-cta">
-              {machine.amountOfWorkers}
-            </span>{' '}
-            עובדים
-          </p>
+        <div className="dashboard-header">
+          <div className="header-details">
+            <h2 className="title">{machine.name}</h2>
+            <p>
+              המכונה מיועדת ל
+              <span className="workers-amount-cta">
+                {machine.amountOfWorkers}
+              </span>{' '}
+              עובדים
+            </p>
+          </div>
           <div className="actions">
             <button className="pill-btn" onClick={handleAmountOfWorkersChange}>
-              עדכון כמות עובדים
+              עדכון יעד עובדים
             </button>
             <button className="pill-btn" onClick={handleNameChange}>
               שינוי שם
@@ -141,41 +147,55 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
               ניתוק
             </button>
           </div>
-        </>
+        </div>
       ) : null}
 
       <div className="stat">
         <div className="main-stat">
-          <VictoryChart domainPadding={20}>
-            <VictoryBar
-              theme={VictoryTheme.material}
-              style={{ data: { fill: '#ffa600' } }}
-              data={workersAmountWorked}
-              x="worker"
-              y="amountWorked"
-            />
-            <VictoryAxis
-              style={{
-                tickLabels: {
-                  fontSize: 10,
-                },
-              }}
-              dependentAxis
-              tickFormat={(x) => `${x}`}
-            />
-            <VictoryAxis
-              tickFormat={(y) => `${y}`}
-              style={{
-                tickLabels: {
-                  angle: 45,
-                  verticalAnchor: 'middle',
-                  textAnchor: 'start',
-                  padding: 10,
-                  fontSize: 10,
-                },
-              }}
-            />
-          </VictoryChart>
+          <h3 className="stat-title">כמות סבבי עבודה של כל עובד במכונה</h3>
+          <div className="stat-wrapper" ref={statWrapper}>
+            <VictoryChart
+              horizontal
+              domainPadding={6}
+              padding={{ top: 30, bottom: 30, left: 80, right: 60 }}
+              width={(size?.width || 1200) - 600}
+              height={workersAmountWorked.length * 20}>
+              <VictoryBar
+                theme={VictoryTheme.material}
+                style={{
+                  data: { fill: '#ffa600' },
+                  labels: { fontFamily: 'Arimo' },
+                }}
+                data={workersAmountWorked}
+                labels={({ datum }) =>
+                  datum.amountWorked ? `${datum.amountWorked}` : ''
+                }
+                x="worker"
+                y="amountWorked"
+              />
+              {/* <VictoryAxis
+                style={{
+                  tickLabels: {
+                    fontSize: 10,
+                  },
+                }}
+                dependentAxis
+                tickFormat={(x) => `${x}`}
+              /> */}
+              <VictoryAxis
+                tickFormat={(y) => `${y}`}
+                style={{
+                  tickLabels: {
+                    // angle: 45,
+                    // verticalAnchor: 'middle',
+                    // textAnchor: 'start',
+                    padding: 10,
+                    fontSize: 10,
+                  },
+                }}
+              />
+            </VictoryChart>
+          </div>
         </div>
       </div>
     </section>

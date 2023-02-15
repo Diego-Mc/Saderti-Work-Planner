@@ -2,6 +2,8 @@
   display: grid;
   grid-template-columns: minmax(100px, 200px) 1fr;
   gap: 16px;
+  height: 100vh;
+  overflow: hidden;
 
   .management-items-list {
     display: flex;
@@ -19,14 +21,40 @@
       }
     }
 
-    .management-item-link {
-      border-radius: 4px;
-      text-decoration: none;
-      background-color: var(--acc-light-blue);
-      padding: 16px 12px;
+    .side-links {
+      display: flex;
+      flex-direction: column;
 
-      &.active {
-        background-color: var(--acc-blue);
+      .management-item-link {
+        text-decoration: none;
+        padding: 16px 12px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding-inline: 40px;
+        box-shadow: inset -4px 0 0 0 transparent;
+        color: var(--acc-dark-gray);
+        opacity: 0.8;
+
+        &:hover {
+          opacity: 1;
+          background-color: #e5e8f27c;
+          // font-weight: 700;
+        }
+
+        &.active {
+          opacity: 1;
+          background-color: #e5e8f2;
+          color: var(--acc-blue);
+          font-weight: 700;
+          box-shadow: inset -4px 0 0 0 var(--acc-blue);
+        }
+      }
+      .add-btn {
+        opacity: 0.5;
+        &:hover {
+          color: var(--acc-blue);
+        }
       }
     }
   }
