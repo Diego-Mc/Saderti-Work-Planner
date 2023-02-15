@@ -129,8 +129,9 @@ export const workersApi = apiSlice.injectEndpoints({
     }),
     saveWorker: builder.mutation({
       query: ({ workerDetails, workerId }) => ({
-        url: `/workers/${workerId}`,
+        url: `/workers/${workerId}/save`,
         method: 'POST',
+        body: workerDetails,
       }),
       async onQueryStarted(
         { workerDetails, workerId },
@@ -140,7 +141,25 @@ export const workersApi = apiSlice.injectEndpoints({
           workersApi.util.updateQueryData('getWorker', workerId, (worker) => {
             worker.name = workerDetails.name
             worker.shiftTime = workerDetails.shiftTime
+            worker.ownerId = workerDetails.ownerId
           })
+        )
+        dispatch(
+          workersApi.util.updateQueryData(
+            'getWorkers',
+            undefined,
+            (workers) => {
+              const workerIdx = workers.findIndex(
+                (w) => w._id === workerDetails._id
+              )
+              if (workerDetails.ownerId === null) {
+                workers.splice(workerIdx, 1)
+              } else {
+                workers[workerIdx].shiftTime = workerDetails.shiftTime
+                workers[workerIdx].name = workerDetails.name
+              }
+            }
+          )
         )
         try {
           await queryFulfilled

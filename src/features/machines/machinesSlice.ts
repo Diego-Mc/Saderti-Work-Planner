@@ -69,8 +69,9 @@ export const machinesApi = apiSlice.injectEndpoints({
     }),
     saveMachine: builder.mutation({
       query: ({ machineDetails, machineId }) => ({
-        url: `/machines/${machineId}`,
+        url: `/machines/${machineId}/save`,
         method: 'POST',
+        body: machineDetails,
       }),
       async onQueryStarted(
         { machineDetails, machineId },
@@ -82,7 +83,26 @@ export const machinesApi = apiSlice.injectEndpoints({
             machineId,
             (machine) => {
               machine.name = machineDetails.name
+              machine.ownerId = machineDetails.ownerId
               machine.amountOfWorkers = machineDetails.amountOfWorkers
+            }
+          )
+        )
+        dispatch(
+          machinesApi.util.updateQueryData(
+            'getMachines',
+            undefined,
+            (machines) => {
+              const machineIdx = machines.findIndex(
+                (m) => m._id === machineDetails._id
+              )
+              if (machineDetails.ownerId === null)
+                machines.splice(machineIdx, 1)
+              else {
+                machines[machineIdx].amountOfWorkers =
+                  machineDetails.amountOfWorkers
+                machines[machineIdx].name = machineDetails.name
+              }
             }
           )
         )
@@ -100,7 +120,7 @@ export const machinesApi = apiSlice.injectEndpoints({
     }),
     deleteMachine: builder.mutation({
       query: (machineId) => ({
-        url: `/posts/${machineId}`,
+        url: `/machines/${machineId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (res, err, machineId) => [

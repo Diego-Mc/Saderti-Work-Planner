@@ -1,5 +1,6 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import {
   VictoryAxis,
   VictoryBar,
@@ -7,12 +8,14 @@ import {
   VictoryLabel,
   VictoryPie,
   VictoryStack,
-  VictoryTheme,
   VictoryTooltip,
 } from 'victory'
 import { useGetMachinesQuery } from '../features/machines/machinesSlice'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
-import { useGetWorkerQuery } from '../features/workers/workersSlice'
+import {
+  useGetWorkerQuery,
+  useSaveWorkerMutation,
+} from '../features/workers/workersSlice'
 import { StatisticsState } from '../types'
 
 //TODO: remove "any" types...
@@ -21,9 +24,12 @@ interface WorkerDashboardProps {}
 
 export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
   const params = useParams()
+  const navigate = useNavigate()
   const { data: worker } = useGetWorkerQuery(params.workerId as string)
   const { data: machines } = useGetMachinesQuery()
   const { data: statistics } = useGetStatisticsQuery()
+
+  const [saveWorker] = useSaveWorkerMutation()
 
   const machineTimesStats: any = {
     morning: [],
@@ -84,108 +90,185 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
             machineTimes?.[worker._id]?.[time]?.[m._id]?.length || 0,
         })
       })
+      machineTimesStats[time].sort((a: any, b: any) =>
+        a.machine.localeCompare(b.machine)
+      )
     })
   }
 
-  console.log(machineTimesStats)
+  const handleNameChange = async () => {
+    if (!worker) return
+    const { value: newName } = await Swal.fire({
+      title: 'מה השם העדכני של העובד?',
+      text: 'השינוי ישתקף בכל הסידורים, גם בעתיד וגם בעבר!',
+      input: 'text',
+      inputPlaceholder: 'הכנס את שם העובד העדכני',
+      confirmButtonColor: '#545454',
+    })
+
+    if (newName) {
+      saveWorker({
+        workerDetails: { ...worker, name: newName },
+        workerId: worker._id,
+      })
+      Swal.fire({
+        title: 'השינוי בוצע בהצלחה!',
+        text: `שם העובד העדכני הוא ${newName}`,
+        confirmButtonColor: '#545454',
+        icon: 'success',
+      })
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!worker) return
+    const { isConfirmed } = await Swal.fire({
+      title: 'אתה בטוח?',
+      text: 'העובד לא יופיע בסידורים הבאים וגם לא בנתונים הסטטיסטיים - הסידורים הקודמים בהם הופיע לא יושפעו.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3c82f6',
+      cancelButtonColor: 'tomato',
+      confirmButtonText: 'אני בטוח',
+      cancelButtonText: 'ביטול',
+    })
+
+    if (isConfirmed) {
+      saveWorker({
+        workerDetails: { ...worker, ownerId: null },
+        workerId: worker._id,
+      })
+      Swal.fire({
+        title: 'העובד נותק בהצלחה',
+        confirmButtonColor: '#545454',
+        icon: 'success',
+      })
+      navigate('/workers')
+    }
+  }
 
   return (
     <section className="worker-dashboard dashboard">
-      {worker ? <pre>{JSON.stringify(worker, null, 2)}</pre> : null}
-      {/* {statistics ? <pre>{JSON.stringify(statistics, null, 2)}</pre> : null} */}
+      {worker ? (
+        <>
+          <h2 className="title">{worker.name}</h2>
+          <div className="actions">
+            <button className="pill-btn" onClick={handleNameChange}>
+              עדכון שם
+            </button>
+            <button className="pill-btn danger" onClick={handleDelete}>
+              מחיקה
+            </button>
+          </div>
+        </>
+      ) : null}
+
       {worker && statistics ? (
         <div className="stat">
-          <VictoryChart domainPadding={20}>
-            <VictoryAxis
-              tickValues={machineTimesStats.morning.map(
-                (obj: any) => obj.amountWorked
-              )}
-              tickFormat={machineTimesStats.morning.map(
-                (obj: any) => obj.machine
-              )}
+          <div className="main-stat">
+            <VictoryChart domainPadding={20}>
+              <VictoryAxis
+                style={{
+                  tickLabels: {
+                    fontSize: 10,
+                  },
+                }}
+              />
+              <VictoryAxis
+                style={{
+                  tickLabels: {
+                    fontSize: 10,
+                  },
+                }}
+                dependentAxis
+                tickFormat={(x) => `${x}`}
+              />
+              <VictoryStack colorScale={['#ffa600', '#a05195', '#003f5c']}>
+                <VictoryBar
+                  data={machineTimesStats.morning}
+                  labels={({ datum }) =>
+                    datum._y > 0 ? `בוקר: ${datum._y}` : ''
+                  }
+                  labelComponent={
+                    <VictoryTooltip
+                      pointerLength={0}
+                      cornerRadius={0}
+                      centerOffset={{ y: 10 }}
+                      orientation="bottom"
+                      style={{ fontFamily: 'Arimo' }}
+                    />
+                  }
+                  x="machine"
+                  y="amountWorked"
+                />
+                <VictoryBar
+                  data={machineTimesStats.evening}
+                  labels={({ datum }) =>
+                    datum._y > 0 ? `ערב: ${datum._y}` : ''
+                  }
+                  labelComponent={
+                    <VictoryTooltip
+                      pointerLength={0}
+                      cornerRadius={0}
+                      centerOffset={{ y: 10 }}
+                      orientation="bottom"
+                      style={{ fontFamily: 'Arimo' }}
+                    />
+                  }
+                  x="machine"
+                  y="amountWorked"
+                />
+                <VictoryBar
+                  data={machineTimesStats.night}
+                  labels={({ datum }) =>
+                    datum._y > 0 ? `לילה: ${datum._y}` : ''
+                  }
+                  labelComponent={
+                    <VictoryTooltip
+                      pointerLength={0}
+                      cornerRadius={0}
+                      centerOffset={{ y: 10 }}
+                      orientation="bottom"
+                      style={{ fontFamily: 'Arimo' }}
+                    />
+                  }
+                  x="machine"
+                  y="amountWorked"
+                />
+              </VictoryStack>
+            </VictoryChart>
+          </div>
+
+          <div className="sec-stat">
+            <VictoryPie
+              data={workerTimesStats}
+              colorScale={['#ffa600', '#a05195', '#003f5c']}
+              padding={100}
+              x="time"
+              y="amountWorked"
+              labels={({ datum }) =>
+                datum._y > 0
+                  ? `${
+                      datum.time === 'morning'
+                        ? 'בוקר'
+                        : datum.time === 'evening'
+                        ? 'ערב'
+                        : 'לילה'
+                    }`
+                  : ''
+              }
+              labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
             />
-            <VictoryAxis dependentAxis tickFormat={(x) => `${x}`} />
-            <VictoryStack colorScale={['#ffa600', '#a05195', '#003f5c']}>
-              <VictoryBar
-                data={machineTimesStats.morning}
-                labels={({ datum }) =>
-                  datum._y > 0 ? `בוקר: ${datum._y}` : ''
-                }
-                labelComponent={
-                  <VictoryTooltip
-                    pointerLength={0}
-                    cornerRadius={0}
-                    centerOffset={{ y: 10 }}
-                    orientation="bottom"
-                    style={{ fontFamily: 'Arimo' }}
-                  />
-                }
-                x="machine"
-                y="amountWorked"
-              />
-              <VictoryBar
-                data={machineTimesStats.evening}
-                labels={({ datum }) => (datum._y > 0 ? `ערב: ${datum._y}` : '')}
-                labelComponent={
-                  <VictoryTooltip
-                    pointerLength={0}
-                    cornerRadius={0}
-                    centerOffset={{ y: 10 }}
-                    orientation="bottom"
-                    style={{ fontFamily: 'Arimo' }}
-                  />
-                }
-                x="machine"
-                y="amountWorked"
-              />
-              <VictoryBar
-                data={machineTimesStats.night}
-                labels={({ datum }) =>
-                  datum._y > 0 ? `לילה: ${datum._y}` : ''
-                }
-                labelComponent={
-                  <VictoryTooltip
-                    pointerLength={0}
-                    cornerRadius={0}
-                    centerOffset={{ y: 10 }}
-                    orientation="bottom"
-                    style={{ fontFamily: 'Arimo' }}
-                  />
-                }
-                x="machine"
-                y="amountWorked"
-              />
-            </VictoryStack>
-          </VictoryChart>
 
-          <VictoryPie
-            data={workerTimesStats}
-            colorScale={['#ffa600', '#a05195', '#003f5c']}
-            x="time"
-            y="amountWorked"
-            labels={({ datum }) =>
-              datum._y > 0
-                ? `${
-                    datum.time === 'morning'
-                      ? 'בוקר'
-                      : datum.time === 'evening'
-                      ? 'ערב'
-                      : 'לילה'
-                  }: ${datum._y}%`
-                : ''
-            }
-            labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
-          />
-
-          <VictoryPie
-            data={workedInMachineStats}
-            x="machine"
-            y="amountWorked"
-            labels={({ datum }) =>
-              datum._y > 0 ? `${datum.machine}: ${datum._y}%` : ''
-            }
-            labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
-          />
+            <VictoryPie
+              data={workedInMachineStats}
+              padding={100}
+              x="machine"
+              y="amountWorked"
+              labels={({ datum }) => (datum._y > 0 ? `${datum.machine}` : '')}
+              labelComponent={<VictoryLabel style={{ fontFamily: 'Arimo' }} />}
+            />
+          </div>
         </div>
       ) : null}
     </section>

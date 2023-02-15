@@ -1,5 +1,33 @@
 .dashboard {
   .stat {
     direction: ltr;
+
+    .sec-stat {
+      display: flex;
+    }
+
+    .main-stat {
+      width: 100%;
+      .VictoryContainer {
+        max-width: 100%;
+      }
+    }
+  }
+
+  background-color: var(--acc-light-gray);
+  margin: 20px;
+  margin-right: 0px;
+  border-radius: 12px;
+  text-align: center;
+
+  .title {
+    padding-top: 36px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding-block: 10px;
   }
 }

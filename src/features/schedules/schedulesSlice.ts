@@ -266,7 +266,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
     }),
     deleteSchedule: builder.mutation({
       query: (scheduleId) => ({
-        url: `/posts/${scheduleId}`,
+        url: `/schedules/${scheduleId}`,
         method: 'DELETE',
       }),
       invalidatesTags: (res, err, scheduleId) => [

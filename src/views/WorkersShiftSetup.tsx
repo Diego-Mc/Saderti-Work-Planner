@@ -78,7 +78,7 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
     <section className="workers-shift-setup-view">
       <header className="worker-shift-header">
         <h2 className="title">זמן משמרת</h2>
-        <button className="reset-btn" onClick={handleTimeShiftReset}>
+        <button className="pill-btn danger" onClick={handleTimeShiftReset}>
           אתחול נתונים
         </button>
       </header>

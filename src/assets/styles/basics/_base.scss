@@ -23,6 +23,7 @@ h5,
 h6 {
   margin: 0;
   line-height: 1;
+  font-family: 'Arimo', sans-serif;
 }
 
 p {
@@ -45,6 +46,30 @@ button {
   background: none;
   outline: none;
   cursor: pointer;
+  font-weight: 700;
+
+  &.pill-btn {
+    outline: 2px solid var(--acc-blue);
+    color: var(--acc-blue);
+    border-radius: 4rem;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    &:hover {
+      background-color: var(--acc-blue);
+      color: white;
+    }
+
+    &.danger {
+      outline-color: tomato;
+      color: tomato;
+      &:hover {
+        background-color: tomato;
+        color: white;
+      }
+    }
+  }
+
   &.btn {
     margin: 15px 0;
     padding: 14px 25px;
