@@ -3,7 +3,7 @@
 }
 
 html {
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Rubik', sans-serif;
   line-height: 1.6;
   color: var(--main-fg);
   font-size: 16px;
@@ -26,10 +26,11 @@ h5,
 h6 {
   margin: 0;
   line-height: 1;
-  font-family: 'Arimo', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 p {
+  font-family: 'Rubik', sans-serif;
   margin: 0;
 }
 
@@ -50,6 +51,7 @@ button {
   outline: none;
   cursor: pointer;
   font-weight: 700;
+  user-select: none;
 
   &.pill-btn {
     outline: 2px solid var(--acc-blue);

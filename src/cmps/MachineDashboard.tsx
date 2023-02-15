@@ -128,32 +128,38 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
         <div className="dashboard-header">
           <div className="header-details">
             <h2 className="title">{machine.name}</h2>
-            <p>
+            <div className="actions">
+              <button
+                className="pill-btn"
+                onClick={handleAmountOfWorkersChange}>
+                עדכון יעד עובדים
+              </button>
+              <button className="pill-btn" onClick={handleNameChange}>
+                שינוי שם
+              </button>
+              <button className="pill-btn danger" onClick={handleDelete}>
+                ניתוק
+              </button>
+            </div>
+          </div>
+          {machine.amountOfWorkers === 1 ? (
+            <p className="header-sub-details">המכונה מיועדת לעובד אחד.</p>
+          ) : (
+            <p className="header-sub-details">
               המכונה מיועדת ל
               <span className="workers-amount-cta">
                 {machine.amountOfWorkers}
               </span>{' '}
-              עובדים
+              עובדים.
             </p>
-          </div>
-          <div className="actions">
-            <button className="pill-btn" onClick={handleAmountOfWorkersChange}>
-              עדכון יעד עובדים
-            </button>
-            <button className="pill-btn" onClick={handleNameChange}>
-              שינוי שם
-            </button>
-            <button className="pill-btn danger" onClick={handleDelete}>
-              ניתוק
-            </button>
-          </div>
+          )}
         </div>
       ) : null}
 
       <div className="stat">
         <div className="main-stat">
           <h3 className="stat-title">כמות סבבי עבודה של כל עובד במכונה</h3>
-          <div className="stat-wrapper" ref={statWrapper}>
+          <div className="stat-wrapper">
             <VictoryChart
               horizontal
               domainPadding={6}
@@ -164,7 +170,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
                 theme={VictoryTheme.material}
                 style={{
                   data: { fill: '#ffa600' },
-                  labels: { fontFamily: 'Arimo' },
+                  labels: { fontFamily: 'Rubik', fontSize: 10 },
                 }}
                 data={workersAmountWorked}
                 labels={({ datum }) =>
@@ -191,6 +197,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
                     // textAnchor: 'start',
                     padding: 10,
                     fontSize: 10,
+                    fontFamily: 'Rubik',
                   },
                 }}
               />

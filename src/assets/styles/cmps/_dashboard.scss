@@ -1,11 +1,17 @@
 .dashboard {
+  > * {
+    padding-inline: 50px;
+  }
+
   .stat {
     overflow-y: auto;
     height: calc(100vh - $headerHeight - $dashboardHeaderHeight);
+    padding-bottom: 50px;
     .stat-title {
       padding-block: 50px 20px;
       user-select: none;
       color: var(--acc-dark-gray);
+      font-size: 1.6rem;
     }
 
     .VictoryContainer {
@@ -15,7 +21,6 @@
 
     .sec-stat {
       display: flex;
-      padding-inline: 50px;
       column-gap: 50px;
       flex-wrap: wrap;
       > * {
@@ -35,8 +40,6 @@
     }
 
     .main-stat {
-      padding-inline: 50px;
-
       .stat-wrapper {
       }
       .VictoryContainer {
@@ -52,18 +55,25 @@
   .dashboard-header {
     height: $dashboardHeaderHeight;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
+    flex-direction: column;
+    box-shadow: 0 3px 5px -5px rgb(0, 0, 0);
+    position: relative;
+    z-index: 1;
     .header-details {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        padding-block: 10px;
+      }
     }
-    .actions {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      padding-block: 10px;
+    .header-sub-details {
+      font-weight: 700;
+      color: var(--acc-dark-gray);
+      opacity: 0.8;
     }
   }
 }

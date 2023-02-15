@@ -27,21 +27,36 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
   return (
     <section className="workers-management-view management-view">
       <section className="workers-list management-items-list">
-        <button className="btn outlined" onClick={openAddWorkerModal}>
-          הוסף עובד חדש
-        </button>
-        {data ? (
-          <>
-            {data.map((worker) => (
-              <NavLink
-                className="worker-link management-item-link"
-                to={`/workers/${worker._id}`}
-                key={worker._id}>
-                {worker.name}
-              </NavLink>
-            ))}
-          </>
-        ) : null}
+        <div className="side-links">
+          <button
+            className="management-item-link add-btn"
+            onClick={openAddWorkerModal}>
+            <span className="material-symbols-outlined">add</span>
+            הוסף עובד
+          </button>
+          {data ? (
+            <>
+              {data.map((worker) => (
+                <NavLink
+                  className="worker-link management-item-link"
+                  to={`/workers/${worker._id}`}
+                  key={worker._id}>
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`material-symbols-outlined ${
+                          isActive ? '' : 'outlined'
+                        }`}>
+                        person
+                      </span>
+                      {worker.name}
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </>
+          ) : null}
+        </div>
       </section>
       <section className="worker-dashboard">
         <Outlet />

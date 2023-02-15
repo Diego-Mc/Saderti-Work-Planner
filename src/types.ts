@@ -58,6 +58,7 @@ export interface ScheduleState extends Omit<ScheduleBase, 'workers'> {
     used: ScheduleWorker[]
     unused: ScheduleWorker[]
   }
+  updatedAt: Date
 }
 
 export type ScheduleBase = {
