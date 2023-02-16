@@ -1,5 +1,8 @@
 import React from 'react'
-import { TableRow } from '../types'
+import { Rate } from 'rsuite'
+import { useMachineHandlers } from '../hooks/useMachineHandlers'
+import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
+import { MachineState, TableRow } from '../types'
 import { Cell } from './Cell'
 
 interface TableProps {
@@ -20,6 +23,12 @@ export type moveWorkerFn = (
 export type setToggleLockFn = (details: workerDetailsProps) => void
 
 export const Table: React.FC<TableProps> = ({ table }) => {
+  // const { handleAmountOfWorkersChange, handleImportanceChange } =
+  //   useMachineHandlers()
+
+  const { handleAmountOfWorkersChange } = useScheduleHandlers()
+  const { handleImportanceChange } = useMachineHandlers()
+
   return (
     <div className="main-table">
       <div className="row row-header">
@@ -30,7 +39,17 @@ export const Table: React.FC<TableProps> = ({ table }) => {
       </div>
       {table.map((row) => (
         <div className="row" key={row.machine._id}>
-          <div className="cell cell-title">{row.machine.name}</div>
+          <div className="cell cell-title">
+            <span className="title">{row.machine.name}</span>
+            <div className="info">
+              <span
+                onClick={() => handleImportanceChange(row.machine)}
+                className="importance">{`(${row.machine.importance})`}</span>
+              <span
+                onClick={() => handleAmountOfWorkersChange(row.machine)}
+                className="workers">{`(${row.machine.amountOfWorkers})`}</span>
+            </div>
+          </div>
           <Cell
             data={row.data.morning}
             locked={row.locked.morning}

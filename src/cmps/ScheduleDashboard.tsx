@@ -8,46 +8,21 @@ import {
 import { Table } from './Table'
 import { downloadWorkbook, scheduleToExcel } from '../services/excel.service'
 import Swal from 'sweetalert2'
+import { utilService } from '../services/util.service'
+import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
 
 interface ScheduleDashboardProps {}
 
 export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
   const params = useParams()
-  const navigate = useNavigate()
   const { data: schedule } = useGetScheduleQuery(params.scheduleId as string)
-
-  const [deleteSchedule] = useDeleteScheduleMutation()
+  const { handleDelete } = useScheduleHandlers()
 
   const handleToExcel = () => {
     if (!schedule) return
     const workbook = scheduleToExcel(schedule)
     downloadWorkbook(workbook)
   }
-
-  const handleDelete = async () => {
-    const { isConfirmed } = await Swal.fire({
-      title: 'אתה בטוח?',
-      text: 'לא יהיה ניתן לשחזר את הסידור לאחר מכן.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3c82f6',
-      cancelButtonColor: 'tomato',
-      confirmButtonText: 'אני בטוח',
-      cancelButtonText: 'ביטול',
-    })
-
-    if (isConfirmed) {
-      deleteSchedule(params.scheduleId)
-      Swal.fire({
-        title: 'הסידור נמחק בהצלחה',
-        confirmButtonColor: '#545454',
-        icon: 'success',
-      })
-      navigate('/schedules')
-    }
-  }
-
-  console.log(schedule)
 
   return (
     <section className="schedule-dashboard dashboard">
@@ -56,8 +31,10 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
           <div className="dashboard-header">
             <div className="header-details">
               <h2 className="title">
-                {moment(schedule.date.from).format('DD/MM')}-
-                {moment(schedule.date.to).format('DD/MM/yyyy')}
+                {utilService.formatDateRange(
+                  schedule.date.from,
+                  schedule.date.to
+                )}
               </h2>
 
               <div className="actions">

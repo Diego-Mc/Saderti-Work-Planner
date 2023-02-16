@@ -12,8 +12,8 @@ import { MachinesManagement } from './views/MachinesManagement'
 import { SchedulesManagement } from './views/SchedulesManagement'
 import { WorkersManagement } from './views/WorkersManagement'
 // import { tableDemo } from './table-demo-data.json'
-import { WorkersShiftSetup } from './views/WorkersShiftSetup'
-import { WorkersTable } from './views/WorkersTable'
+import { ScheduleSettings } from './views/ScheduleSettings'
+import { ScheduleEdit } from './views/ScheduleEdit'
 
 const App = () => {
   const Router = () => {
@@ -54,11 +54,11 @@ const App = () => {
       },
       {
         path: '/edit/:scheduleId',
-        element: <WorkersTable />,
+        element: <ScheduleEdit />,
       },
       {
         path: '/new',
-        element: <WorkersShiftSetup />,
+        element: <ScheduleSettings />,
       },
     ])
     return router

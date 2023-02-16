@@ -17,6 +17,8 @@
     "react-charts": "^3.0.0-beta.54",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
+    "react-dnd-preview": "^8.0.0",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",

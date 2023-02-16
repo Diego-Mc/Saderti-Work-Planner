@@ -1,3 +1,4 @@
+import { utilService } from './util.service'
 import ExcelJS from 'exceljs'
 import { ScheduleState } from '../types'
 
@@ -31,7 +32,14 @@ export const scheduleToExcel = (schedule: ScheduleState) => {
 
   sheet.pageSetup.printArea = `A1:D${schedule.table.length + 2}`
 
-  sheet.getRow(1).getCell(1).value = 'סידור חדש - נסיון!'
+  sheet
+    .getRow(1)
+    .getCell(
+      1
+    ).value = `סידור עבודה שבועי לפי מכונות ${utilService.formatDateRange(
+    schedule.date.from,
+    schedule.date.to
+  )}`
   sheet.getRow(2).getCell(1).value = 'מכונות'
   sheet.getRow(2).getCell(2).value = 'בוקר'
   sheet.getRow(2).getCell(3).value = 'ערב'
@@ -42,21 +50,27 @@ export const scheduleToExcel = (schedule: ScheduleState) => {
   rows?.forEach((row, rowIdx) => {
     sheet.getRow(3 + rowIdx).getCell(1).value = row.machine.name
     sheet.getRow(3 + rowIdx).getCell(2).value = row.data.morning
-      .map((w) => w?.name)
+      .map((w) => w?.name || '')
+      .filter((w) => w.length !== 0)
       .join(' + ')
     sheet.getRow(3 + rowIdx).getCell(3).value = row.data.evening
-      .map((w) => w?.name)
+      .map((w) => w?.name || '')
+      .filter((w) => w.length !== 0)
       .join(' + ')
     sheet.getRow(3 + rowIdx).getCell(4).value = row.data.night
-      .map((w) => w?.name)
+      .map((w) => w?.name || '')
+      .filter((w) => w.length !== 0)
       .join(' + ')
   })
 
   sheet.getColumn(1).font = { name: 'Arial', size: 38, bold: true }
   sheet.getColumn(1).alignment = { horizontal: 'center' }
   sheet.getColumn(2).font = { name: 'Arial', size: 26, bold: false }
+  sheet.getColumn(2).alignment = { horizontal: 'center' }
   sheet.getColumn(3).font = { name: 'Arial', size: 26, bold: false }
+  sheet.getColumn(3).alignment = { horizontal: 'center' }
   sheet.getColumn(4).font = { name: 'Arial', size: 26, bold: false }
+  sheet.getColumn(4).alignment = { horizontal: 'center' }
   sheet.getRow(1).font = { name: 'Arial', size: 33, bold: true }
   sheet.getRow(2).font = { name: 'Arial', size: 38, bold: true }
   sheet.getRow(2).alignment = { horizontal: 'center' }
@@ -81,10 +95,10 @@ export const scheduleToExcel = (schedule: ScheduleState) => {
   // sheet.getRows(1, 4)
   createOuterBorder(sheet, { row: 1, col: 1 }, { row: 1, col: 4 })
 
-  sheet.getColumn(1).width = 27.5
-  sheet.getColumn(2).width = 27.5
-  sheet.getColumn(3).width = 27.5
-  sheet.getColumn(4).width = 27.5
+  sheet.getColumn(1).width = 32
+  sheet.getColumn(2).width = 32
+  sheet.getColumn(3).width = 32
+  sheet.getColumn(4).width = 32
 
   return workbook
 }

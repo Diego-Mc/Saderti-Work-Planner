@@ -48,7 +48,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         isDragging: !!monitor.isDragging(),
       }),
       item: () => {
-        return details
+        return { ...details, name: worker }
       },
       canDrag() {
         return !isLocked && !!worker

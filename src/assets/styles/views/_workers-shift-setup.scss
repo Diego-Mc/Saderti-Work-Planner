@@ -1,18 +1,35 @@
 .workers-shift-setup-view {
-  max-width: 400px;
-  margin-inline: auto;
-  .worker-shift-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .title {
-      padding: 16px 0;
+  // margin-inline: auto;
+  display: flex;
+  .first-step {
+    flex-grow: 2;
+    max-width: 400px;
+    .worker-shift-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 5px -5px rgb(0, 0, 0);
+      position: relative;
+      z-index: 1;
+      height: $dashboardHeaderHeight;
+      .title {
+        padding: 16px 0;
+      }
+    }
+    .list-workers-shifts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      overflow-y: scroll;
+      height: calc(100vh - $headerHeight - $dashboardHeaderHeight);
     }
   }
-  .list-workers-shifts {
+  .next-step {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    justify-content: center;
     align-items: center;
   }
 }

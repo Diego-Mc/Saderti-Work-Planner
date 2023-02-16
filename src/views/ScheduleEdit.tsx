@@ -4,6 +4,7 @@ import { Table } from '../cmps/Table'
 import React, { useEffect } from 'react'
 import {
   useGetScheduleQuery,
+  usePlaceWorkerMutation,
   useSetDateMutation,
 } from '../features/schedules/schedulesSlice'
 import { useParams } from 'react-router-dom'
@@ -11,10 +12,11 @@ import { useParams } from 'react-router-dom'
 import { DateRangePicker } from 'rsuite'
 import { DateRange } from 'rsuite/esm/DateRangePicker'
 import moment from 'moment'
+import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 
-interface WorkersTableProps {}
+interface Props {}
 
-export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
+export const ScheduleEdit: React.FC<Props> = ({}) => {
   const params = useParams()
 
   const { data: schedule, isLoading } = useGetScheduleQuery(
@@ -24,6 +26,22 @@ export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
   const [value, setValue] = React.useState<[Date, Date] | null>()
 
   const [setDate] = useSetDateMutation()
+
+  const [placeWorker] = usePlaceWorkerMutation()
+
+  const { data: statistics } = useGetStatisticsQuery()
+
+  const handleAutoFill = async () => {
+    // start by time
+    //start by most important machine
+    //start by least used worker in that machine
+    //sum(amount of time not worked in machine * machine's importance) === permutation rating!
+
+    if (!schedule || !statistics) return
+
+    console.log(schedule)
+    console.log(statistics)
+  }
 
   const handleSetDate = (date: DateRange | null) => {
     if (!date) return
@@ -41,24 +59,32 @@ export const WorkersTable: React.FC<WorkersTableProps> = ({}) => {
   }, [schedule])
 
   return (
-    <div className="workers-table">
-      <h2>
-        סידור שבועי לתאריכים{' '}
-        <DateRangePicker
-          showOneCalendar
-          cleanable={false}
-          size="lg"
-          character=" - "
-          editable={false}
-          appearance="subtle"
-          format="dd/MM/yyyy"
-          value={value}
-          onChange={handleSetDate}
-        />
-      </h2>
+    <div className="schedule-edit-view">
+      <section className="schedule-edit-header">
+        <div className="title">
+          <h2>סידור שבועי לתאריכים </h2>
+          <DateRangePicker
+            showOneCalendar
+            cleanable={false}
+            size="lg"
+            character=" - "
+            editable={false}
+            appearance="subtle"
+            format="dd/MM/yyyy"
+            value={value}
+            onChange={handleSetDate}
+          />
+        </div>
+        <div className="btns">
+          <button className="pill-btn">ייצוא לאקסל</button>
+          <button className="pill-btn danger">מחיקה</button>
+        </div>
+      </section>
 
       {schedule ? <Table table={schedule.table} /> : null}
-      <button className="btn outlined">מילוי אוטומטי</button>
+      <button className="btn primary" onClick={handleAutoFill}>
+        מילוי אוטומטי
+      </button>
       {schedule ? <WorkerList workers={schedule.workers} /> : null}
     </div>
   )

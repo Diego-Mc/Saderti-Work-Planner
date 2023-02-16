@@ -73,6 +73,7 @@ export const machinesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: machineDetails,
       }),
+      invalidatesTags: ['Schedules'],
       async onQueryStarted(
         { machineDetails, machineId },
         { dispatch, queryFulfilled }
@@ -85,6 +86,7 @@ export const machinesApi = apiSlice.injectEndpoints({
               machine.name = machineDetails.name
               machine.ownerId = machineDetails.ownerId
               machine.amountOfWorkers = machineDetails.amountOfWorkers
+              machine.importance = machineDetails.importance
             }
           )
         )

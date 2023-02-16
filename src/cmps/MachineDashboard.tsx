@@ -15,6 +15,7 @@ import {
 } from '../features/machines/machinesSlice'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 import { useGetWorkersQuery } from '../features/workers/workersSlice'
+import { useMachineHandlers } from '../hooks/useMachineHandlers'
 import { useWindowSize } from '../hooks/useWindowSize'
 
 interface MachineDashboardProps {}
@@ -26,12 +27,14 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
   const { data: workers } = useGetWorkersQuery()
   const { data: statistics } = useGetStatisticsQuery()
 
-  const [saveMachine] = useSaveMachineMutation()
-  const [deleteMachine] = useDeleteMachineMutation()
-
-  const statWrapper = useRef<HTMLDivElement>(null)
-
   const size = useWindowSize()
+
+  const {
+    handleAmountOfWorkersChange,
+    handleDelete,
+    handleImportanceChange,
+    handleNameChange,
+  } = useMachineHandlers(machine)
 
   const workersAmountWorked: any = []
 
@@ -48,80 +51,6 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
     )
   }
 
-  const handleAmountOfWorkersChange = async () => {
-    if (!machine) return
-    const { value: amountOfWorkers } = await Swal.fire({
-      title: 'לכמה עובדים המכונה מיועדת?',
-      input: 'number',
-      inputPlaceholder: 'הכנס את מספר העובדים',
-      confirmButtonColor: '#545454',
-    })
-
-    if (amountOfWorkers) {
-      saveMachine({
-        machineDetails: { ...machine, amountOfWorkers: +amountOfWorkers },
-        machineId: machine._id,
-      })
-      Swal.fire({
-        title: 'השינוי בוצע בהצלחה!',
-        text: `כמות העובדים העדכנית היא ${amountOfWorkers}`,
-        confirmButtonColor: '#545454',
-        icon: 'success',
-      })
-    }
-  }
-
-  const handleNameChange = async () => {
-    if (!machine) return
-    const { value: newName } = await Swal.fire({
-      title: 'מה השם העדכני של המכונה?',
-      text: 'השינוי ישתקף בכל הסידורים, גם בעתיד וגם בעבר!',
-      input: 'text',
-      inputPlaceholder: 'הכנס את שם המכונה העדכני',
-      confirmButtonColor: '#545454',
-    })
-
-    if (newName) {
-      saveMachine({
-        machineDetails: { ...machine, name: newName },
-        machineId: machine._id,
-      })
-      Swal.fire({
-        title: 'השינוי בוצע בהצלחה!',
-        text: `שם המכונה העדכני הוא ${newName}`,
-        confirmButtonColor: '#545454',
-        icon: 'success',
-      })
-    }
-  }
-
-  const handleDelete = async () => {
-    if (!machine) return
-    const { isConfirmed } = await Swal.fire({
-      title: 'אתה בטוח?',
-      text: 'המכונה לא תופיע בסידורים הבאים וגם לא בנתונים הסטטיסטיים - הסידורים הקודמים בהם הופיעה לא יושפעו.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3c82f6',
-      cancelButtonColor: 'tomato',
-      confirmButtonText: 'אני בטוח',
-      cancelButtonText: 'ביטול',
-    })
-
-    if (isConfirmed) {
-      saveMachine({
-        machineDetails: { ...machine, ownerId: null },
-        machineId: machine._id,
-      })
-      Swal.fire({
-        title: 'המכונה נותקה בהצלחה',
-        confirmButtonColor: '#545454',
-        icon: 'success',
-      })
-      navigate('/machines')
-    }
-  }
-
   return (
     <section className="machine-dashboard dashboard">
       {machine ? (
@@ -134,6 +63,9 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
                 onClick={handleAmountOfWorkersChange}>
                 עדכון יעד עובדים
               </button>
+              <button className="pill-btn" onClick={handleImportanceChange}>
+                עדכון חשיבות
+              </button>
               <button className="pill-btn" onClick={handleNameChange}>
                 שינוי שם
               </button>
@@ -143,14 +75,16 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
             </div>
           </div>
           {machine.amountOfWorkers === 1 ? (
-            <p className="header-sub-details">המכונה מיועדת לעובד אחד.</p>
+            <p className="header-sub-details">
+              המכונה מיועדת לעובד אחד ובעלת חשיבות {machine.importance}.
+            </p>
           ) : (
             <p className="header-sub-details">
               המכונה מיועדת ל
               <span className="workers-amount-cta">
                 {machine.amountOfWorkers}
               </span>{' '}
-              עובדים.
+              עובדים ובעלת חשיבות {machine.importance}.
             </p>
           )}
         </div>
@@ -164,7 +98,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
               horizontal
               domainPadding={6}
               padding={{ top: 30, bottom: 30, left: 80, right: 60 }}
-              width={(size?.width || 1200) - 600}
+              width={(size?.width || 1600) - 800}
               height={workersAmountWorked.length * 20}>
               <VictoryBar
                 theme={VictoryTheme.material}

@@ -13,7 +13,8 @@ export type TableRow = {
   machine: {
     name: string
     _id: string
-    workersAmount: number
+    amountOfWorkers: number
+    importance: number
   }
   data: {
     [key: string]: (WorkerType | null)[]
@@ -79,9 +80,10 @@ export interface MachineState extends MachineBase {
 }
 
 export type MachineBase = {
-  ownerId: string
+  ownerId?: string
   name: string
   amountOfWorkers: number
+  importance: number
 }
 
 export type sessionUser = {

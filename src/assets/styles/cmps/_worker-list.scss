@@ -16,5 +16,11 @@
     .list-section-title {
       margin-bottom: 10px;
     }
+    .list-section-list {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: 10px;
+    }
   }
 }

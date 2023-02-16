@@ -55,7 +55,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
 
   return (
     <VictoryChart
-      width={(size?.width || 1200) - 600}
+      width={(size?.width || 1600) - 800}
       padding={{ top: 30, left: 50, right: 50, bottom: 50 }}
       domain={maxAmountWorked ? { y: [0, maxAmountWorked] } : {}}
       domainPadding={20}>

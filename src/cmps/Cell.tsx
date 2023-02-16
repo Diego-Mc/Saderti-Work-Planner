@@ -17,11 +17,7 @@ export const Cell: React.FC<CellProps> = ({ data, locked, details }) => {
           worker={worker ? worker.name : null}
           isLocked={locked[idx]}
           details={{ ...details, idx }}
-          key={
-            worker
-              ? worker._id
-              : `${details.machineId}-${details.shiftTime} -${idx}`
-          }
+          key={`${details.machineId}-${details.shiftTime} -${idx}`}
         />
       ))}
     </div>

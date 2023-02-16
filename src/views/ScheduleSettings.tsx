@@ -1,20 +1,18 @@
 import moment from 'moment'
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ShiftTimesSettingsList } from '../cmps/ShiftTimesSettingsList'
 import { useGetMachinesQuery } from '../features/machines/machinesSlice'
 import { useAddScheduleMutation } from '../features/schedules/schedulesSlice'
 import {
-  resetTimeShifts,
-  selectWorkers,
-  setTimeShift,
   useGetWorkersQuery,
   useResetShiftTimesMutation,
   useSetShiftTimeMutation,
 } from '../features/workers/workersSlice'
-import { useAppDispatch, useAppSelector } from '../hooks'
+import { utilService } from '../services/util.service'
 import { BaseTableRow } from '../types'
 
-interface WorkersShiftSetupProps {
+interface Props {
   //   workers: Worker[]
   //   setWorkers: React.Dispatch<React.SetStateAction<Worker[]>>
 }
@@ -24,7 +22,7 @@ interface WorkersShiftSetupProps {
 //TODO: if a worker is assigned a shift he will be shown as a round grayed out item with the selected icon for his shift
 //TODO: to change a selected shift after being grayed out hover on the icon
 
-export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
+export const ScheduleSettings: React.FC<Props> = ({}) => {
   const { data: workers } = useGetWorkersQuery()
   const { data: machines } = useGetMachinesQuery()
   const [setTimeShift] = useSetShiftTimeMutation()
@@ -33,6 +31,9 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
   const navigate = useNavigate()
 
   const handleToggleShift = (workerId: string, shiftTime: string) => {
+    const worker = workers?.find((w) => w._id === workerId)
+    if (!worker) return
+    if (worker.shiftTime === shiftTime) shiftTime = ''
     setTimeShift({ workerId, shiftTime })
   }
 
@@ -74,50 +75,32 @@ export const WorkersShiftSetup: React.FC<WorkersShiftSetupProps> = ({}) => {
     navigate(`/edit/${scheduleId}`)
   }
 
+  const assignedWorkers =
+    workers?.reduce((a, b) => a + (b.shiftTime === '' ? 0 : 1), 0) || 0
+
   return (
     <section className="workers-shift-setup-view">
-      <header className="worker-shift-header">
-        <h2 className="title">זמן משמרת</h2>
-        <button className="pill-btn danger" onClick={handleTimeShiftReset}>
-          אתחול נתונים
-        </button>
-      </header>
-      <section className="list-workers-shifts">
+      <section className="first-step">
+        <header className="worker-shift-header">
+          <h2 className="title">זמן משמרת</h2>
+          <button className="pill-btn danger" onClick={handleTimeShiftReset}>
+            אתחול נתונים
+          </button>
+        </header>
         {workers ? (
-          <>
-            {workers?.map((worker) => (
-              <article
-                className={`worker-shift-item ${
-                  worker.shiftTime ? 'selected' : ''
-                }`}
-                key={worker.name}>
-                {worker.name}
-                <div className="icons">
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'morning' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'morning')}>
-                    light_mode
-                  </span>
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'evening' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'evening')}>
-                    nights_stay
-                  </span>
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'night' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'night')}>
-                    dark_mode
-                  </span>
-                </div>
-              </article>
-            ))}
-          </>
+          <ShiftTimesSettingsList
+            handleToggleShift={handleToggleShift}
+            workers={workers}
+          />
+        ) : null}
+      </section>
+      <section className="next-step">
+        {workers ? (
+          assignedWorkers < workers.length ? (
+            <p>{`שייכת זמני משמרת ל${assignedWorkers} עובדים מתוך ${workers.length}, עוד קצת ומסיימים!`}</p>
+          ) : (
+            <p>{`כולם משויכים, אפשר להתקדם!`}</p>
+          )
         ) : null}
         <button
           className="btn outlined continue-btn"

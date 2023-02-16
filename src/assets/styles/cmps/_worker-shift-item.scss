@@ -1,36 +1,87 @@
+// .worker-shift-item {
+//   background-color: var(--acc-light-gray);
+//   font-weight: 700;
+//   width: 100%;
+//   max-width: 400px;
+//   justify-content: space-between;
+//   display: flex;
+//   align-items: center;
+//   padding: 12px 36px;
+//   border-radius: 4px;
+//   position: relative;
+//   user-select: none;
+//   &.over {
+//     background-color: var(--acc-yellow);
+//   }
+//   &.drag {
+//     opacity: 0.5;
+//   }
+//   .icons {
+//     display: flex;
+//     gap: 14px;
+//     color: var(--acc-dark-gray);
+//     cursor: auto;
+//     * {
+//       cursor: pointer;
+//       opacity: 0.5;
+//       &:hover {
+//         color: var(--acc-blue);
+//       }
+//     }
+//     .selected {
+//       opacity: 1;
+//       color: var(--acc-blue);
+//     }
+//   }
+// }
 .worker-shift-item {
-  background-color: var(--acc-light-gray);
-  font-weight: 700;
+  background-color: var(--acc-bg);
+  border-radius: 14px;
   width: 100%;
-  max-width: 400px;
-  justify-content: space-between;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 12px 36px;
-  border-radius: 4px;
-  position: relative;
+  padding: 18px 24px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 12px 24px hsla(0, 0%, 0%, 0.03);
   user-select: none;
-  &.over {
-    background-color: var(--acc-yellow);
-  }
-  &.drag {
+  transition: all 0.2s;
+  &.selected {
     opacity: 0.5;
+    // width: 200px;
+    justify-content: flex-end;
+    gap: 20px;
+    flex-direction: row-reverse;
+    .icons {
+      * {
+        display: none;
+      }
+      .selected {
+        display: block;
+      }
+    }
+    &:hover {
+      opacity: 0.8;
+    }
   }
   .icons {
     display: flex;
-    gap: 14px;
-    color: var(--acc-dark-gray);
+    gap: 12px;
     cursor: auto;
     * {
+      transition: all 0.2s;
       cursor: pointer;
-      opacity: 0.5;
+      color: var(--acc-dark-gray);
+      opacity: 0.2;
       &:hover {
-        color: var(--acc-blue);
+        opacity: 0.5;
+        // color: var(--acc-blue);
       }
     }
     .selected {
       opacity: 1;
-      color: var(--acc-blue);
+      // color: var(--acc-blue);
     }
   }
 }

@@ -1,11 +1,7 @@
-import moment from 'moment'
 import React from 'react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2'
-import {
-  useAddScheduleMutation,
-  useGetSchedulesQuery,
-} from '../features/schedules/schedulesSlice'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useGetSchedulesQuery } from '../features/schedules/schedulesSlice'
+import { utilService } from '../services/util.service'
 
 interface SchedulesManagementProps {}
 
@@ -39,8 +35,11 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
                         }`}>
                         clinical_notes
                       </span>
-                      {moment(schedule.date.from).format('DD/MM/yyyy')} -{' '}
-                      {moment(schedule.date.to).format('DD/MM')}
+
+                      {utilService.formatDateRange(
+                        schedule.date.from,
+                        schedule.date.to
+                      )}
                     </>
                   )}
                 </NavLink>

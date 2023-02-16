@@ -1,12 +1,9 @@
 import React, { useRef, useState } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { useDrag } from 'react-dnd'
+
 import { ItemTypes } from '../constants'
-import {
-  useMoveWorkersMutation,
-  usePlaceWorkerMutation,
-  useToggleLockMutation,
-} from '../features/schedules/schedulesSlice'
-import { ScheduleWorker, WorkerBase, WorkerIdentifier } from '../types'
+import { usePlaceWorkerMutation } from '../features/schedules/schedulesSlice'
+import { ScheduleWorker } from '../types'
 
 interface BasicWorkerItemProps {
   worker: ScheduleWorker
@@ -22,7 +19,7 @@ export const BasicWorkerItem: React.FC<BasicWorkerItemProps> = ({
 
   const [placeWorker] = usePlaceWorkerMutation()
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag, preview] = useDrag(
     () => ({
       type: ItemTypes.WORKER,
       collect: (monitor) => ({
@@ -49,13 +46,15 @@ export const BasicWorkerItem: React.FC<BasicWorkerItemProps> = ({
   drag(ref)
 
   return (
-    <article
-      ref={ref}
-      className={`worker-item
-      ${worker.name ? '' : 'empty'}
-      ${isLocked ? 'locked' : ''}
-      ${isDragging ? 'drag' : ''}`}>
-      {worker.name}
-    </article>
+    <>
+      <article
+        ref={ref}
+        className={`worker-item
+        ${worker.name ? '' : 'empty'}
+        ${isLocked ? 'locked' : ''}
+        ${isDragging ? 'drag' : ''}`}>
+        {worker.name}
+      </article>
+    </>
   )
 }

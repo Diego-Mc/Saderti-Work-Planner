@@ -201,6 +201,84 @@ export const schedulesApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    changeMachineWorkersAmount: builder.mutation({
+      query: ({ changeDetails, scheduleId }) => ({
+        url: `/schedules/${scheduleId}/workers-amount`,
+        method: 'PATCH',
+        body: { changeDetails },
+      }),
+      async onQueryStarted(
+        { changeDetails, scheduleId },
+        { dispatch, queryFulfilled }
+      ) {
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedule',
+            scheduleId,
+            (schedule) => {
+              const { machineId, newAmount } = changeDetails
+              const row = schedule.table.find(
+                (row) => row.machine._id.toString() === machineId
+              )
+              if (!row) return
+
+              const len = () => row.data.morning.length
+
+              if (newAmount === len()) return
+
+              row.machine.amountOfWorkers = newAmount
+
+              if (newAmount > len()) {
+                while (len() < newAmount) {
+                  row.data.morning.push(null)
+                  row.locked.morning.push(false)
+                  row.data.evening.push(null)
+                  row.locked.evening.push(false)
+                  row.data.night.push(null)
+                  row.locked.night.push(false)
+                }
+              }
+
+              if (newAmount < len()) {
+                let maxActualWorkers = Math.max(
+                  row.data.morning.filter((w) => w !== null).length,
+                  row.data.evening.filter((w) => w !== null).length,
+                  row.data.night.filter((w) => w !== null).length
+                )
+
+                if (maxActualWorkers > newAmount)
+                  throw new Error('more workers assigned than requested')
+
+                for (let i = 0; newAmount < len(); i++) {
+                  let shouldDecrement = false
+                  ;['morning', 'evening', 'night'].forEach((time) => {
+                    if (row.data[time][i] === null) {
+                      row.data[time].splice(i, 1)
+                      row.locked[time].splice(i, 1)
+                      shouldDecrement = true
+                    }
+                  })
+                  if (shouldDecrement) i--
+                }
+              }
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error toggle lock, invalidating {Schedules - scheduleId}',
+            err
+          )
+          dispatch(
+            schedulesApi.util.invalidateTags([
+              { type: 'Schedules', id: scheduleId },
+            ])
+          )
+        }
+      },
+    }),
     setDate: builder.mutation({
       query: ({ date, scheduleId }) => ({
         url: `/schedules/${scheduleId}/set-date`,
@@ -213,6 +291,18 @@ export const schedulesApi = apiSlice.injectEndpoints({
             'getSchedule',
             scheduleId,
             (schedule) => {
+              schedule.date.to = date.to
+              schedule.date.from = date.from
+            }
+          )
+        )
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedules',
+            undefined,
+            (schedules) => {
+              const schedule = schedules.find((s) => s._id === scheduleId)
+              if (!schedule) return
               schedule.date.to = date.to
               schedule.date.from = date.from
             }
@@ -287,6 +377,7 @@ export const {
   useSaveScheduleMutation,
   usePlaceWorkerMutation,
   useSetDateMutation,
+  useChangeMachineWorkersAmountMutation,
 } = schedulesApi
 
 ////////////////////////////////////////////////////////////////

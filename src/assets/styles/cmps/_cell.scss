@@ -7,8 +7,33 @@
   flex-wrap: wrap;
   gap: 10px;
   padding: 16px 20px;
+
   &.cell-title {
     color: var(--acc-blue);
     font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0;
+
+    .info {
+      display: flex;
+      gap: 6px;
+      > * {
+        color: var(--acc-dark-gray);
+        font-weight: normal;
+        font-size: 1rem;
+        opacity: 0.5;
+        cursor: pointer;
+        &.importance {
+          color: #f63a7e;
+        }
+        &:hover {
+          opacity: 1;
+          text-decoration: underline;
+        }
+      }
+    }
   }
 }
