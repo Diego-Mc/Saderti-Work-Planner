@@ -162,6 +162,52 @@ export const schedulesApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    unplaceWorker: builder.mutation({
+      query: ({ destinationDetails, worker, scheduleId }) => ({
+        url: `/schedules/${scheduleId}/unplace-worker`,
+        method: 'PATCH',
+        body: { destinationDetails, worker },
+      }),
+      async onQueryStarted(
+        { destinationDetails, worker, scheduleId },
+        { dispatch, queryFulfilled }
+      ) {
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedule',
+            scheduleId,
+            (schedule) => {
+              const { machineId, shiftTime, idx } = destinationDetails
+              const destinationRow = schedule.table.find(
+                (row) => row.machine._id === machineId
+              )
+              if (!destinationRow) return
+              destinationRow.data[shiftTime][idx] = null
+              destinationRow.locked[shiftTime][idx] = false
+
+              const usedIdx = schedule.workers.used.findIndex(
+                (w) => w._id === worker._id
+              )
+              schedule.workers.used.splice(usedIdx, 1)
+              schedule.workers.unused.push(worker)
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error unplace worker, invalidating {Schedules - scheduleId}',
+            err
+          )
+          dispatch(
+            schedulesApi.util.invalidateTags([
+              { type: 'Schedules', id: scheduleId },
+            ])
+          )
+        }
+      },
+    }),
     toggleLock: builder.mutation({
       query: ({ workerDetails, scheduleId }) => ({
         url: `/schedules/${scheduleId}/toggle-lock`,
@@ -361,6 +407,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (res, err, scheduleId) => [
         { type: 'Schedules', id: scheduleId },
+        { type: 'Schedules', id: 'LIST' },
       ],
     }),
   }),
@@ -378,6 +425,7 @@ export const {
   usePlaceWorkerMutation,
   useSetDateMutation,
   useChangeMachineWorkersAmountMutation,
+  useUnplaceWorkerMutation,
 } = schedulesApi
 
 ////////////////////////////////////////////////////////////////

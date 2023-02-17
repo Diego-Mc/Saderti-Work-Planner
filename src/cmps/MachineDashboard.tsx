@@ -102,15 +102,15 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
           <div className="stat-wrapper">
             <VictoryChart
               horizontal
-              domainPadding={6}
-              padding={{ top: 30, bottom: 30, left: 80, right: 60 }}
-              width={(size?.width || 1600) - 800}
-              height={workersAmountWorked.length * 20}>
+              domainPadding={16}
+              padding={{ top: 30, bottom: 30, left: 120, right: 60 }}
+              width={(size?.width || 1600) - 400}
+              height={workersAmountWorked.length * 30}>
               <VictoryBar
                 theme={VictoryTheme.material}
                 style={{
                   data: { fill: '#ffa600' },
-                  labels: { fontFamily: 'Rubik', fontSize: 10 },
+                  labels: { fontFamily: 'Rubik', fontSize: 16 },
                 }}
                 data={workersAmountWorked}
                 labels={({ datum }) =>
@@ -136,7 +136,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
                     // verticalAnchor: 'middle',
                     // textAnchor: 'start',
                     padding: 10,
-                    fontSize: 10,
+                    fontSize: 16,
                     fontFamily: 'Rubik',
                   },
                 }}

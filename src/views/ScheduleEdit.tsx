@@ -15,6 +15,7 @@ import moment from 'moment'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 
 import { interpolateWarm } from 'd3-scale-chromatic'
+import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
 
 interface Props {}
 
@@ -28,6 +29,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
   const [value, setValue] = React.useState<[Date, Date] | null>()
 
   const [setDate] = useSetDateMutation()
+
+  const { handleDelete, handleToExcel } = useScheduleHandlers()
 
   const [placeWorker] = usePlaceWorkerMutation()
 
@@ -179,13 +182,21 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
             onChange={handleSetDate}
           />
         </div>
-        <div className="actions">
-          <button className="btn primary" onClick={handleAutoFill}>
-            מילוי אוטומטי
-          </button>
-          <button className="pill-btn">ייצוא לאקסל</button>
-          <button className="pill-btn danger">מחיקה</button>
-        </div>
+        {schedule ? (
+          <div className="actions">
+            <button className="pill-btn" onClick={handleAutoFill}>
+              מילוי אוטומטי
+            </button>
+            <button
+              className="pill-btn"
+              onClick={() => handleToExcel(schedule)}>
+              ייצוא לאקסל
+            </button>
+            <button className="pill-btn danger" onClick={handleDelete}>
+              מחיקה
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <main>

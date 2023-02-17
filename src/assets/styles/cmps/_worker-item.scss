@@ -39,6 +39,9 @@
   &.empty {
     background-color: var(--acc-gray);
     cursor: auto;
+    .icon-remove {
+      display: none !important;
+    }
   }
   &.locked {
     cursor: not-allowed;
@@ -70,6 +73,35 @@
 
     &.active {
       background-color: var(--acc-blue);
+    }
+
+    &:hover {
+      background-color: #4f5258;
+    }
+  }
+
+  .icon-remove {
+    background-color: tomato;
+    color: var(--main-bg);
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%) scale(0);
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.2s ease-in;
+    &:hover {
+      background-color: rgb(240, 60, 28);
+    }
+  }
+
+  &:hover {
+    .icon-remove {
+      opacity: 1;
+      transform: translate(30%, -30%) scale(1);
     }
   }
 }

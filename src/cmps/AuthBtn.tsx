@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
-import { useLoginMutation, useRegisterMutation } from '../features/api/apiSlice'
+import {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+} from '../features/api/apiSlice'
 import { userService } from '../services/user.service'
 
 interface AuthBtnProps {}
@@ -13,6 +17,7 @@ type UserCred = {
 
 export const AuthBtn: React.FC<AuthBtnProps> = ({}) => {
   const [login] = useLoginMutation()
+  const [logout] = useLogoutMutation()
   const [register] = useRegisterMutation()
   const [userCred, setUserCred] = useState<UserCred>({
     username: '',
@@ -58,9 +63,14 @@ export const AuthBtn: React.FC<AuthBtnProps> = ({}) => {
   return (
     <section className="auth-wrapper">
       {userService.isLoggedIn() ? (
-        <p className="username-box">
-          מנהל: {userService.getLoggedInUser()?.username}
-        </p>
+        <section className="logged-section">
+          <p className="username-box">
+            מנהל: {userService.getLoggedInUser()?.username}
+          </p>
+          <p className="logout-opt" onClick={() => logout()}>
+            יציאה
+          </p>
+        </section>
       ) : (
         <>
           <button className="auth-btn" onClick={(e) => setShowModal(true)}>

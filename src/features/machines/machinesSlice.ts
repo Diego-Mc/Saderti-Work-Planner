@@ -13,9 +13,9 @@ export const machinesApi = apiSlice.injectEndpoints({
       queryFn: async (query, queryApi, extraOptions, baseQuery) => {
         const result = await baseQuery('/machines/')
         const data = result.data as MachineState[]
-        data?.sort((a: MachineState, b: MachineState) =>
-          a.name.localeCompare(b.name)
-        )
+        // data?.sort((a: MachineState, b: MachineState) =>
+        //   a.name.localeCompare(b.name)
+        // )
         return { data }
       },
       providesTags: (res) =>

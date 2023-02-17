@@ -1,4 +1,4 @@
-import { MachineState } from './../types'
+import { MachineState, ScheduleState } from './../types'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useSaveMachineMutation } from '../features/machines/machinesSlice'
@@ -6,6 +6,7 @@ import {
   useChangeMachineWorkersAmountMutation,
   useDeleteScheduleMutation,
 } from '../features/schedules/schedulesSlice'
+import { downloadWorkbook, scheduleToExcel } from '../services/excel.service'
 
 export const useScheduleHandlers = () => {
   const [saveMachine] = useSaveMachineMutation()
@@ -77,9 +78,16 @@ export const useScheduleHandlers = () => {
     return isConfirmed
   }
 
+  const handleToExcel = (schedule: ScheduleState) => {
+    if (!schedule) return
+    const workbook = scheduleToExcel(schedule)
+    downloadWorkbook(workbook)
+  }
+
   return {
     handleAmountOfWorkersChange: (machine: MachineState) =>
       handleAmountOfWorkersChange(machine),
     handleDelete: () => handleDelete(),
+    handleToExcel,
   }
 }

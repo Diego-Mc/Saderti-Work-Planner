@@ -21,4 +21,20 @@
   .logo {
     cursor: pointer;
   }
+
+  .logged-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    > * {
+      margin: 0;
+    }
+    .logout-opt {
+      color: tomato;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }

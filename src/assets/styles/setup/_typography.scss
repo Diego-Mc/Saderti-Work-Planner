@@ -4,6 +4,9 @@
   &.outlined {
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
   }
+  &.thick {
+    font-variation-settings: 'FILL' 0, 'wght' 800, 'GRAD' 0, 'opsz' 48;
+  }
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Secular+One&display=swap');

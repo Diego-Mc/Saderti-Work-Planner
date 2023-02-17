@@ -4,11 +4,12 @@
   .first-step {
     flex-grow: 2;
     max-width: 400px;
+    margin-right: 50px;
     .worker-shift-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 3px 5px -5px rgb(0, 0, 0);
+      box-shadow: 0 3px 5px -5px rgb(168, 168, 168);
       position: relative;
       z-index: 1;
       height: $dashboardHeaderHeight;
@@ -23,6 +24,7 @@
       align-items: center;
       overflow-y: scroll;
       height: calc(100vh - $headerHeight - $dashboardHeaderHeight);
+      padding-block: 10px 20px;
     }
   }
   .next-step {

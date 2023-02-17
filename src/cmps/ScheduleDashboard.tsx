@@ -16,13 +16,7 @@ interface ScheduleDashboardProps {}
 export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
   const params = useParams()
   const { data: schedule } = useGetScheduleQuery(params.scheduleId as string)
-  const { handleDelete } = useScheduleHandlers()
-
-  const handleToExcel = () => {
-    if (!schedule) return
-    const workbook = scheduleToExcel(schedule)
-    downloadWorkbook(workbook)
-  }
+  const { handleDelete, handleToExcel } = useScheduleHandlers()
 
   return (
     <section className="schedule-dashboard dashboard">
@@ -41,8 +35,10 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
                 <Link to={`/edit/${schedule._id}`}>
                   <button className="pill-btn">עריכה</button>
                 </Link>
-                <button className="pill-btn" onClick={handleToExcel}>
-                  ייצוא
+                <button
+                  className="pill-btn"
+                  onClick={() => handleToExcel(schedule)}>
+                  ייצוא לאקסל
                 </button>
                 <button className="pill-btn danger" onClick={handleDelete}>
                   מחיקה

@@ -6,11 +6,12 @@ import {
   useMoveWorkersMutation,
   usePlaceWorkerMutation,
   useToggleLockMutation,
+  useUnplaceWorkerMutation,
 } from '../features/schedules/schedulesSlice'
-import { WorkerIdentifier } from '../types'
+import { WorkerIdentifier, WorkerState, WorkerType } from '../types'
 
 interface WorkerItemProps {
-  worker: string | null
+  worker: WorkerType | null
   isLocked: boolean
   details: WorkerIdentifier
 }
@@ -28,6 +29,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
   const [moveWorkers] = useMoveWorkersMutation()
   const [toggleLock] = useToggleLockMutation()
   const [placeWorker] = usePlaceWorkerMutation()
+  const [unplaceWorker] = useUnplaceWorkerMutation()
 
   const handleOver = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (isLocked) return
@@ -40,6 +42,13 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
   const handleLockToggle = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     toggleLock({ workerDetails: details, scheduleId: params.scheduleId })
   }
+  const handleRemove = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    unplaceWorker({
+      destinationDetails: details,
+      worker,
+      scheduleId: params.scheduleId,
+    })
+  }
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
@@ -48,7 +57,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         isDragging: !!monitor.isDragging(),
       }),
       item: () => {
-        return { ...details, name: worker }
+        return { ...details, name: worker?.name }
       },
       canDrag() {
         return !isLocked && !!worker
@@ -110,16 +119,21 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
       ${isLocked ? 'locked' : ''}
       ${isOver ? 'over' : ''}
       ${isDragging ? 'drag' : ''}`}>
-      {worker}
+      {worker?.name}
       {showLock ? (
         <span
-          className={`material-symbols-outlined icon-lock icon ${
+          className={`material-symbols-outlined thick icon-lock icon ${
             isLocked ? 'active' : ''
           }`}
           onClick={handleLockToggle}>
           lock
         </span>
       ) : null}
+      <span
+        className="material-symbols-outlined thick icon-remove icon"
+        onClick={handleRemove}>
+        close
+      </span>
     </article>
   )
 }
