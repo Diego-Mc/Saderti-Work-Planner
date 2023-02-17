@@ -1,5 +1,6 @@
+import { schemeTableau10 } from 'd3-scale-chromatic'
 import React from 'react'
-import { VictoryPie } from 'victory'
+import { ColorScalePropType, VictoryPie } from 'victory'
 import { MachineState, StatisticsState, WorkerState } from '../../types'
 import { CustomLabel } from './CustomLabel'
 
@@ -43,7 +44,7 @@ export const ChartWorkerPerMachine: React.FC<Props> = ({
           userSelect: 'none',
         },
       }}
-      colorScale={['#ffa600', '#a05195', '#003f5c']}
+      colorScale={schemeTableau10 as ColorScalePropType}
       innerRadius={100}
       labelRadius={120}
       labels={({ datum }) =>

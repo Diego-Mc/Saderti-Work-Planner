@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { AuthBtn } from './AuthBtn'
 import { ReactComponent as Logo } from '../assets/imgs/logo.svg'
 
@@ -9,13 +9,15 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   return (
     <header className="main-header">
       <div className="logo">
-        <Logo />
+        <Link to="/">
+          <Logo />
+        </Link>
       </div>
       <nav className="nav">
-        <Link to="/new">סידור חדש</Link>
-        <Link to="/schedules">סידורים</Link>
-        <Link to="/machines">מכונות</Link>
-        <Link to="/workers">עובדים</Link>
+        <NavLink to="/new">סידור חדש</NavLink>
+        <NavLink to="/schedules">סידורים</NavLink>
+        <NavLink to="/machines">מכונות</NavLink>
+        <NavLink to="/workers">עובדים</NavLink>
       </nav>
       <div className="user">
         <AuthBtn />

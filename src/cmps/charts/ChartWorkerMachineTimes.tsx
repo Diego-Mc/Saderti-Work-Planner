@@ -78,7 +78,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
         dependentAxis
         tickFormat={(x) => `${x}`}
       />
-      <VictoryStack colorScale={['#ffa600', '#a05195', '#003f5c']}>
+      <VictoryStack colorScale={['#edc949', '#f28e2c', '#af7aa1']}>
         <VictoryBar
           data={machineTimesStats.morning}
           labels={({ datum }) => (datum._y > 0 ? `בוקר: ${datum._y}` : '')}

@@ -34,7 +34,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
     handleDelete,
     handleImportanceChange,
     handleNameChange,
-  } = useMachineHandlers(machine)
+  } = useMachineHandlers()
 
   const workersAmountWorked: any = []
 
@@ -60,16 +60,22 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
             <div className="actions">
               <button
                 className="pill-btn"
-                onClick={handleAmountOfWorkersChange}>
+                onClick={() => handleAmountOfWorkersChange(machine)}>
                 עדכון יעד עובדים
               </button>
-              <button className="pill-btn" onClick={handleImportanceChange}>
+              <button
+                className="pill-btn"
+                onClick={() => handleImportanceChange(machine)}>
                 עדכון חשיבות
               </button>
-              <button className="pill-btn" onClick={handleNameChange}>
+              <button
+                className="pill-btn"
+                onClick={() => handleNameChange(machine)}>
                 שינוי שם
               </button>
-              <button className="pill-btn danger" onClick={handleDelete}>
+              <button
+                className="pill-btn danger"
+                onClick={() => handleDelete(machine)}>
                 ניתוק
               </button>
             </div>

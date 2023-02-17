@@ -17,13 +17,7 @@ export const downloadWorkbook = (workbook: ExcelJS.Workbook) => {
 }
 
 export const scheduleToExcel = (schedule: ScheduleState) => {
-  // const user = userService.getLoggedInUser()
-  // if (!user) return
   const workbook = new ExcelJS.Workbook()
-  // workbook.creator = user.username
-  // workbook.lastModifiedBy = user.username
-  // workbook.created = new Date()
-  // workbook.modified = new Date()
 
   const sheet = workbook.addWorksheet('סידור', {
     pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true },
@@ -64,21 +58,22 @@ export const scheduleToExcel = (schedule: ScheduleState) => {
   })
 
   sheet.getColumn(1).font = { name: 'Arial', size: 38, bold: true }
-  sheet.getColumn(1).alignment = { horizontal: 'center' }
+  sheet.getColumn(1).alignment = { horizontal: 'center', vertical: 'middle' }
   sheet.getColumn(2).font = { name: 'Arial', size: 26, bold: false }
-  sheet.getColumn(2).alignment = { horizontal: 'center' }
+  sheet.getColumn(2).alignment = { horizontal: 'center', vertical: 'middle' }
   sheet.getColumn(3).font = { name: 'Arial', size: 26, bold: false }
-  sheet.getColumn(3).alignment = { horizontal: 'center' }
+  sheet.getColumn(3).alignment = { horizontal: 'center', vertical: 'middle' }
   sheet.getColumn(4).font = { name: 'Arial', size: 26, bold: false }
-  sheet.getColumn(4).alignment = { horizontal: 'center' }
+  sheet.getColumn(4).alignment = { horizontal: 'center', vertical: 'middle' }
   sheet.getRow(1).font = { name: 'Arial', size: 33, bold: true }
+  sheet.getRow(1).alignment = { vertical: 'middle' }
   sheet.getRow(2).font = { name: 'Arial', size: 38, bold: true }
-  sheet.getRow(2).alignment = { horizontal: 'center' }
+  sheet.getRow(2).alignment = { horizontal: 'center', vertical: 'middle' }
 
   sheet.eachRow((row, rowNumber) => {
     if (rowNumber === 1) {
       row.height = 66
-      row.alignment = { horizontal: 'right' }
+      row.alignment = { horizontal: 'right', vertical: 'middle' }
       return
     }
     row.height = 42

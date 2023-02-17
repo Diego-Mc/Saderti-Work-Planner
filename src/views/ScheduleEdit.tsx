@@ -14,6 +14,8 @@ import { DateRange } from 'rsuite/esm/DateRangePicker'
 import moment from 'moment'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 
+import { interpolateWarm } from 'd3-scale-chromatic'
+
 interface Props {}
 
 export const ScheduleEdit: React.FC<Props> = ({}) => {
@@ -41,6 +43,108 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
     console.log(schedule)
     console.log(statistics)
+
+    // Map - workerId -> [{machineId: rating}]
+
+    const machinesMap: {
+      [key: string]: { [key: string]: [{ score: number; workerId: string }] }
+    } = {}
+
+    console.log(moment(schedule.date.from).diff(1677347047390, 'days'))
+
+    const workers = schedule.workers.unused.map((w) => {
+      const machineDates = statistics.amountWorkedInMachinePerWorker?.[w._id]
+      const machineInfo = schedule.table.map(
+        (r) => [r.machine._id, r.machine.importance] as [string, number]
+      )
+
+      const machinesData = machineInfo.map(([mId, mImportance]) => {
+        const workDiff = (i: number) =>
+          moment(schedule.date.from).diff(machineDates?.[mId]?.[i], 'days')
+        let diffIdx = 0
+
+        //find the latest work date (idx of dates arr) that was before the current schedule "from" date
+        while (workDiff(diffIdx) < 0 || diffIdx < machineDates?.[mId]?.length)
+          diffIdx++
+
+        const score = (machineDates?.[mId]?.[diffIdx] || 99) * mImportance
+
+        //add to machinesMap
+        if (!machinesMap[mId]) machinesMap[mId] = {}
+        if (!machinesMap[mId][w.shiftTime || 'unassigned'])
+          machinesMap[mId][w.shiftTime || 'unassigned'] = [
+            { score, workerId: w._id },
+          ]
+        else
+          machinesMap[mId][w.shiftTime || 'unassigned'].push({
+            score,
+            workerId: w._id,
+          })
+
+        return {
+          [mId]: score,
+        }
+      })
+
+      return {
+        [w._id]: machinesData,
+      }
+    })
+
+    // console.log('workers', workers)
+    // console.log('machines', machinesMap)
+
+    //iterate through table & times, by importance, take the best fit and then remove it from the Map! (each time we sort by rating the Map inner array to always get the best fit)
+
+    const table = structuredClone(schedule.table).sort(
+      (row1, row2) => row2.machine.importance - row1.machine.importance
+    )
+
+    const usedWorkers = new Set()
+
+    const placeWorkerCalls: any[] = []
+
+    table.forEach((row) => {
+      const machineId = row.machine._id
+      ;['morning', 'evening', 'night'].forEach((time) => {
+        row.data[time].forEach((cell, cellIdx) => {
+          if (cell !== null) return
+          if (row.locked[time][cellIdx] === true) return
+
+          const availableWorkers = machinesMap[machineId][time]
+            .filter(({ workerId }) => !usedWorkers.has(workerId))
+            .sort((a, b) => b.score - a.score)
+            .concat(
+              machinesMap[machineId]['unassigned']
+                .filter(({ workerId }) => !usedWorkers.has(workerId))
+                .sort((a, b) => b.score - a.score)
+            )
+
+          const bestWorkerId = availableWorkers[0]?.workerId
+
+          const bestWorker = schedule.workers.unused.find(
+            (w) => w._id === bestWorkerId
+          )
+
+          if (!bestWorker) return
+
+          placeWorkerCalls.push({
+            destinationDetails: { machineId, shiftTime: time, idx: cellIdx },
+            scheduleId: schedule._id,
+            worker: bestWorker,
+          })
+
+          usedWorkers.add(bestWorkerId)
+        })
+      })
+    })
+
+    // placeWorkerCalls.forEach(async (call) => await placeWorker(call).unwrap())
+
+    for (let call of placeWorkerCalls) {
+      await placeWorker(call).unwrap()
+    }
+    console.log(placeWorkerCalls)
   }
 
   const handleSetDate = (date: DateRange | null) => {
@@ -75,17 +179,23 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
             onChange={handleSetDate}
           />
         </div>
-        <div className="btns">
+        <div className="actions">
+          <button className="btn primary" onClick={handleAutoFill}>
+            מילוי אוטומטי
+          </button>
           <button className="pill-btn">ייצוא לאקסל</button>
           <button className="pill-btn danger">מחיקה</button>
         </div>
       </section>
 
-      {schedule ? <Table table={schedule.table} /> : null}
-      <button className="btn primary" onClick={handleAutoFill}>
-        מילוי אוטומטי
-      </button>
-      {schedule ? <WorkerList workers={schedule.workers} /> : null}
+      <main>
+        <aside className="workers-list-section">
+          {schedule ? <WorkerList workers={schedule.workers} /> : null}
+        </aside>
+        <section className="table-section">
+          {schedule ? <Table table={schedule.table} /> : null}
+        </section>
+      </main>
     </div>
   )
 }

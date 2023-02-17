@@ -36,7 +36,7 @@ export const ChartWorkerTimes: React.FC<Props> = ({ statistics, worker }) => {
           userSelect: 'none',
         },
       }}
-      colorScale={['#ffa600', '#a05195', '#003f5c']}
+      colorScale={['#edc949', '#f28e2c', '#af7aa1']}
       innerRadius={100}
       labelRadius={120}
       // padding={{ top: 50, right: 50, left: 50, bottom: 50 }}

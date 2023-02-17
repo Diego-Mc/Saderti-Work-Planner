@@ -61,3 +61,19 @@
     }
   }
 }
+
+.schedules-management-view {
+  .main-table {
+    pointer-events: none;
+    user-select: none;
+  }
+  .locked {
+    outline: none;
+  }
+  .icon-lock {
+    display: none;
+  }
+  .info {
+    display: none !important;
+  }
+}
