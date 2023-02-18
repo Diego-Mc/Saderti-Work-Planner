@@ -119,8 +119,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
             .sort((a, b) => b.score - a.score)
             .concat(
               machinesMap[machineId]['unassigned']
-                .filter(({ workerId }) => !usedWorkers.has(workerId))
-                .sort((a, b) => b.score - a.score)
+                ?.filter(({ workerId }) => !usedWorkers.has(workerId))
+                ?.sort((a, b) => b.score - a.score)
             )
 
           const bestWorkerId = availableWorkers[0]?.workerId
