@@ -2,11 +2,13 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 32px;
+  gap: 16px;
   overflow-y: auto;
+  // overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
   height: calc(100vh - $headerHeight);
   padding-inline: 50px;
-  user-select: none;
 
   .schedule-edit-header {
     display: flex;
@@ -30,6 +32,7 @@
       }
       .rs-picker-toggle-caret {
         transform: scale(115%);
+        transform-origin: center center;
       }
     }
     .actions {
@@ -43,14 +46,66 @@
 
   main {
     display: grid;
-    grid-template-columns: minmax(100px, 350px) minmax(900px, 1fr);
+    grid-template-columns: minmax(100px, 350px) minmax(800px, 1fr);
     gap: 32px;
     width: 100%;
     .table-section {
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
+      overflow-x: auto;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    // background-color: red;
+    .schedule-edit-header {
+      flex-direction: column;
+      // align-items: flex-start;
+      justify-content: center;
+      height: $dashboardHeaderHeight + 16px;
+      min-height: $dashboardHeaderHeight + 16px;
+      .title {
+        transform: scale(95%);
+        transform-origin: center center;
+      }
+    }
+    main {
+      grid-template-columns: 1fr;
+      .table-section {
+        order: -1;
+      }
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    padding-inline: 0;
+
+    .schedule-edit-header {
+      min-height: auto;
+      height: auto;
+      .title {
+        gap: 6px;
+        flex-direction: column;
+        transform: scale(95%);
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        .rs-picker {
+          margin-left: 42px;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 550px) {
+    main {
+      width: 100vw;
+      .table-section {
+        width: 100vw;
+      }
     }
   }
 }

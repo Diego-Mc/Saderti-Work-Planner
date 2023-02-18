@@ -1,3 +1,4 @@
+import { ScheduleWorker } from './../../types'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../../store'
@@ -137,6 +138,19 @@ export const schedulesApi = apiSlice.injectEndpoints({
                 (row) => row.machine._id === machineId
               )
               if (!destinationRow) return
+              if (destinationRow.locked[shiftTime][idx] === true)
+                throw new Error("Can't place worker on locked cell")
+              if (destinationRow.data[shiftTime][idx] !== null) {
+                const currWorker = destinationRow.data[shiftTime][
+                  idx
+                ] as ScheduleWorker
+                const usedIdx = schedule.workers.used.findIndex(
+                  (w) => w._id === currWorker._id
+                )
+                schedule.workers.used.splice(usedIdx, 1)
+                schedule.workers.unused.push(currWorker)
+              }
+
               destinationRow.data[shiftTime][idx] = worker
 
               const unusedIdx = schedule.workers.unused.findIndex(
@@ -148,6 +162,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
           )
         )
         try {
+          console.log('yes im heer..')
           await queryFulfilled
         } catch (err) {
           console.log(

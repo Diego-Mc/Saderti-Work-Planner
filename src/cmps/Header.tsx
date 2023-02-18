@@ -8,17 +8,17 @@ interface HeaderProps {}
 export const Header: React.FC<HeaderProps> = ({}) => {
   return (
     <header className="main-header">
-      <div className="logo">
-        <Link to="/">
-          <Logo />
-        </Link>
-      </div>
       <nav className="nav">
         <NavLink to="/new">סידור חדש</NavLink>
         <NavLink to="/schedules">סידורים</NavLink>
         <NavLink to="/machines">מכונות</NavLink>
         <NavLink to="/workers">עובדים</NavLink>
       </nav>
+      <div className="logo">
+        <Link to="/">
+          <Logo />
+        </Link>
+      </div>
       <div className="user">
         <AuthBtn />
       </div>

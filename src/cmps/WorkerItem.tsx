@@ -78,14 +78,16 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         return !isLocked
       },
       drop(item: any) {
-        console.log('HEYY!!', item, details)
+        console.log('HEYY!!', item, details, worker)
         if ('_id' in item) {
           //the item is a worker
+
           placeWorker({
             destinationDetails: details,
             worker: item,
             scheduleId: params.scheduleId,
           })
+
           return
         }
 

@@ -9,7 +9,7 @@
 //   padding: 12px 36px;
 //   border-radius: 4px;
 //   position: relative;
-//   user-select: none;
+//
 //   &.over {
 //     background-color: var(--acc-yellow);
 //   }
@@ -45,43 +45,87 @@
   font-weight: 700;
   font-size: 1.2rem;
   box-shadow: 0 12px 24px hsla(0, 0%, 0%, 0.03);
-  user-select: none;
+
   transition: all 0.2s;
   &.selected {
-    opacity: 0.5;
-    // width: 200px;
-    justify-content: flex-end;
-    gap: 20px;
-    flex-direction: row-reverse;
-    .icons {
-      * {
-        display: none;
-      }
-      .selected {
-        display: block;
-      }
+    // opacity: 0.5;
+    // border: 2px inset var(--acc-blue);
+    box-shadow: 0 12px 24px hsla(0, 0%, 0%, 0.03),
+      0 0 0 2px inset var(--acc-blue);
+    * {
+      opacity: 0.5;
     }
+    // width: 200px;
+    // justify-content: flex-end;
+    // &.morning {
+    //   background-color: transparentize(#edc949, 0.9);
+    // }
+
+    // &.evening {
+    //   background-color: transparentize(#f28e2c, 0.9);
+    // }
+    // &.night {
+    //   background-color: transparentize(#af7aa1, 0.9);
+    // }
+    // gap: 20px;
+    // flex-direction: row-reverse;
+    // color: var(--main-fg);
+    // .icons {
+    //   * {
+    //     display: none;
+    //   }
+    //   .selected {
+    //     display: block;
+    //   }
+    // }
     &:hover {
-      opacity: 0.8;
+      // opacity: 0.8;
+      * {
+        opacity: 0.6;
+      }
     }
   }
   .icons {
     display: flex;
     gap: 12px;
     cursor: auto;
-    * {
+    > * {
       transition: all 0.2s;
       cursor: pointer;
       color: var(--acc-dark-gray);
       opacity: 0.2;
       &:hover {
-        opacity: 0.5;
-        // color: var(--acc-blue);
+        opacity: 1;
       }
+      // &.morning {
+      //   color: #edc949;
+      // }
+
+      // &.evening {
+      //   color: #f28e2c;
+      // }
+      // &.night {
+      //   color: #af7aa1;
+      // }
     }
     .selected {
-      opacity: 1;
-      // color: var(--acc-blue);
+      // color: var(--main-fg);
+      opacity: 1 !important;
+      &:hover {
+        color: var(--main-fg);
+        opacity: 1;
+      }
+
+      // &.morning {
+      //   color: #edc949;
+      // }
+
+      // &.evening {
+      //   color: #f28e2c;
+      // }
+      // &.night {
+      //   color: #af7aa1;
+      // }
     }
   }
 }

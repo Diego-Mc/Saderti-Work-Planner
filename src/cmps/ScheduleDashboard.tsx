@@ -15,6 +15,7 @@ interface ScheduleDashboardProps {}
 
 export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
   const params = useParams()
+  const navigate = useNavigate()
   const { data: schedule } = useGetScheduleQuery(params.scheduleId as string)
   const { handleDelete, handleToExcel } = useScheduleHandlers()
 
@@ -25,6 +26,11 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
           <div className="dashboard-header">
             <div className="header-details">
               <h2 className="title">
+                <span
+                  className="material-symbols-outlined back-icon"
+                  onClick={() => navigate('/schedules')}>
+                  chevron_right
+                </span>
                 {utilService.formatDateRange(
                   schedule.date.from,
                   schedule.date.to
@@ -51,7 +57,7 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
               )} בשעה ${moment(schedule.updatedAt).format('HH:mm')}`}
             </p>
           </div>
-          <div className="stat">
+          <div className="stat table-stat">
             <Table table={schedule.table} />
           </div>
         </>

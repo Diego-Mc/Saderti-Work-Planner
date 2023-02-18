@@ -60,12 +60,23 @@
       }
     }
   }
+
+  @media screen and (max-width: 720px) {
+    grid-template-columns: 1fr;
+    .side-links .management-item-link {
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    &.open {
+      grid-template-columns: 0 1fr;
+      gap: 0;
+    }
+  }
 }
 
 .schedules-management-view {
   .main-table {
     pointer-events: none;
-    user-select: none;
   }
   .locked {
     outline: none;

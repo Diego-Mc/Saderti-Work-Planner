@@ -30,40 +30,44 @@ export const ShiftTimesSettingsList: React.FC<Props> = ({
     <section className="list-workers-shifts" ref={listRef} onScroll={onScroll}>
       {workers ? (
         <>
-          {[...workers]
-            .sort((a, b) => (b.shiftTime.length === 0 ? 1 : -1))
-            .map((worker) => (
-              <article
-                className={`worker-shift-item ${
-                  worker.shiftTime ? 'selected' : ''
-                }`}
-                key={worker._id}>
-                {worker.name}
-                <div className="icons">
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'morning' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'morning')}>
-                    light_mode
-                  </span>
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'evening' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'evening')}>
-                    nights_stay
-                  </span>
-                  <span
-                    className={`material-symbols-outlined ${
-                      worker.shiftTime === 'night' ? 'selected' : ''
-                    }`}
-                    onClick={(e) => handleToggleShift(worker._id, 'night')}>
-                    dark_mode
-                  </span>
-                </div>
-              </article>
-            ))}
+          {workers.map((worker) => (
+            <article
+              className={`worker-shift-item ${
+                worker.shiftTime ? `selected ${worker.shiftTime}` : ''
+              }`}
+              key={worker._id}>
+              <p>{worker.name}</p>
+              <div className="icons">
+                <span
+                  className={`material-symbols-outlined ${
+                    worker.shiftTime === 'morning'
+                      ? `selected ${worker.shiftTime}`
+                      : ''
+                  }`}
+                  onClick={(e) => handleToggleShift(worker._id, 'morning')}>
+                  light_mode
+                </span>
+                <span
+                  className={`material-symbols-outlined ${
+                    worker.shiftTime === 'evening'
+                      ? `selected ${worker.shiftTime}`
+                      : ''
+                  }`}
+                  onClick={(e) => handleToggleShift(worker._id, 'evening')}>
+                  nights_stay
+                </span>
+                <span
+                  className={`material-symbols-outlined ${
+                    worker.shiftTime === 'night'
+                      ? `selected ${worker.shiftTime}`
+                      : ''
+                  }`}
+                  onClick={(e) => handleToggleShift(worker._id, 'night')}>
+                  dark_mode
+                </span>
+              </div>
+            </article>
+          ))}
         </>
       ) : null}
     </section>

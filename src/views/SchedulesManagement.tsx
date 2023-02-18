@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useGetSchedulesQuery } from '../features/schedules/schedulesSlice'
 import { utilService } from '../services/util.service'
 
@@ -8,10 +8,17 @@ interface SchedulesManagementProps {}
 export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
   const { data } = useGetSchedulesQuery()
 
+  const params = useParams()
+
   const navigate = useNavigate()
 
+  const isDashboardOpen = !!params.scheduleId
+
   return (
-    <section className="schedules-management-view management-view">
+    <section
+      className={`schedules-management-view management-view ${
+        isDashboardOpen ? 'open' : ''
+      }`}>
       <section className="schedules-list management-items-list">
         <div className="side-links">
           <button

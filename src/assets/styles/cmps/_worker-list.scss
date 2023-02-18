@@ -30,4 +30,28 @@
       gap: 10px;
     }
   }
+
+  @media screen and (max-width: 1200px) {
+    .time-shifts-lists {
+      flex-direction: row;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    .time-shifts-lists {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    padding-inline: 20px;
+  }
+
+  @media screen and (max-width: 550px) {
+    .time-shifts-lists {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
 }

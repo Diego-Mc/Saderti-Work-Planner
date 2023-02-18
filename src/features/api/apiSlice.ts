@@ -28,7 +28,13 @@ export const apiSlice = createApi({
         window.location.reload()
         return res
       },
-      invalidatesTags: ['Auth'],
+      invalidatesTags: [
+        'Machines',
+        'Schedules',
+        'Workers',
+        'Auth',
+        'Statistics',
+      ],
     }),
     login: builder.mutation({
       query: (userCred) => ({
@@ -41,7 +47,13 @@ export const apiSlice = createApi({
         window.location.reload()
         return res
       },
-      invalidatesTags: ['Auth'],
+      invalidatesTags: [
+        'Machines',
+        'Schedules',
+        'Workers',
+        'Auth',
+        'Statistics',
+      ],
     }),
     logout: builder.mutation<string, void>({
       query: () => ({
@@ -53,7 +65,13 @@ export const apiSlice = createApi({
         window.location.reload()
         return res.msg
       },
-      invalidatesTags: ['Auth'],
+      invalidatesTags: [
+        'Machines',
+        'Schedules',
+        'Workers',
+        'Auth',
+        'Statistics',
+      ],
     }),
     //   getPosts: builder.query<PostProps[], string | void>({
     //     queryFn: async (query = undefined, queryApi, extraOptions, baseQuery) => {

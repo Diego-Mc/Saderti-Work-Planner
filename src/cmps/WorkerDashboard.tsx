@@ -83,7 +83,14 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
       {worker ? (
         <div className="dashboard-header">
           <div className="header-details">
-            <h2 className="title">{worker.name}</h2>
+            <h2 className="title">
+              <span
+                className="material-symbols-outlined back-icon"
+                onClick={() => navigate('/workers')}>
+                chevron_right
+              </span>
+              {worker.name}
+            </h2>
             <div className="actions">
               <button className="pill-btn" onClick={handleNameChange}>
                 עדכון שם
@@ -110,7 +117,7 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
         <div className="stat">
           <div className="main-stat">
             <h3 className="stat-title">
-              סבבי עבודה בכל מכונה בפילוח לפי זמן משמרת
+              סבבי עבודה בכל מכונה עם חלוקת זמן משמרת
             </h3>
             <div className="stat-wrapper">
               <ChartWorkerMachineTimes

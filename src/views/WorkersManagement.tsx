@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import {
   useAddWorkerMutation,
@@ -11,6 +11,10 @@ interface WorkersManagementProps {}
 export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
   const { data } = useGetWorkersQuery()
   const [addWorker] = useAddWorkerMutation()
+
+  const params = useParams()
+
+  const isDashboardOpen = !!params.workerId
 
   const openAddWorkerModal = async () => {
     const { value: workerName } = await Swal.fire({
@@ -25,7 +29,10 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
   }
 
   return (
-    <section className="workers-management-view management-view">
+    <section
+      className={`workers-management-view management-view ${
+        isDashboardOpen ? 'open' : ''
+      }`}>
       <section className="workers-list management-items-list">
         <div className="side-links">
           <button

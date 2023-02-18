@@ -55,24 +55,27 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
 
   return (
     <VictoryChart
-      width={(size?.width || 1600) - 800}
-      padding={{ top: 30, left: 50, right: 50, bottom: 50 }}
+      width={
+        (size?.width || 1200) < 720 ? size.width : (size?.width || 1200) - 400
+      }
+      height={machines.length * 60}
+      padding={{ top: 30, bottom: 50, left: 80, right: 60 }}
       domain={maxAmountWorked ? { y: [0, maxAmountWorked] } : {}}
+      horizontal
       domainPadding={20}>
       <VictoryAxis
         style={{
           tickLabels: {
-            fontSize: 10,
             fontFamily: 'Rubik',
+            fontSize: 16,
           },
         }}
       />
       <VictoryAxis
-        tickCount={maxAmountWorked + 1}
         style={{
           tickLabels: {
-            fontSize: 10,
             fontFamily: 'Rubik',
+            fontSize: 16,
           },
         }}
         dependentAxis
@@ -91,7 +94,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
               flyoutStyle={{ fill: 'black', stroke: 'black' }}
               style={{
                 fontFamily: 'Rubik',
-                fontSize: 10,
+                fontSize: 16,
                 fill: 'white',
                 fontWeight: 700,
               }}
@@ -112,7 +115,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
               flyoutStyle={{ fill: 'black', stroke: 'black' }}
               style={{
                 fontFamily: 'Rubik',
-                fontSize: 10,
+                fontSize: 16,
                 fill: 'white',
                 fontWeight: 700,
               }}
@@ -133,7 +136,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
               flyoutStyle={{ fill: 'black', stroke: 'black' }}
               style={{
                 fontFamily: 'Rubik',
-                fontSize: 10,
+                fontSize: 16,
                 fill: 'white',
                 fontWeight: 700,
               }}

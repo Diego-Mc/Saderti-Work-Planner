@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import {
   useAddMachineMutation,
@@ -11,6 +11,10 @@ interface MachinesManagementProps {}
 export const MachinesManagement: React.FC<MachinesManagementProps> = ({}) => {
   const { data } = useGetMachinesQuery()
   const [addMachine] = useAddMachineMutation()
+
+  const params = useParams()
+
+  const isDashboardOpen = !!params.machineId
 
   const openAddMachineModal = async () => {
     const { value: machineName } = await Swal.fire({
@@ -25,7 +29,10 @@ export const MachinesManagement: React.FC<MachinesManagementProps> = ({}) => {
   }
 
   return (
-    <section className="machines-management-view management-view">
+    <section
+      className={`machines-management-view management-view ${
+        isDashboardOpen ? 'open' : ''
+      }`}>
       <section className="machines-list management-items-list">
         <div className="side-links">
           <button

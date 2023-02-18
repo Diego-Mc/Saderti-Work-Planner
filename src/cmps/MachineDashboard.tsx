@@ -56,7 +56,14 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
       {machine ? (
         <div className="dashboard-header">
           <div className="header-details">
-            <h2 className="title">{machine.name}</h2>
+            <h2 className="title">
+              <span
+                className="material-symbols-outlined back-icon"
+                onClick={() => navigate('/machines')}>
+                chevron_right
+              </span>
+              {machine.name}
+            </h2>
             <div className="actions">
               <button
                 className="pill-btn"
@@ -104,7 +111,11 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
               horizontal
               domainPadding={16}
               padding={{ top: 30, bottom: 30, left: 120, right: 60 }}
-              width={(size?.width || 1600) - 400}
+              width={
+                (size?.width || 1200) < 720
+                  ? size.width
+                  : (size?.width || 1200) - 400
+              }
               height={workersAmountWorked.length * 30}>
               <VictoryBar
                 theme={VictoryTheme.material}

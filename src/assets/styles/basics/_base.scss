@@ -52,7 +52,6 @@ button {
   outline: none;
   cursor: pointer;
   font-weight: 700;
-  user-select: none;
 
   &.priority-btn {
     outline: 2px solid var(--acc-blue);

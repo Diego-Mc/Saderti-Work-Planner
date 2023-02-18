@@ -83,9 +83,16 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
       <section className="first-step">
         <header className="worker-shift-header">
           <h2 className="title">זמן משמרת</h2>
-          <button className="pill-btn danger" onClick={handleTimeShiftReset}>
-            אתחול נתונים
-          </button>
+          <div className="btns">
+            <button className="pill-btn danger" onClick={handleTimeShiftReset}>
+              אתחול נתונים
+            </button>
+            <button
+              className="pill-btn continue-btn"
+              onClick={handleNewSchedule}>
+              המשך
+            </button>
+          </div>
         </header>
         {workers ? (
           <ShiftTimesSettingsList
