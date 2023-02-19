@@ -44,6 +44,7 @@ export const machinesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: { name: machineName },
       }),
+      invalidatesTags: ['Statistics'],
       async onQueryStarted(machineName, { dispatch, queryFulfilled }) {
         try {
           const { data: savedMachine } = await queryFulfilled
@@ -73,7 +74,7 @@ export const machinesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: machineDetails,
       }),
-      invalidatesTags: ['Schedules'],
+      invalidatesTags: ['Schedules', 'Statistics'],
       async onQueryStarted(
         { machineDetails, machineId },
         { dispatch, queryFulfilled }
@@ -127,6 +128,8 @@ export const machinesApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (res, err, machineId) => [
         { type: 'Machines', id: machineId },
+        { type: 'Machines', id: 'LIST' },
+        { type: 'Statistics' },
       ],
     }),
   }),

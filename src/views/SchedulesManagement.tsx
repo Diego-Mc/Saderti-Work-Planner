@@ -55,7 +55,7 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
           ) : null}
         </div>
       </section>
-      <section className="schedule-dashboard">
+      <section className="schedule-dashboard-wrapper dashboard-wrapper">
         <Outlet />
       </section>
     </section>

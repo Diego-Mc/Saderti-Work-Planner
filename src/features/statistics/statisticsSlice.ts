@@ -7,7 +7,7 @@ import type { RootState } from '../../store'
 import { apiSlice } from '../api/apiSlice'
 import { StatisticsState } from '../../types'
 
-export const workersApi = apiSlice.injectEndpoints({
+export const statisticsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getStatistics: builder.query<StatisticsState, void>({
       queryFn: async (query, queryApi, extraOptions, baseQuery) => {
@@ -21,6 +21,6 @@ export const workersApi = apiSlice.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useGetStatisticsQuery, usePrefetch } = workersApi
+export const { useGetStatisticsQuery } = statisticsApi
 
 ////////////////////////////////////////////////////////////////

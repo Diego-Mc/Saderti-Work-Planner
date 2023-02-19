@@ -41,3 +41,116 @@
     }
   }
 }
+
+//burger
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+  position: absolute;
+  width: 24px;
+  height: 18px;
+  // left: 36px;
+  // top: 36px;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  button + span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+  background: var(--acc-dark-gray);
+  height: 4px !important;
+  &:nth-last-of-type(1) {
+    width: 12px;
+  }
+  &:nth-last-of-type(2) {
+    width: 24px;
+  }
+  &:nth-last-of-type(3) {
+    width: 19px;
+  }
+}
+
+/* Color/shape of burger icon bars on hover*/
+.bm-burger-bars-hover {
+  background: var(--acc-dark-gray);
+  opacity: 1 !important;
+  // background: #a90000;
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+  background: #bdc3c7;
+}
+
+/*
+Sidebar wrapper styles
+Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
+*/
+.bm-menu-wrap {
+  position: fixed;
+  top: 0;
+  box-shadow: -6px 0px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* General sidebar styles */
+.bm-menu {
+  background: #fff;
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+  > * {
+    color: var(--acc-dark-gray) !important;
+  }
+  > a {
+    display: block;
+    margin-bottom: 16px;
+    text-decoration: none;
+    &:hover {
+      color: var(--acc-dark-gray) !important;
+      text-decoration: none;
+    }
+    &.active {
+      color: var(--acc-blue) !important;
+      text-decoration: none;
+    }
+  }
+}
+
+/* Individual item */
+.bm-item {
+  display: inline-block;
+  margin-bottom: 16px;
+  text-decoration: none !important;
+  &.active {
+    color: var(--acc-blue) !important;
+  }
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  background: rgba(0, 0, 0, 0) !important;
+  top: 0;
+}

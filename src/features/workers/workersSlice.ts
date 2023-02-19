@@ -42,6 +42,7 @@ export const workersApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: { name: workerName },
       }),
+      invalidatesTags: ['Statistics'],
       async onQueryStarted(workerName, { dispatch, queryFulfilled }) {
         try {
           const { data: savedWorker } = await queryFulfilled
@@ -68,6 +69,7 @@ export const workersApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: { shiftTime },
       }),
+
       async onQueryStarted(
         { shiftTime, workerId },
         { dispatch, queryFulfilled }
@@ -107,6 +109,7 @@ export const workersApi = apiSlice.injectEndpoints({
         url: `/workers/reset-shift-times`,
         method: 'PATCH',
       }),
+      invalidatesTags: ['Workers'],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         dispatch(
           workersApi.util.updateQueryData(
@@ -133,6 +136,7 @@ export const workersApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: workerDetails,
       }),
+      invalidatesTags: ['Statistics'],
       async onQueryStarted(
         { workerDetails, workerId },
         { dispatch, queryFulfilled }
@@ -178,6 +182,8 @@ export const workersApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: (res, err, workerId) => [
         { type: 'Workers', id: workerId },
+        { type: 'Workers', id: 'LIST' },
+        { type: 'Statistics' },
       ],
     }),
   }),

@@ -4,7 +4,8 @@ import { Header } from './cmps/Header'
 import { MachineDashboard } from './cmps/MachineDashboard'
 import { ScheduleDashboard } from './cmps/ScheduleDashboard'
 import { WorkerDashboard } from './cmps/WorkerDashboard'
-import { usePrefetch } from './features/statistics/statisticsSlice'
+import { apiSlice } from './features/api/apiSlice'
+import { statisticsApi } from './features/statistics/statisticsSlice'
 import { addWorker } from './features/workers/workersSlice'
 import { useAppDispatch } from './hooks'
 import { Home } from './views/Home'
@@ -64,9 +65,11 @@ const App = () => {
     return router
   }
 
-  const prefetchStatistics = usePrefetch('getStatistics')
+  const prefetchUser = apiSlice.usePrefetch('fetchUser')
+  const prefetchStatistics = statisticsApi.usePrefetch('getStatistics')
 
   useEffect(() => {
+    prefetchUser()
     prefetchStatistics()
   })
 

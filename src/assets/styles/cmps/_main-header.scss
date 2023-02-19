@@ -1,16 +1,41 @@
 .main-header {
   background-color: var(--acc-light-gray);
   height: $headerHeight;
-  display: flex;
+  display: grid;
   justify-content: space-between;
+  justify-items: center;
   align-items: center;
+  position: relative;
+  grid-template-columns: 200px 1fr 200px;
   font-family: 'Secular One';
-  margin-inline: 50px;
+  padding-inline: 50px;
+  &.home-header {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+      rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    background-color: var(--acc-darker-gray);
+    color: white;
+    .logo .main {
+      fill: white;
+    }
+
+    .bm-burger-bars {
+      background-color: white;
+    }
+  }
+  .mb-only {
+    display: none;
+    position: absolute;
+    * {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
   .nav {
     flex-grow: 1;
     display: flex;
     justify-content: space-between;
     max-width: 400px;
+    width: 100%;
     > * {
       text-decoration: none;
       &.active {
@@ -18,8 +43,51 @@
       }
     }
   }
+  .user {
+    justify-self: end;
+  }
   .logo {
     cursor: pointer;
+    height: 36px;
+    justify-self: start;
+    a {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      svg {
+        height: 100%;
+      }
+    }
+    // svg {
+    //   .main {
+    //     fill: #575757;
+    //     transition: all 0.2s ease-in;
+    //   }
+    //   .secondary {
+    //     transition: all 0.2s ease-in;
+    //     fill: #afafaf;
+    //   }
+    // }
+    // &:hover {
+    //   svg {
+    //     .main {
+    //       fill: #000;
+    //     }
+    //     .item1 {
+    //       fill: #3b82f6;
+    //     }
+    //     .item2 {
+    //       fill: #f6ab3b;
+    //     }
+    //     .item3 {
+    //       fill: #f63b7e;
+    //     }
+    //     .item4 {
+    //       fill: #3b82f6;
+    //     }
+    //   }
+    // }
   }
 
   .logged-section {
@@ -35,6 +103,37 @@
       &:hover {
         text-decoration: underline;
       }
+    }
+  }
+
+  @media screen and (max-width: 980px) {
+    .nav {
+      display: none;
+    }
+    .mb-only {
+      display: flex;
+      position: static;
+      * {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    .logo {
+      justify-self: center;
+    }
+  }
+
+  @media screen and (max-width: 680px) {
+    grid-template-columns: 1fr 1fr;
+    padding-inline: 16px;
+    .user {
+      display: none;
+      position: absolute;
+    }
+
+    .logo {
+      justify-self: end;
     }
   }
 }

@@ -58,7 +58,7 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
       width={
         (size?.width || 1200) < 720 ? size.width : (size?.width || 1200) - 400
       }
-      height={machines.length * 60}
+      height={machines.length * 80}
       padding={{ top: 30, bottom: 50, left: 80, right: 60 }}
       domain={maxAmountWorked ? { y: [0, maxAmountWorked] } : {}}
       horizontal

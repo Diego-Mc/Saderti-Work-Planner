@@ -85,7 +85,7 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
           <h2 className="title">זמן משמרת</h2>
           <div className="btns">
             <button className="pill-btn danger" onClick={handleTimeShiftReset}>
-              אתחול נתונים
+              אתחול
             </button>
             <button
               className="pill-btn continue-btn"

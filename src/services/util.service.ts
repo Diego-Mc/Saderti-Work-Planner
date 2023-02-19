@@ -22,8 +22,6 @@ function formatDateRange(
   const fromYear = moment(from).year()
   const toYear = moment(to).year()
 
-  console.log(fromMonth, toMonth, toYear, fromYear, 'sfds')
-
   if (fromYear !== toYear) {
     return `${moment(from).format('DD/MM/yyyy')}-${moment(to).format(
       'DD/MM/yyyy'

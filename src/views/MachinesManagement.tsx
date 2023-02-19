@@ -63,7 +63,7 @@ export const MachinesManagement: React.FC<MachinesManagementProps> = ({}) => {
             : null}
         </div>
       </section>
-      <section className="machine-dashboard">
+      <section className="machine-dashboard-wrapper dashboard-wrapper">
         <Outlet />
       </section>
     </section>

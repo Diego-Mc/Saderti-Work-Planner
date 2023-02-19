@@ -61,6 +61,29 @@
     }
   }
 
+  .machine-dashboard-wrapper:empty::before {
+    content: 'בחר מכונה או הוסף מכונה חדשה';
+  }
+  .worker-dashboard-wrapper:empty::before {
+    content: 'בחר עובד או הוסף עובד חדש';
+  }
+  .schedule-dashboard-wrapper:empty::before {
+    content: 'בחר סידור או הוסף סידור חדש';
+  }
+  .dashboard-wrapper:empty::before {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - $headerHeight - 40px);
+    font-weight: 800;
+    font-family: 'Secular One';
+    opacity: 0.6;
+    background-color: var(--acc-gray);
+    color: #9b9ea5;
+    margin: 20px 0 0 20px;
+    border-radius: 8px;
+  }
+
   @media screen and (max-width: 720px) {
     grid-template-columns: 1fr;
     .side-links .management-item-link {

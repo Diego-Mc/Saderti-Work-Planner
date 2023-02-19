@@ -93,7 +93,7 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
             </h2>
             <div className="actions">
               <button className="pill-btn" onClick={handleNameChange}>
-                עדכון שם
+                שינוי שם
               </button>
               <button className="pill-btn danger" onClick={handleDelete}>
                 ניתוק

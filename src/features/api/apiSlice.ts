@@ -1,9 +1,5 @@
+import { userService } from './../../services/user.service'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-type AuthState = {
-  userId: string | null
-  token: string | null
-}
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -14,7 +10,14 @@ export const apiSlice = createApi({
         : 'http://localhost:3001/api',
     credentials: 'include',
   }),
-  tagTypes: ['Machines', 'Schedules', 'Workers', 'Auth', 'Statistics'],
+  tagTypes: [
+    'Machines',
+    'Schedules',
+    'Workers',
+    'Auth',
+    'Statistics',
+    'CheckAuth',
+  ],
   endpoints: (builder) => ({
     /* AUTH */
     register: builder.mutation({
@@ -72,6 +75,77 @@ export const apiSlice = createApi({
         'Auth',
         'Statistics',
       ],
+    }),
+    fetchUser: builder.query<any, void>({
+      // queryFn: async (query, queryApi, extraOptions, baseQuery) => {
+      //   let path = '/auth/fetch-user/'
+      //   const user = userService.getLoggedInUser()
+      //   if (user) path += user._id
+      //   const result = await baseQuery(path)
+      //   const data = result.data as { _id: string; username: string }
+      //   const error = result.error
+      //   console.log('data', data, result)
+      //   if (error?.status === 403) {
+      //     sessionStorage.removeItem('loggedInUser')
+      //     apiSlice.util.invalidateTags([
+      //       'Machines',
+      //       'Schedules',
+      //       'Workers',
+      //       'Auth',
+      //       'Statistics',
+      //     ])
+      //     return { error }
+      //   }
+      //   userService.saveLocalUser(data)
+      //   return { data }
+      // },
+      query: () => ({
+        url: `/auth/fetch-user/${userService.getLoggedInUser()?._id || ''}`,
+        method: 'GET',
+      }),
+      transformResponse: (res:  { _id: string; username: string  }) => {
+        console.log('res', res)
+        userService.saveLocalUser(res)
+        return res
+      },
+      transformErrorResponse: (err) => {
+        sessionStorage.removeItem('loggedInUser')
+        apiSlice.util.invalidateTags([
+          'Machines',
+          'Schedules',
+          'Workers',
+          'Auth',
+          'Statistics',
+        ])
+        return err
+      },
+
+      // transformResponse: (res: { user: { _id: string; username: string } }) => {
+      //   console.log('res', res)
+      //   const user = userService.getLoggedInUser()
+      //   if (user) {
+      //     if (user._id === res.user._id) return res
+      //     else {
+      //       sessionStorage.removeItem('loggedInUser')
+      //       window.location.reload()
+      //       apiSlice.util.invalidateTags([
+      //         'Machines',
+      //         'Schedules',
+      //         'Workers',
+      //         'Auth',
+      //         'Statistics',
+      //       ])
+      //     }
+      //   }
+      //   sessionStorage.setItem('loggedInUser', JSON.stringify(res.user))
+      //   return res
+      // },
+      // transformErrorResponse: (err) => {
+      //   console.log('err', err)
+      //   if (err.status === 403) {
+      //     sessionStorage.removeItem('loggedInUser')
+      //   }
+      // },
     }),
     //   getPosts: builder.query<PostProps[], string | void>({
     //     queryFn: async (query = undefined, queryApi, extraOptions, baseQuery) => {
@@ -518,5 +592,10 @@ export const apiSlice = createApi({
 //   useUpdateDescriptionMutation,
 // } = apiSlice
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } =
-  apiSlice
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useFetchUserQuery,
+  usePrefetch,
+} = apiSlice

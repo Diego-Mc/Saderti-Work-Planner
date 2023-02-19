@@ -68,12 +68,12 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
               <button
                 className="pill-btn"
                 onClick={() => handleAmountOfWorkersChange(machine)}>
-                עדכון יעד עובדים
+                יעד עובדים
               </button>
               <button
                 className="pill-btn"
                 onClick={() => handleImportanceChange(machine)}>
-                עדכון חשיבות
+                חשיבות
               </button>
               <button
                 className="pill-btn"
@@ -116,7 +116,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
                   ? size.width
                   : (size?.width || 1200) - 400
               }
-              height={workersAmountWorked.length * 30}>
+              height={workersAmountWorked.length * 80}>
               <VictoryBar
                 theme={VictoryTheme.material}
                 style={{

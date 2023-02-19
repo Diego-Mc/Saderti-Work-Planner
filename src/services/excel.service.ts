@@ -10,7 +10,7 @@ export const downloadWorkbook = (workbook: ExcelJS.Workbook) => {
     const url = window.URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = 'download.xlsx'
+    anchor.download = 'סידור.xlsx'
     anchor.click()
     window.URL.revokeObjectURL(url)
   })

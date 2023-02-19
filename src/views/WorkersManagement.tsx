@@ -65,7 +65,7 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
           ) : null}
         </div>
       </section>
-      <section className="worker-dashboard">
+      <section className="worker-dashboard-wrapper dashboard-wrapper">
         <Outlet />
       </section>
     </section>

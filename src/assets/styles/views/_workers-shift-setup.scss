@@ -53,8 +53,23 @@
 
   @media screen and (max-width: 750px) {
     grid-template-columns: 1fr;
-    .first-step .worker-shift-header .btns .continue-btn {
-      display: block;
+    .first-step .worker-shift-header {
+      flex-direction: column;
+      gap: 10px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      .title {
+        // font-size: 1.8rem;
+        // margin: 0;
+        padding: 0;
+      }
+      .btns {
+        width: 100%;
+        justify-content: space-between;
+        .continue-btn {
+          display: block;
+        }
+      }
     }
     .next-step {
       display: none;

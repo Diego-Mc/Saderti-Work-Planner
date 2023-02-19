@@ -60,6 +60,11 @@ export const AuthBtn: React.FC<AuthBtnProps> = ({}) => {
     }
   }
 
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowModal(false)
+  }
+
   return (
     <section className="auth-wrapper">
       {userService.isLoggedIn() ? (
@@ -77,8 +82,8 @@ export const AuthBtn: React.FC<AuthBtnProps> = ({}) => {
             כניסה
           </button>
           {showModal ? (
-            <div className="overlay">
-              <form className="auth-modal">
+            <div className="overlay" onClick={handleOverlayClick}>
+              <form className="auth-modal" onClick={(e) => e.stopPropagation()}>
                 {isRegister ? (
                   <input
                     type="text"

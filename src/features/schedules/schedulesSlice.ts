@@ -45,6 +45,8 @@ export const schedulesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body: schedule,
       }),
+      invalidatesTags: ['Statistics'],
+
       async onQueryStarted(schedule, { dispatch, queryFulfilled }) {
         try {
           const { data: savedSchedule } = await queryFulfilled
@@ -76,6 +78,8 @@ export const schedulesApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: { from, to },
       }),
+      invalidatesTags: ['Statistics'],
+
       async onQueryStarted(
         { from, to, scheduleId },
         { dispatch, queryFulfilled }
@@ -124,6 +128,8 @@ export const schedulesApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: { destinationDetails, worker },
       }),
+      invalidatesTags: ['Statistics'],
+
       async onQueryStarted(
         { destinationDetails, worker, scheduleId },
         { dispatch, queryFulfilled }
@@ -183,6 +189,8 @@ export const schedulesApi = apiSlice.injectEndpoints({
         method: 'PATCH',
         body: { destinationDetails, worker },
       }),
+      invalidatesTags: ['Statistics'],
+
       async onQueryStarted(
         { destinationDetails, worker, scheduleId },
         { dispatch, queryFulfilled }
@@ -389,6 +397,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
         url: `/schedules/${scheduleId}`,
         method: 'POST',
       }),
+      invalidatesTags: ['Statistics', { type: 'Schedules', id: 'LIST' }],
       async onQueryStarted(
         { scheduleDetails, scheduleId },
         { dispatch, queryFulfilled }
@@ -423,6 +432,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
       invalidatesTags: (res, err, scheduleId) => [
         { type: 'Schedules', id: scheduleId },
         { type: 'Schedules', id: 'LIST' },
+        { type: 'Statistics', id: 'LIST' },
       ],
     }),
   }),
