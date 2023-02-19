@@ -110,3 +110,4 @@ export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
     </div>
   )
 }
+export default WorkerList

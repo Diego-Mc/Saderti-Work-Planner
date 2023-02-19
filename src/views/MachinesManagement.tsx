@@ -69,3 +69,4 @@ export const MachinesManagement: React.FC<MachinesManagementProps> = ({}) => {
     </section>
   )
 }
+export default MachinesManagement

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Rate } from 'rsuite'
 import { useMachineHandlers } from '../hooks/useMachineHandlers'
 import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
-import { MachineState, TableRow } from '../types'
+import { TableRow } from '../types'
 import { Cell } from './Cell'
 
 interface TableProps {
@@ -70,3 +69,4 @@ export const Table: React.FC<TableProps> = ({ table }) => {
     </div>
   )
 }
+export default Table

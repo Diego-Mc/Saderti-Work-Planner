@@ -1,15 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import workersReducer from './features/workers/workersSlice'
-import schedulesReducer from './features/schedules/schedulesSlice'
-import machinesReducer from './features/machines/machinesSlice'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import { apiSlice } from './features/api/apiSlice'
 
 export const store = configureStore({
   reducer: {
-    workers: workersReducer,
-    schedules: schedulesReducer,
-    machines: machinesReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

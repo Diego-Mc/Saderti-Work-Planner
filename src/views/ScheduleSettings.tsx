@@ -1,7 +1,9 @@
+import React, { lazy, Suspense } from 'react'
+const ShiftTimesSettingsList = lazy(
+  () => import('../cmps/ShiftTimesSettingsList')
+)
 import moment from 'moment'
-import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ShiftTimesSettingsList } from '../cmps/ShiftTimesSettingsList'
 import { useGetMachinesQuery } from '../features/machines/machinesSlice'
 import { useAddScheduleMutation } from '../features/schedules/schedulesSlice'
 import {
@@ -9,7 +11,6 @@ import {
   useResetShiftTimesMutation,
   useSetShiftTimeMutation,
 } from '../features/workers/workersSlice'
-import { utilService } from '../services/util.service'
 import { BaseTableRow } from '../types'
 
 interface Props {
@@ -95,10 +96,12 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
           </div>
         </header>
         {workers ? (
-          <ShiftTimesSettingsList
-            handleToggleShift={handleToggleShift}
-            workers={workers}
-          />
+          <Suspense>
+            <ShiftTimesSettingsList
+              handleToggleShift={handleToggleShift}
+              workers={workers}
+            />
+          </Suspense>
         ) : null}
       </section>
       <section className="next-step">
@@ -118,3 +121,4 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
     </section>
   )
 }
+export default ScheduleSettings

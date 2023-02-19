@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './App'
-import 'rsuite/dist/rsuite.min.css'
-import './assets/styles/main.scss'
+
 import { store } from './store'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { usePreview } from 'react-dnd-preview'
+import { Loader } from './cmps/Loader'
 
 const MyPreview = () => {
   const preview = usePreview()

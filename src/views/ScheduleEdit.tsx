@@ -1,7 +1,8 @@
-import { WorkerList } from '../cmps/WorkerList'
-import { Table } from '../cmps/Table'
+import React, { lazy, Suspense, useEffect, useRef } from 'react'
 
-import React, { useEffect } from 'react'
+const WorkerList = lazy(() => import('../cmps/WorkerList'))
+const Table = lazy(() => import('../cmps/Table'))
+
 import {
   useGetScheduleQuery,
   usePlaceWorkerMutation,
@@ -14,7 +15,6 @@ import { DateRange } from 'rsuite/esm/DateRangePicker'
 import moment from 'moment'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 
-import { interpolateWarm } from 'd3-scale-chromatic'
 import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
 
 interface Props {}
@@ -25,6 +25,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
   const { data: schedule, isLoading } = useGetScheduleQuery(
     params.scheduleId as string
   )
+
+  const viewRef = useRef<HTMLDivElement>(null)
 
   const [value, setValue] = React.useState<[Date, Date] | null>()
 
@@ -44,8 +46,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
     if (!schedule || !statistics) return
 
-    console.log(schedule)
-    console.log(statistics)
+    // console.log(schedule)
+    // console.log(statistics)
 
     // Map - workerId -> [{machineId: rating}]
 
@@ -114,14 +116,14 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
           if (cell !== null) return
           if (row.locked[time][cellIdx] === true) return
 
-          const availableWorkers = machinesMap[machineId][time]
-            .filter(({ workerId }) => !usedWorkers.has(workerId))
-            .sort((a, b) => b.score - a.score)
-            .concat(
-              machinesMap[machineId]['unassigned']
-                ?.filter(({ workerId }) => !usedWorkers.has(workerId))
-                ?.sort((a, b) => b.score - a.score)
-            )
+          const availableWorkersByTime = (t: string) =>
+            machinesMap[machineId][t]
+              ?.filter(({ workerId }) => !usedWorkers.has(workerId))
+              ?.sort((a, b) => b.score - a.score) || []
+
+          const availableWorkers = availableWorkersByTime(time).concat(
+            availableWorkersByTime('unassigned')
+          )
 
           const bestWorkerId = availableWorkers[0]?.workerId
 
@@ -147,7 +149,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     for (let call of placeWorkerCalls) {
       await placeWorker(call).unwrap()
     }
-    console.log(placeWorkerCalls)
+    // console.log(placeWorkerCalls)
   }
 
   const handleSetDate = (date: DateRange | null) => {
@@ -166,7 +168,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
   }, [schedule])
 
   return (
-    <div className="schedule-edit-view">
+    <div className="schedule-edit-view" ref={viewRef}>
       <section className="schedule-edit-header">
         <div className="title">
           <h2>סידור שבועי לתאריכים </h2>
@@ -201,10 +203,18 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
       <main>
         <aside className="workers-list-section">
-          {schedule ? <WorkerList workers={schedule.workers} /> : null}
+          {schedule ? (
+            <Suspense>
+              <WorkerList workers={schedule.workers} />
+            </Suspense>
+          ) : null}
         </aside>
         <section className="table-section">
-          {schedule ? <Table table={schedule.table} /> : null}
+          {schedule ? (
+            <Suspense>
+              <Table table={schedule.table} />
+            </Suspense>
+          ) : null}
         </section>
       </main>
     </div>
@@ -230,3 +240,4 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 //1. add lock mechanism to cells
 //2. add logic for generating the time shifts for the workers
 //3. connect to the backend & add authentication to the app (maybe use SQL??)
+export default ScheduleEdit

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Feature } from '../cmps/homepage/feature'
+import { Feature } from '../cmps/homepage/Feature'
 
 interface HomeProps {}
 
@@ -101,3 +101,4 @@ export const Home: React.FC<HomeProps> = ({}) => {
     </section>
   )
 }
+export default Home

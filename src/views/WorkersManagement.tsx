@@ -71,3 +71,4 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
     </section>
   )
 }
+export default WorkersManagement

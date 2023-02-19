@@ -39,7 +39,7 @@
     > * {
       text-decoration: none;
       &.active {
-        color: var(--acc-blue);
+        color: var(--acc-blue) !important;
       }
     }
   }

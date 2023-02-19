@@ -5,6 +5,7 @@ import {
   useRegisterMutation,
 } from '../features/api/apiSlice'
 import { userService } from '../services/user.service'
+import 'sweetalert2'
 
 interface AuthBtnProps {}
 

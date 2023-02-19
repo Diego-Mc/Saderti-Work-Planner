@@ -159,3 +159,4 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
     </section>
   )
 }
+export default MachineDashboard

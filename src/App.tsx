@@ -1,65 +1,103 @@
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
-import { Header } from './cmps/Header'
-import { MachineDashboard } from './cmps/MachineDashboard'
-import { ScheduleDashboard } from './cmps/ScheduleDashboard'
-import { WorkerDashboard } from './cmps/WorkerDashboard'
+
+// import 'https://rsms.me/inter/inter.css'
+import 'rsuite/dist/rsuite.min.css'
+import './assets/styles/main.scss'
 import { apiSlice } from './features/api/apiSlice'
 import { statisticsApi } from './features/statistics/statisticsSlice'
-import { addWorker } from './features/workers/workersSlice'
-import { useAppDispatch } from './hooks'
-import { Home } from './views/Home'
-import { MachinesManagement } from './views/MachinesManagement'
-import { SchedulesManagement } from './views/SchedulesManagement'
-import { WorkersManagement } from './views/WorkersManagement'
-// import { tableDemo } from './table-demo-data.json'
-import { ScheduleSettings } from './views/ScheduleSettings'
-import { ScheduleEdit } from './views/ScheduleEdit'
+
+import Header from './cmps/Header'
+const Home = lazy(() => import('./views/Home'))
+const MachineDashboard = lazy(() => import('./cmps/MachineDashboard'))
+const ScheduleDashboard = lazy(() => import('./cmps/ScheduleDashboard'))
+const WorkerDashboard = lazy(() => import('./cmps/WorkerDashboard'))
+const MachinesManagement = lazy(() => import('./views/MachinesManagement'))
+const SchedulesManagement = lazy(() => import('./views/SchedulesManagement'))
+const WorkersManagement = lazy(() => import('./views/WorkersManagement'))
+const ScheduleSettings = lazy(() => import('./views/ScheduleSettings'))
+const ScheduleEdit = lazy(() => import('./views/ScheduleEdit'))
 
 const App = () => {
   const Router = () => {
     const router = useRoutes([
       {
         path: '/',
-        element: <Home />,
+        element: (
+          <Suspense>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: '/workers',
-        element: <WorkersManagement />,
+        element: (
+          <Suspense>
+            <WorkersManagement />
+          </Suspense>
+        ),
         children: [
           {
             path: ':workerId',
-            element: <WorkerDashboard />,
+            element: (
+              <Suspense>
+                <WorkerDashboard />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: '/machines',
-        element: <MachinesManagement />,
+        element: (
+          <Suspense>
+            <MachinesManagement />
+          </Suspense>
+        ),
         children: [
           {
             path: ':machineId',
-            element: <MachineDashboard />,
+            element: (
+              <Suspense>
+                <MachineDashboard />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: '/schedules',
-        element: <SchedulesManagement />,
+        element: (
+          <Suspense>
+            <SchedulesManagement />
+          </Suspense>
+        ),
         children: [
           {
             path: ':scheduleId',
-            element: <ScheduleDashboard />,
+            element: (
+              <Suspense>
+                <ScheduleDashboard />
+              </Suspense>
+            ),
           },
         ],
       },
       {
         path: '/edit/:scheduleId',
-        element: <ScheduleEdit />,
+        element: (
+          <Suspense>
+            <ScheduleEdit />
+          </Suspense>
+        ),
       },
       {
         path: '/new',
-        element: <ScheduleSettings />,
+        element: (
+          <Suspense>
+            <ScheduleSettings />
+          </Suspense>
+        ),
       },
     ])
     return router

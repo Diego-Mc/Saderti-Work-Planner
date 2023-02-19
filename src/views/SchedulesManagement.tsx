@@ -61,3 +61,4 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
     </section>
   )
 }
+export default SchedulesManagement

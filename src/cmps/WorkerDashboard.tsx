@@ -151,3 +151,4 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
     </section>
   )
 }
+export default WorkerDashboard

@@ -103,7 +103,7 @@ export const apiSlice = createApi({
         url: `/auth/fetch-user/${userService.getLoggedInUser()?._id || ''}`,
         method: 'GET',
       }),
-      transformResponse: (res:  { _id: string; username: string  }) => {
+      transformResponse: (res: { _id: string; username: string }) => {
         console.log('res', res)
         userService.saveLocalUser(res)
         return res

@@ -5,8 +5,11 @@
   > * {
     padding-inline: 50px;
   }
-  p {
+  p,
+  li,
+  a {
     max-width: 900px;
+    font-size: 1.1rem;
   }
   .hero {
     background-color: var(--acc-darker-gray);
@@ -15,7 +18,7 @@
     flex-direction: column;
     text-align: center;
     align-items: center;
-    max-height: 85vh;
+    // max-height: 85vh;
     gap: 16px;
     > * {
       transform: translateY(60px);
@@ -25,7 +28,6 @@
     }
 
     .text {
-      font-size: 1.1rem;
     }
 
     button {

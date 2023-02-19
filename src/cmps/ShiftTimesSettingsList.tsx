@@ -73,3 +73,5 @@ export const ShiftTimesSettingsList: React.FC<Props> = ({
     </section>
   )
 }
+
+export default ShiftTimesSettingsList

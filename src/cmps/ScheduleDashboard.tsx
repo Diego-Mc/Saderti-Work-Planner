@@ -65,3 +65,4 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
     </section>
   )
 }
+export default ScheduleDashboard
