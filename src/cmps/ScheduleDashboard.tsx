@@ -1,13 +1,8 @@
 import moment from 'moment'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import {
-  useDeleteScheduleMutation,
-  useGetScheduleQuery,
-} from '../features/schedules/schedulesSlice'
+import { useGetScheduleQuery } from '../features/schedules/schedulesSlice'
 import { Table } from './Table'
-import { downloadWorkbook, scheduleToExcel } from '../services/excel.service'
-import Swal from 'sweetalert2'
 import { utilService } from '../services/util.service'
 import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
 
@@ -29,7 +24,7 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
                 <span
                   className="material-symbols-outlined back-icon"
                   onClick={() => navigate('/schedules')}>
-                  chevron_right
+                  &#xe5cc;
                 </span>
                 {utilService.formatDateRange(
                   schedule.date.from,

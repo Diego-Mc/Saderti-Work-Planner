@@ -1,20 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Feature } from '../cmps/homepage/Feature'
+import { AuthModal } from '../hooks/AuthModal'
 
 interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = ({}) => {
+  const [showModal, setShowModal] = useState(false)
   return (
     <section className="home-view">
+      {showModal ? <AuthModal onClose={() => setShowModal(false)} /> : null}
       <section className="hero">
         <h2 className="title">ניהול עובדי משמרת מעולם לא היה פשוט יותר</h2>
         <p className="text">
           אפליקציית סדר'תי מסדרת אותך - ניהול עובדים על בסיס ותוך יצירת סידורי
           עבודה
         </p>
-        <button className="btn primary outlined">סדר אותי!</button>
+        <button
+          className="btn primary outlined"
+          onClick={() => setShowModal(true)}>
+          סדר אותי!
+        </button>
         <article className="hero-media">
-          <img src="img-hero.png" alt="" />
+          <img
+            src="https://res.cloudinary.com/wewix/image/upload/v1676854968/saderti/img-hero_g8fze7.png"
+            alt="hero image showcasing a schedule being built"
+          />
         </article>
       </section>
       <section className="features">
@@ -23,27 +33,27 @@ export const Home: React.FC<HomeProps> = ({}) => {
           <Feature
             title="בקרת נתונים מלאה"
             text="צפו בנתונים סטטיסטיים מעודכנים על כל עובד ועל כל מכונה"
-            icon="insert_chart"
+            icon="&#xe24b;"
           />
           <Feature
             title="יצירת סידורים בקלות"
             text="תגררו את העובד שאתם רוצים למקום שהוא צריך להיות - פשוט וקל"
-            icon="drag_pan"
+            icon="&#xf71e;"
           />
           <Feature
             title="יצירת סידורים אוטומטית"
             text="מלאו את הסידור שלכם בצורה אוטומטית בעזרת אלגוריתם מתוחכם מבוסס סטטיסטיקה"
-            icon="acute"
+            icon="&#xe4cb;"
           />
           <Feature
             title="היסטוריית סידורים עדכנית"
             text="כל הסידורים נשמרים אוטומטית ותמיד זמינים לעריכה"
-            icon="work_history"
+            icon="&#xec09;"
           />
           <Feature
             title="ייצוא לאקסל"
             text="בניתם סידור? בלחיצת כפתור הוא בקובץ אקסל בפורמט ייעודי לסידור עבודה"
-            icon="table_view"
+            icon="&#xf1be;"
           />
         </section>
       </section>
@@ -91,7 +101,11 @@ export const Home: React.FC<HomeProps> = ({}) => {
       </section>
       <footer className="footer">
         <p className="text">הצטרפו לסדר'תי ותנו לו לסדר אתכם כבר עכשיו</p>
-        <button className="btn primary outlined">הרשמה</button>
+        <button
+          className="btn primary outlined"
+          onClick={() => setShowModal(true)}>
+          הרשמה
+        </button>
         <div className="lines">
           <div className="line-1 line"></div>
           <div className="line-2 line"></div>

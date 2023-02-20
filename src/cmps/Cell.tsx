@@ -1,6 +1,5 @@
 import React from 'react'
 import { WorkerType } from '../types'
-import { moveWorkerFn, setToggleLockFn } from './Table'
 import { WorkerItem } from './WorkerItem'
 
 interface CellProps {

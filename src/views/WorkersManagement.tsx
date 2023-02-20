@@ -1,6 +1,9 @@
-import React from 'react'
-import { Link, NavLink, Outlet, useParams } from 'react-router-dom'
+import React, { lazy, Suspense } from 'react'
+import { NavLink, Route, Routes, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
+import { ListSkeletonLoader } from '../cmps/ListSkeletonLoader'
+import { Loader } from '../cmps/Loader'
+const WorkerDashboard = lazy(() => import('../cmps/WorkerDashboard'))
 import {
   useAddWorkerMutation,
   useGetWorkersQuery,
@@ -38,7 +41,7 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
           <button
             className="management-item-link add-btn"
             onClick={openAddWorkerModal}>
-            <span className="material-symbols-outlined">add</span>
+            <span className="material-symbols-outlined">&#xe145;</span>
             הוסף עובד
           </button>
           {data ? (
@@ -54,7 +57,7 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
                         className={`material-symbols-outlined ${
                           isActive ? '' : 'outlined'
                         }`}>
-                        person
+                        &#xe7fd;
                       </span>
                       {worker.name}
                     </>
@@ -62,11 +65,24 @@ export const WorkersManagement: React.FC<WorkersManagementProps> = ({}) => {
                 </NavLink>
               ))}
             </>
-          ) : null}
+          ) : (
+            <ListSkeletonLoader />
+          )}
         </div>
       </section>
       <section className="worker-dashboard-wrapper dashboard-wrapper">
-        <Outlet />
+        {/* <Outlet /> */}
+        <Suspense
+          fallback={
+            <>
+              <section className="worker-dashboard-wrapper dashboard-wrapper" />
+              <Loader />
+            </>
+          }>
+          <Routes>
+            <Route path=":workerId" element={<WorkerDashboard />} />
+          </Routes>
+        </Suspense>
       </section>
     </section>
   )

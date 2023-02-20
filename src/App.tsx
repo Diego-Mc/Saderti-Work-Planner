@@ -1,17 +1,13 @@
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
 
 // import 'https://rsms.me/inter/inter.css'
 import 'rsuite/dist/rsuite.min.css'
 import './assets/styles/main.scss'
-import { apiSlice } from './features/api/apiSlice'
-import { statisticsApi } from './features/statistics/statisticsSlice'
+import { Loader } from './cmps/Loader'
 
-import Header from './cmps/Header'
+const Header = lazy(() => import('./cmps/Header'))
 const Home = lazy(() => import('./views/Home'))
-const MachineDashboard = lazy(() => import('./cmps/MachineDashboard'))
-const ScheduleDashboard = lazy(() => import('./cmps/ScheduleDashboard'))
-const WorkerDashboard = lazy(() => import('./cmps/WorkerDashboard'))
 const MachinesManagement = lazy(() => import('./views/MachinesManagement'))
 const SchedulesManagement = lazy(() => import('./views/SchedulesManagement'))
 const WorkersManagement = lazy(() => import('./views/WorkersManagement'))
@@ -23,100 +19,58 @@ const App = () => {
     const router = useRoutes([
       {
         path: '/',
-        element: (
-          <Suspense>
-            <Home />
-          </Suspense>
-        ),
+        element: <Home />,
       },
       {
         path: '/workers',
-        element: (
-          <Suspense>
-            <WorkersManagement />
-          </Suspense>
-        ),
+        element: <WorkersManagement />,
         children: [
           {
             path: ':workerId',
-            element: (
-              <Suspense>
-                <WorkerDashboard />
-              </Suspense>
-            ),
+            // element: <WorkerDashboard />,
           },
         ],
       },
       {
         path: '/machines',
-        element: (
-          <Suspense>
-            <MachinesManagement />
-          </Suspense>
-        ),
+        element: <MachinesManagement />,
         children: [
           {
             path: ':machineId',
-            element: (
-              <Suspense>
-                <MachineDashboard />
-              </Suspense>
-            ),
+            // element: <MachineDashboard />,
           },
         ],
       },
       {
         path: '/schedules',
-        element: (
-          <Suspense>
-            <SchedulesManagement />
-          </Suspense>
-        ),
+        element: <SchedulesManagement />,
         children: [
           {
             path: ':scheduleId',
-            element: (
-              <Suspense>
-                <ScheduleDashboard />
-              </Suspense>
-            ),
+            // element: <ScheduleDashboard />,
           },
         ],
       },
       {
         path: '/edit/:scheduleId',
-        element: (
-          <Suspense>
-            <ScheduleEdit />
-          </Suspense>
-        ),
+        element: <ScheduleEdit />,
       },
       {
         path: '/new',
-        element: (
-          <Suspense>
-            <ScheduleSettings />
-          </Suspense>
-        ),
+        element: <ScheduleSettings />,
       },
     ])
     return router
   }
 
-  const prefetchUser = apiSlice.usePrefetch('fetchUser')
-  const prefetchStatistics = statisticsApi.usePrefetch('getStatistics')
-
-  useEffect(() => {
-    prefetchUser()
-    prefetchStatistics()
-  })
-
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
-        <Router />
-      </BrowserRouter>
+      <Suspense fallback={<Loader />}>
+        <BrowserRouter>
+          <Header />
+          <Router />
+        </BrowserRouter>
+      </Suspense>
     </div>
   )
 }

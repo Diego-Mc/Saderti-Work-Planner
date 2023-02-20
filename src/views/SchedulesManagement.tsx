@@ -1,5 +1,14 @@
-import React from 'react'
-import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import React, { lazy, Suspense } from 'react'
+import {
+  NavLink,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from 'react-router-dom'
+import { ListSkeletonLoader } from '../cmps/ListSkeletonLoader'
+import { Loader } from '../cmps/Loader'
+const ScheduleDashboard = lazy(() => import('../cmps/ScheduleDashboard'))
 import { useGetSchedulesQuery } from '../features/schedules/schedulesSlice'
 import { utilService } from '../services/util.service'
 
@@ -24,7 +33,7 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
           <button
             className="management-item-link add-btn"
             onClick={() => navigate('/new')}>
-            <span className="material-symbols-outlined">add</span>
+            <span className="material-symbols-outlined">&#xe145;</span>
             הוסף סידור
           </button>
           {data ? (
@@ -40,7 +49,7 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
                         className={`material-symbols-outlined ${
                           isActive ? '' : 'outlined'
                         }`}>
-                        clinical_notes
+                        &#xe09e;
                       </span>
 
                       {utilService.formatDateRange(
@@ -52,11 +61,24 @@ export const SchedulesManagement: React.FC<SchedulesManagementProps> = ({}) => {
                 </NavLink>
               ))}
             </>
-          ) : null}
+          ) : (
+            <ListSkeletonLoader />
+          )}
         </div>
       </section>
       <section className="schedule-dashboard-wrapper dashboard-wrapper">
-        <Outlet />
+        {/* <Outlet /> */}
+        <Suspense
+          fallback={
+            <>
+              <section className="schedule-dashboard-wrapper dashboard-wrapper" />
+              <Loader />
+            </>
+          }>
+          <Routes>
+            <Route path=":scheduleId" element={<ScheduleDashboard />} />
+          </Routes>
+        </Suspense>
       </section>
     </section>
   )

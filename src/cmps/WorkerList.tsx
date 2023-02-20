@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScheduleWorker, WorkerState } from '../types'
+import { ScheduleWorker } from '../types';
 import { BasicWorkerItem } from './BasicWorkerItem'
 
 interface WorkerListProps {

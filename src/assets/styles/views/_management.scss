@@ -52,6 +52,21 @@
           box-shadow: inset -4px 0 0 0 var(--acc-blue);
         }
       }
+
+      .list-skeleton {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+        height: calc(100vh - $headerHeight);
+        padding-right: 40px;
+        > * {
+          width: 100%;
+          height: 24px;
+        }
+      }
+
       .add-btn {
         opacity: 0.5;
         &:hover {

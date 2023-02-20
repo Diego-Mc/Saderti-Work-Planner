@@ -87,7 +87,7 @@ export const WorkerDashboard: React.FC<WorkerDashboardProps> = ({}) => {
               <span
                 className="material-symbols-outlined back-icon"
                 onClick={() => navigate('/workers')}>
-                chevron_right
+                &#xe5cc;
               </span>
               {worker.name}
             </h2>

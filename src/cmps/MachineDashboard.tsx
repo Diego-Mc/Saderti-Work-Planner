@@ -1,22 +1,10 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import Swal from 'sweetalert2'
-import {
-  LineSegment,
-  VictoryAxis,
-  VictoryBar,
-  VictoryChart,
-  VictoryTheme,
-} from 'victory'
-import {
-  useDeleteMachineMutation,
-  useGetMachineQuery,
-  useSaveMachineMutation,
-} from '../features/machines/machinesSlice'
+import { useGetMachineQuery } from '../features/machines/machinesSlice'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 import { useGetWorkersQuery } from '../features/workers/workersSlice'
 import { useMachineHandlers } from '../hooks/useMachineHandlers'
-import { useWindowSize } from '../hooks/useWindowSize'
+import { ChartMachineWorkAmount } from './charts/ChartMachineWorkAmount'
 
 interface MachineDashboardProps {}
 
@@ -27,29 +15,12 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
   const { data: workers } = useGetWorkersQuery()
   const { data: statistics } = useGetStatisticsQuery()
 
-  const size = useWindowSize()
-
   const {
     handleAmountOfWorkersChange,
     handleDelete,
     handleImportanceChange,
     handleNameChange,
   } = useMachineHandlers()
-
-  const workersAmountWorked: any = []
-
-  if (statistics && workers && machine) {
-    const machineWorkStats = statistics.amountWorkedPerMachine[machine._id]
-    workers.forEach((w) => {
-      workersAmountWorked.push({
-        worker: w.name,
-        amountWorked: machineWorkStats?.[w._id]?.length || 0,
-      })
-    })
-    workersAmountWorked.sort(
-      (a: any, b: any) => a.amountWorked - b.amountWorked
-    )
-  }
 
   return (
     <section className="machine-dashboard dashboard">
@@ -60,7 +31,7 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
               <span
                 className="material-symbols-outlined back-icon"
                 onClick={() => navigate('/machines')}>
-                chevron_right
+                &#xe5cc;
               </span>
               {machine.name}
             </h2>
@@ -107,52 +78,13 @@ export const MachineDashboard: React.FC<MachineDashboardProps> = ({}) => {
         <div className="main-stat">
           <h3 className="stat-title">כמות סבבי עבודה של כל עובד במכונה</h3>
           <div className="stat-wrapper">
-            <VictoryChart
-              horizontal
-              domainPadding={16}
-              padding={{ top: 30, bottom: 30, left: 120, right: 60 }}
-              width={
-                (size?.width || 1200) < 720
-                  ? size.width
-                  : (size?.width || 1200) - 400
-              }
-              height={workersAmountWorked.length * 80}>
-              <VictoryBar
-                theme={VictoryTheme.material}
-                style={{
-                  data: { fill: '#ffa600' },
-                  labels: { fontFamily: 'Rubik', fontSize: 16 },
-                }}
-                data={workersAmountWorked}
-                labels={({ datum }) =>
-                  datum.amountWorked ? `${datum.amountWorked}` : ''
-                }
-                x="worker"
-                y="amountWorked"
+            {machine && statistics && workers ? (
+              <ChartMachineWorkAmount
+                machine={machine}
+                statistics={statistics}
+                workers={workers}
               />
-              {/* <VictoryAxis
-                style={{
-                  tickLabels: {
-                    fontSize: 10,
-                  },
-                }}
-                dependentAxis
-                tickFormat={(x) => `${x}`}
-              /> */}
-              <VictoryAxis
-                tickFormat={(y) => `${y}`}
-                style={{
-                  tickLabels: {
-                    // angle: 45,
-                    // verticalAnchor: 'middle',
-                    // textAnchor: 'start',
-                    padding: 10,
-                    fontSize: 16,
-                    fontFamily: 'Rubik',
-                  },
-                }}
-              />
-            </VictoryChart>
+            ) : null}
           </div>
         </div>
       </div>

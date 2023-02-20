@@ -22,7 +22,12 @@ export const Header: React.FC<HeaderProps> = ({}) => {
         location?.pathname === '/' ? 'home-header' : ''
       }`}>
       <nav className="nav mb-only">
-        <Menu right onOpen={() => setIsBurgerOpen(true)} isOpen={isBurgerOpen}>
+        <Menu
+          right
+          overlayClassName={`${isBurgerOpen ? 'open' : ''}`}
+          onOpen={() => setIsBurgerOpen(true)}
+          onClose={() => setIsBurgerOpen(false)}
+          isOpen={isBurgerOpen}>
           {loggedInUser ? (
             <>
               <NavLink onClick={handleMenuSelect} to="/new">

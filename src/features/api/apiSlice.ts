@@ -28,7 +28,7 @@ export const apiSlice = createApi({
       }),
       transformResponse: (res: { token: string; user: { _id: string } }) => {
         sessionStorage.setItem('loggedInUser', JSON.stringify(res.user))
-        window.location.reload()
+        // window.location.reload()
         return res
       },
       invalidatesTags: [
@@ -47,7 +47,7 @@ export const apiSlice = createApi({
       }),
       transformResponse: (res: { token: string; user: { _id: string } }) => {
         sessionStorage.setItem('loggedInUser', JSON.stringify(res.user))
-        window.location.reload()
+        // window.location.reload()
         return res
       },
       invalidatesTags: [
@@ -65,7 +65,7 @@ export const apiSlice = createApi({
       }),
       transformResponse: (res: { msg: string }) => {
         sessionStorage.removeItem('loggedInUser')
-        window.location.reload()
+        // window.location.reload()
         return res.msg
       },
       invalidatesTags: [
@@ -104,7 +104,6 @@ export const apiSlice = createApi({
         method: 'GET',
       }),
       transformResponse: (res: { _id: string; username: string }) => {
-        console.log('res', res)
         userService.saveLocalUser(res)
         return res
       },
@@ -599,3 +598,5 @@ export const {
   useFetchUserQuery,
   usePrefetch,
 } = apiSlice
+
+export default apiSlice

@@ -45,7 +45,7 @@ export const ShiftTimesSettingsList: React.FC<Props> = ({
                       : ''
                   }`}
                   onClick={(e) => handleToggleShift(worker._id, 'morning')}>
-                  light_mode
+                  &#xe518;
                 </span>
                 <span
                   className={`material-symbols-outlined ${
@@ -54,7 +54,7 @@ export const ShiftTimesSettingsList: React.FC<Props> = ({
                       : ''
                   }`}
                   onClick={(e) => handleToggleShift(worker._id, 'evening')}>
-                  nights_stay
+                  &#xea46;
                 </span>
                 <span
                   className={`material-symbols-outlined ${
@@ -63,7 +63,7 @@ export const ShiftTimesSettingsList: React.FC<Props> = ({
                       : ''
                   }`}
                   onClick={(e) => handleToggleShift(worker._id, 'night')}>
-                  dark_mode
+                  &#xe51c;
                 </span>
               </div>
             </article>

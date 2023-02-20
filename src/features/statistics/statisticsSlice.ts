@@ -17,6 +17,8 @@ export const statisticsApi = apiSlice.injectEndpoints({
   overrideExisting: false,
 })
 
-export const { useGetStatisticsQuery } = statisticsApi
+export const { useGetStatisticsQuery, usePrefetch } = statisticsApi
+
+export default statisticsApi
 
 ////////////////////////////////////////////////////////////////
