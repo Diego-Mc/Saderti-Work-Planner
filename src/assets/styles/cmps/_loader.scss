@@ -1,16 +1,3 @@
-.load-initial {
-  display: none;
-  position: fixed;
-  min-width: 100vw;
-  min-height: 100vh;
-  background-color: #f7f7f9;
-}
-
-#root:empty + .load-initial {
-  display: flex;
-  /* position: static; */
-}
-
 .center-body {
   display: flex;
   justify-content: center;
