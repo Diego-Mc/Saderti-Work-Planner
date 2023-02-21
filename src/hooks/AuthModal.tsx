@@ -4,6 +4,21 @@ import {
   useLogoutMutation,
   useRegisterMutation,
 } from '../features/api/apiSlice'
+import Chance from 'chance'
+import Swal from 'sweetalert2'
+const chance = new Chance()
+
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-right',
+  iconColor: 'white',
+  customClass: {
+    popup: 'colored-toast',
+  },
+  showConfirmButton: false,
+  timer: 2500,
+  timerProgressBar: true,
+})
 
 interface Props {
   onClose?: () => void
@@ -35,19 +50,53 @@ export const AuthModal: React.FC<Props> = ({ onClose }) => {
   const handleLogin = async (e: React.MouseEvent) => {
     e.preventDefault()
     //check data.. //TODO
-    if (!userCred.email || !userCred.password) return
-    const x = await login(userCred).unwrap()
-    console.log(x)
+    try {
+      if (!userCred.email || !userCred.password) throw new Error()
+      const x = await login(userCred).unwrap()
+    } catch (e) {
+      await Toast.fire({
+        icon: 'error',
+        title: 'לא מצליחים לחבר אותך',
+      })
+    }
   }
 
   const handleRegister = async (e: React.MouseEvent) => {
     e.preventDefault()
     //check data.. //TODO
 
-    if (!userCred.email || !userCred.password || !userCred.username) return
+    try {
+      if (!userCred.email || !userCred.password || !userCred.username)
+        throw new Error()
+      const x = await register(userCred).unwrap()
+    } catch (e) {
+      await Toast.fire({
+        icon: 'error',
+        title: 'לא מצליחים לרשום אותך',
+      })
+    }
+  }
 
-    const x = await register(userCred).unwrap()
-    console.log(x)
+  const handleAutoRegister = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    //check data.. //TODO
+
+    try {
+      await Toast.fire({
+        icon: 'success',
+        title: 'כבר מכניסים אותך',
+      })
+      const x = await register({
+        email: chance.email(),
+        username: chance.name({ gender: 'male' }),
+        password: '!!secret!!',
+      }).unwrap()
+    } catch (e) {
+      await Toast.fire({
+        icon: 'error',
+        title: 'משהו לא מסתדר, צרו קשר אם הבעיה חוזרת',
+      })
+    }
   }
 
   const handleSetRegister = (e: React.MouseEvent, force: boolean) => {
@@ -118,6 +167,9 @@ export const AuthModal: React.FC<Props> = ({ onClose }) => {
               חדש?
             </button>
           )}
+          <button className="btn fill" onClick={handleAutoRegister}>
+            טסטר? הרשמה בלחיצה אחת
+          </button>
         </div>
       </form>
     </div>

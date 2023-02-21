@@ -33,8 +33,18 @@
     justify-content: space-between;
     gap: 16px;
     margin-top: 16px;
+    flex-wrap: wrap;
     * {
       flex-grow: 1;
+    }
+    .fill {
+      width: 100%;
+      margin-block: 0;
+      padding-block: 0;
+      color: var(--acc-darker-gray);
+      &:hover {
+        color: var(--main-fg);
+      }
     }
   }
 }

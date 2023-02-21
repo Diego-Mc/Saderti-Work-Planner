@@ -125,15 +125,28 @@ button {
     }
 
     &.primary {
-      background: var(--main-fg);
+      background: var(--acc-darker-gray);
       color: var(--main-bg);
-      border: 2px solid var(--main-fg);
+      border: 2px solid var(--acc-darker-gray);
+      &.hover {
+        &:hover {
+          background: var(--main-fg);
+          border: 2px solid var(--main-fg);
+        }
+      }
     }
 
     &.outlined {
       background: none;
-      border: 2px solid var(--main-fg);
-      color: var(--main-fg);
+      border: 2px solid var(--acc-darker-gray);
+      // color: var(--main-fg);
+      color: var(--acc-darker-gray);
+      &.hover {
+        &:hover {
+          border-color: var(--main-fg);
+          color: var(--main-fg);
+        }
+      }
     }
   }
 }

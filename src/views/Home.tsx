@@ -1,11 +1,20 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Feature } from '../cmps/homepage/Feature'
 import { AuthModal } from '../hooks/AuthModal'
+import { userService } from '../services/user.service'
 
 interface HomeProps {}
 
 export const Home: React.FC<HomeProps> = ({}) => {
   const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
+
+  const handleShowNodal = () => {
+    const isLoggedIn = userService.isLoggedIn()
+    if (isLoggedIn) navigate('/new')
+    else setShowModal(true)
+  }
   return (
     <section className="home-view">
       {showModal ? <AuthModal onClose={() => setShowModal(false)} /> : null}
@@ -15,9 +24,7 @@ export const Home: React.FC<HomeProps> = ({}) => {
           אפליקציית סדר'תי מסדרת אותך - ניהול עובדים על בסיס ותוך יצירת סידורי
           עבודה
         </p>
-        <button
-          className="btn primary outlined"
-          onClick={() => setShowModal(true)}>
+        <button className="btn primary outlined" onClick={handleShowNodal}>
           סדר אותי!
         </button>
         <article className="hero-media">
@@ -109,9 +116,7 @@ export const Home: React.FC<HomeProps> = ({}) => {
       </section>
       <footer className="footer">
         <p className="text">הצטרפו לסדר'תי ותנו לו לסדר אתכם כבר עכשיו</p>
-        <button
-          className="btn primary outlined"
-          onClick={() => setShowModal(true)}>
+        <button className="btn primary outlined" onClick={handleShowNodal}>
           הרשמה
         </button>
         <div className="lines">
