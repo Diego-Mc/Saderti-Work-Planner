@@ -113,19 +113,20 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
     const placeWorkerCalls: any[] = []
 
+    const unassigned = [] as { workerId: string; score: number }[]
+
     table.forEach((row) => {
       const machineId = row.machine._id
       const availableWorkers = machinesMap[machineId]
         .filter((w) => !usedWorkers.has(w.workerId))
         .sort((a, b) => b.score - a.score)
-      const checkLater = []
       for (let i = 0; i < availableWorkers.length; i++) {
         const { workerId, score } = availableWorkers[i]
         const time = schedule.workers.unused.find(
           (w) => w._id === workerId
         )?.shiftTime
         if (!time) {
-          checkLater.push({ workerId, score })
+          unassigned.push({ workerId, score })
           continue
         }
         row.data[time].some((cell, cellIdx) => {
@@ -147,6 +148,35 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
           usedWorkers.add(workerId)
           row.locked[time][cellIdx] = true
           return true
+        })
+      }
+
+      const filteredUnassigned = unassigned
+        .filter((w) => !usedWorkers.has(w.workerId))
+        .sort((a, b) => b.score - a.score)
+      for (let i = 0; i < filteredUnassigned.length; i++) {
+        const { workerId, score } = filteredUnassigned[i]
+        ;['morning', 'evening', 'night'].some((time) => {
+          return row.data[time].some((cell, cellIdx) => {
+            if (cell !== null) return
+            if (row.locked[time][cellIdx] === true) return
+
+            const bestWorker = schedule.workers.unused.find(
+              (w) => w._id === workerId
+            )
+
+            if (!bestWorker) return
+
+            placeWorkerCalls.push({
+              destinationDetails: { machineId, shiftTime: time, idx: cellIdx },
+              scheduleId: schedule._id,
+              worker: bestWorker,
+            })
+
+            usedWorkers.add(workerId)
+            row.locked[time][cellIdx] = true
+            return true
+          })
         })
       }
       // ;['morning', 'evening', 'night'].forEach((time) => {
@@ -172,7 +202,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       //   })
       // })
 
-      console.log(checkLater)
+      console.log(unassigned)
     })
 
     // placeWorkerCalls.forEach(async (call) => await placeWorker(call).unwrap())

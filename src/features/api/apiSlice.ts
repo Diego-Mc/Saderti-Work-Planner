@@ -66,6 +66,7 @@ export const apiSlice = createApi({
       transformResponse: (res: { msg: string }) => {
         sessionStorage.removeItem('loggedInUser')
         window.location.reload()
+        window.location.assign('/')
         return res.msg
       },
       invalidatesTags: [
