@@ -78,7 +78,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         return !isLocked
       },
       drop(item: any) {
-        console.log('HEYY!!', item, details, worker)
+        // console.log('HEYY!!', item, details, worker)
         if ('_id' in item) {
           //the item is a worker
 

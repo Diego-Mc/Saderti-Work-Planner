@@ -62,12 +62,12 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       )
 
       const machinesData = machineInfo.map(([mId, mImportance]) => {
-        console.log(
-          machineDates,
-          w.name,
-          machineDates?.[mId],
-          moment(schedule.date.from).diff(machineDates?.[mId]?.[0], 'days')
-        )
+        // console.log(
+        //   machineDates,
+        //   w.name,
+        //   machineDates?.[mId],
+        //   moment(schedule.date.from).diff(machineDates?.[mId]?.[0], 'days')
+        // )
         const workDiff = (i: number) =>
           moment(schedule.date.from).diff(machineDates?.[mId]?.[i], 'days')
         let diffIdx = 0
@@ -99,7 +99,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       }
     })
 
-    console.log('workers', workers)
+    // console.log('workers', workers)
     // console.log('machines', machinesMap)
     // return
 
@@ -208,7 +208,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       //   })
       // })
 
-      console.log(unassigned)
+      // console.log(unassigned)
     })
 
     // placeWorkerCalls.forEach(async (call) => await placeWorker(call).unwrap())
@@ -218,12 +218,12 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     for (let call of placeWorkerCalls) {
       await placeWorker(call).unwrap()
     }
-    console.log(placeWorkerCalls)
+    // console.log(placeWorkerCalls)
   }
 
   const handleSetDate = (date: DateRange | null) => {
     if (!date) return
-    console.log(date)
+    // console.log(date)
     setValue(date)
     setDate({
       scheduleId: params.scheduleId,

@@ -165,7 +165,7 @@ export const schedulesApi = apiSlice.injectEndpoints({
           )
         )
         try {
-          console.log('yes im heer..')
+          // console.log('yes im heer..')
           await queryFulfilled
         } catch (err) {
           console.log(
