@@ -88,7 +88,7 @@ export const AuthModal: React.FC<Props> = ({ onClose }) => {
       })
       const x = await register({
         email: chance.email(),
-        username: chance.name({ gender: 'male' }),
+        username: chance.first({ gender: 'male' }),
         password: '!!secret!!',
       }).unwrap()
     } catch (e) {

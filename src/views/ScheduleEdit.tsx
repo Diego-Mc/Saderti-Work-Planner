@@ -52,10 +52,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     // Map - workerId -> [{machineId: rating}]
 
     const machinesMap: {
-      [key: string]: { [key: string]: [{ score: number; workerId: string }] }
+      [key: string]: { score: number; workerId: string }[]
     } = {}
-
-    console.log(moment(schedule.date.from).diff(1677347047390, 'days'))
 
     const workers = schedule.workers.unused.map((w) => {
       const machineDates = statistics.amountWorkedInMachinePerWorker?.[w._id]
@@ -64,40 +62,46 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       )
 
       const machinesData = machineInfo.map(([mId, mImportance]) => {
+        console.log(
+          machineDates,
+          w.name,
+          machineDates?.[mId],
+          moment(schedule.date.from).diff(machineDates?.[mId]?.[0], 'days')
+        )
         const workDiff = (i: number) =>
           moment(schedule.date.from).diff(machineDates?.[mId]?.[i], 'days')
         let diffIdx = 0
 
         //find the latest work date (idx of dates arr) that was before the current schedule "from" date
-        while (workDiff(diffIdx) < 0 || diffIdx < machineDates?.[mId]?.length)
+        while (workDiff(diffIdx) <= 0 && diffIdx < machineDates?.[mId]?.length)
           diffIdx++
 
-        const score = (machineDates?.[mId]?.[diffIdx] || 99) * mImportance
+        const score = (workDiff(diffIdx) || 99) * mImportance
 
         //add to machinesMap
-        if (!machinesMap[mId]) machinesMap[mId] = {}
-        if (!machinesMap[mId][w.shiftTime || 'unassigned'])
-          machinesMap[mId][w.shiftTime || 'unassigned'] = [
-            { score, workerId: w._id },
-          ]
-        else
-          machinesMap[mId][w.shiftTime || 'unassigned'].push({
-            score,
-            workerId: w._id,
-          })
+        if (!machinesMap[mId]) machinesMap[mId] = []
+        machinesMap[mId].push({
+          score,
+          workerId: w._id,
+        })
 
         return {
-          [mId]: score,
+          // [mId]: score,
+          machineId: mId,
+          score,
         }
       })
 
       return {
-        [w._id]: machinesData,
+        // [w._id]: machinesData,
+        workerId: w._id,
+        machineScore: machinesData,
       }
     })
 
-    // console.log('workers', workers)
+    console.log('workers', workers)
     // console.log('machines', machinesMap)
+    // return
 
     //iterate through table & times, by importance, take the best fit and then remove it from the Map! (each time we sort by rating the Map inner array to always get the best fit)
 
@@ -111,24 +115,25 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
     table.forEach((row) => {
       const machineId = row.machine._id
-      ;['morning', 'evening', 'night'].forEach((time) => {
-        row.data[time].forEach((cell, cellIdx) => {
+      const availableWorkers = machinesMap[machineId]
+        .filter((w) => !usedWorkers.has(w.workerId))
+        .sort((a, b) => b.score - a.score)
+      const checkLater = []
+      for (let i = 0; i < availableWorkers.length; i++) {
+        const { workerId, score } = availableWorkers[i]
+        const time = schedule.workers.unused.find(
+          (w) => w._id === workerId
+        )?.shiftTime
+        if (!time) {
+          checkLater.push({ workerId, score })
+          continue
+        }
+        row.data[time].some((cell, cellIdx) => {
           if (cell !== null) return
           if (row.locked[time][cellIdx] === true) return
 
-          const availableWorkersByTime = (t: string) =>
-            machinesMap[machineId][t]
-              ?.filter(({ workerId }) => !usedWorkers.has(workerId))
-              ?.sort((a, b) => b.score - a.score) || []
-
-          const availableWorkers = availableWorkersByTime(time).concat(
-            availableWorkersByTime('unassigned')
-          )
-
-          const bestWorkerId = availableWorkers[0]?.workerId
-
           const bestWorker = schedule.workers.unused.find(
-            (w) => w._id === bestWorkerId
+            (w) => w._id === workerId
           )
 
           if (!bestWorker) return
@@ -139,17 +144,45 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
             worker: bestWorker,
           })
 
-          usedWorkers.add(bestWorkerId)
+          usedWorkers.add(workerId)
+          row.locked[time][cellIdx] = true
+          return true
         })
-      })
+      }
+      // ;['morning', 'evening', 'night'].forEach((time) => {
+      //   row.data[time].forEach((cell, cellIdx) => {
+      //     if (cell !== null) return
+      //     if (row.locked[time][cellIdx] === true) return
+
+      //     const bestWorkerId = availableWorkers[0]?.workerId
+
+      //     const bestWorker = schedule.workers.unused.find(
+      //       (w) => w._id === bestWorkerId
+      //     )
+
+      //     if (!bestWorker) return
+
+      //     placeWorkerCalls.push({
+      //       destinationDetails: { machineId, shiftTime: time, idx: cellIdx },
+      //       scheduleId: schedule._id,
+      //       worker: bestWorker,
+      //     })
+
+      //     usedWorkers.add(bestWorkerId)
+      //   })
+      // })
+
+      console.log(checkLater)
     })
 
     // placeWorkerCalls.forEach(async (call) => await placeWorker(call).unwrap())
 
+    //TODO: optimize and maybe add recursion w/backtracking
+    //small change to improve alot - create a dictionary for worker's time shifts first instead of using "find" every time!
     for (let call of placeWorkerCalls) {
       await placeWorker(call).unwrap()
     }
-    // console.log(placeWorkerCalls)
+    console.log(placeWorkerCalls)
   }
 
   const handleSetDate = (date: DateRange | null) => {
