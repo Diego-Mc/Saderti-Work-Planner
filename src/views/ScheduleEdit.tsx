@@ -123,8 +123,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     table.forEach((row) => {
       const machineId = row.machine._id
       const availableWorkers = machinesMap[machineId]
-        .filter((w) => !usedWorkers.has(w.workerId))
-        .sort((a, b) => b.score - a.score)
+        ?.filter((w) => !usedWorkers.has(w.workerId))
+        ?.sort((a, b) => b.score - a.score)
       for (let i = 0; i < availableWorkers.length; i++) {
         const { workerId, score } = availableWorkers[i]
         const time = schedule.workers.unused.find(
@@ -158,9 +158,9 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
       }
 
       const filteredUnassigned = unassigned[machineId]
-        .filter((w) => !usedWorkers.has(w.workerId))
-        .sort((a, b) => b.score - a.score)
-      for (let i = 0; i < filteredUnassigned.length; i++) {
+        ?.filter((w) => !usedWorkers.has(w.workerId))
+        ?.sort((a, b) => b.score - a.score)
+      for (let i = 0; i < filteredUnassigned?.length; i++) {
         const { workerId, score } = filteredUnassigned[i]
         ;['morning', 'evening', 'night'].some((time) => {
           return row.data[time].some((cell, cellIdx) => {
