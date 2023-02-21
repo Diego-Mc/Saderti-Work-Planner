@@ -103,7 +103,27 @@
     flex-direction: column;
     align-items: center;
     .title {
-      margin-bottom: 72px;
+      margin-bottom: 42px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      max-width: 1100px;
+      align-items: center;
+      gap: 24px;
+      .video {
+        border-radius: 12px;
+        padding: 8px;
+        position: relative;
+        box-shadow: 1px 0 20px 0 #ccc;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        video {
+          border-radius: 8px;
+        }
+      }
     }
   }
 

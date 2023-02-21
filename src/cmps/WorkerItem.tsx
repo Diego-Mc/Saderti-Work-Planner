@@ -128,7 +128,7 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
             isLocked ? 'active' : ''
           }`}
           onClick={handleLockToggle}>
-          &#xe897;
+          lock
         </span>
       ) : null}
       <span

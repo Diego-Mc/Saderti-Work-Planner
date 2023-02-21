@@ -28,7 +28,7 @@ export const Home: React.FC<HomeProps> = ({}) => {
         </article>
       </section>
       <section className="features">
-        <h2 className="title">מה אתה מקבל?</h2>
+        <h2 className="title">מה אתם מקבלים?</h2>
         <section className="feature-list">
           <Feature
             title="בקרת נתונים מלאה"
@@ -59,12 +59,20 @@ export const Home: React.FC<HomeProps> = ({}) => {
       </section>
       <section className="demo">
         <h2 className="title">איך זה עובד?</h2>
-        <ol>
-          <li>הרשם לאתר</li>
-          <li>הגדר עובדים</li>
-          <li>הגדר מכונות</li>
-          <li>צור סידורים</li>
-        </ol>
+        <div className="content">
+          <p>
+            בסדר'תי לא צריך לעבוד קשה, נרשמים, מגדירים עובדים, מגדירים מכונות
+            ו... וזהו. רק נשאר לבנות סידור (או ללחוץ על כפתור המילוי האוטומטי).
+          </p>
+          <div className="video">
+            <video
+              src="https://res.cloudinary.com/wewix/video/upload/v1676916973/saderti/Saderti_showcase_video_wpp1da.mp4"
+              autoPlay
+              loop
+              muted
+              controls={false}></video>
+          </div>
+        </div>
       </section>
       <section className="about">
         <h2 className="title">אודות יוצר הפרויקט</h2>
