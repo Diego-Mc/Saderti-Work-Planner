@@ -113,7 +113,12 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
 
     const placeWorkerCalls: any[] = []
 
-    const unassigned = [] as { workerId: string; score: number }[]
+    const unassigned = {} as {
+      [key: string]: {
+        score: number
+        workerId: string
+      }[]
+    }
 
     table.forEach((row) => {
       const machineId = row.machine._id
@@ -126,7 +131,8 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
           (w) => w._id === workerId
         )?.shiftTime
         if (!time) {
-          unassigned.push({ workerId, score })
+          if (!unassigned[machineId]) unassigned[machineId] = []
+          unassigned[machineId].push({ workerId, score })
           continue
         }
         row.data[time].some((cell, cellIdx) => {
@@ -151,7 +157,7 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
         })
       }
 
-      const filteredUnassigned = unassigned
+      const filteredUnassigned = unassigned[machineId]
         .filter((w) => !usedWorkers.has(w.workerId))
         .sort((a, b) => b.score - a.score)
       for (let i = 0; i < filteredUnassigned.length; i++) {
