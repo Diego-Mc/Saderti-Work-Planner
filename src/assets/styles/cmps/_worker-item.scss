@@ -58,6 +58,9 @@
   &.drag {
     opacity: 0.5;
   }
+  &.no-drag {
+    cursor: auto;
+  }
   .icon-lock {
     background-color: var(--acc-dark-gray);
     color: var(--main-bg);

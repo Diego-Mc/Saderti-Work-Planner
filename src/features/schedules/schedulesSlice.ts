@@ -1,4 +1,3 @@
-import { ScheduleWorker } from './../../types'
 import { ScheduleState } from '../../types'
 
 ////////////////////////////////////////////////////////////////
@@ -144,12 +143,11 @@ export const schedulesApi = apiSlice.injectEndpoints({
               if (destinationRow.locked[shiftTime][idx] === true)
                 throw new Error("Can't place worker on locked cell")
               if (destinationRow.data[shiftTime][idx] !== null) {
-                const currWorker = destinationRow.data[shiftTime][
-                  idx
-                ] as ScheduleWorker
+                const currWorker = destinationRow.data[shiftTime][idx]
                 const usedIdx = schedule.workers.used.findIndex(
-                  (w) => w._id === currWorker._id
+                  (w) => w._id === currWorker?._id
                 )
+                if (!currWorker || usedIdx < 0) return
                 schedule.workers.used.splice(usedIdx, 1)
                 schedule.workers.unused.push(currWorker)
               }
@@ -389,6 +387,61 @@ export const schedulesApi = apiSlice.injectEndpoints({
         }
       },
     }),
+    placeShiftWorker: builder.mutation({
+      query: ({ details, scheduleId }) => ({
+        url: `/schedules/${scheduleId}/place-shift-worker`,
+        method: 'PATCH',
+        body: details,
+      }),
+      async onQueryStarted(
+        { details, scheduleId },
+        { dispatch, queryFulfilled }
+      ) {
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedule',
+            scheduleId,
+            (schedule) => {
+              const { worker, newTime } = details
+              const foundWorker = schedule.workers.unused.find(
+                (w) => w._id === worker._id
+              )
+              if (!foundWorker) return
+              foundWorker.shiftTime = newTime
+            }
+          )
+        )
+        dispatch(
+          schedulesApi.util.updateQueryData(
+            'getSchedules',
+            undefined,
+            (schedules) => {
+              const schedule = schedules.find((s) => s._id === scheduleId)
+              if (!schedule) return
+              const { worker, newTime } = details
+              const foundWorker = schedule.workers.unused.find(
+                (w) => w._id === worker._id
+              )
+              if (!foundWorker) return
+              foundWorker.shiftTime = newTime
+            }
+          )
+        )
+        try {
+          await queryFulfilled
+        } catch (err) {
+          console.log(
+            'error set date, invalidating {Schedules - scheduleId}',
+            err
+          )
+          dispatch(
+            schedulesApi.util.invalidateTags([
+              { type: 'Schedules', id: scheduleId },
+            ])
+          )
+        }
+      },
+    }),
     saveSchedule: builder.mutation({
       query: ({ scheduleDetails, scheduleId }) => ({
         url: `/schedules/${scheduleId}`,
@@ -448,6 +501,7 @@ export const {
   useSetDateMutation,
   useChangeMachineWorkersAmountMutation,
   useUnplaceWorkerMutation,
+  usePlaceShiftWorkerMutation,
 } = schedulesApi
 
 ////////////////////////////////////////////////////////////////

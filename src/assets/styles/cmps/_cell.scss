@@ -4,9 +4,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   flex-wrap: wrap;
   gap: 10px;
   padding: 16px 20px;
+  height: 100%;
+  width: 100%;
+
+  &::before {
+    content: '';
+    position: absolute;
+    transform: translate(-50%, -50%);
+    // width: 100px;
+    // height: 60px;
+    width: 90%;
+    height: 90%;
+    top: 50%;
+    left: 50%;
+    box-shadow: 0 0 0 2px var(--acc-blue);
+    background-color: #d1f1ff7e;
+    border-radius: 4px;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+  }
+  &.over {
+    // background-color: var(--acc-blue);
+    // color: var(--acc-bg);
+    position: relative;
+    &::before {
+      opacity: 1;
+    }
+  }
 
   &.cell-title {
     color: var(--acc-blue);

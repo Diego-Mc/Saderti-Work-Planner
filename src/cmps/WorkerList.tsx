@@ -1,11 +1,12 @@
 import React from 'react'
-import { ScheduleWorker } from '../types';
+import { WorkerState } from '../types'
 import { BasicWorkerItem } from './BasicWorkerItem'
+import { WorkerItem } from './WorkerItem'
 
 interface WorkerListProps {
   workers: {
-    used: ScheduleWorker[]
-    unused: ScheduleWorker[]
+    used: WorkerState[]
+    unused: WorkerState[]
   }
 }
 
@@ -19,19 +20,27 @@ export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
           <div className="list-section-list">
             {workers.unused.map((worker) =>
               worker.shiftTime === 'morning' ? (
-                <BasicWorkerItem
-                  isUsed={false}
+                <WorkerItem
+                  key={`unused-morning-${worker._id}`}
+                  isLocked={false}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
             {workers.used.map((worker) =>
               worker.shiftTime === 'morning' ? (
-                <BasicWorkerItem
-                  isUsed={true}
+                <WorkerItem
+                  key={`used-morning-${worker._id}`}
+                  isLocked={true}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
@@ -42,19 +51,27 @@ export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
           <div className="list-section-list">
             {workers.unused.map((worker) =>
               worker.shiftTime === 'evening' ? (
-                <BasicWorkerItem
-                  isUsed={false}
+                <WorkerItem
+                  key={`unused-evening-${worker._id}`}
+                  isLocked={false}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
             {workers.used.map((worker) =>
               worker.shiftTime === 'evening' ? (
-                <BasicWorkerItem
-                  isUsed={true}
+                <WorkerItem
+                  key={`used-evening-${worker._id}`}
+                  isLocked={true}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
@@ -65,19 +82,27 @@ export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
           <div className="list-section-list">
             {workers.unused.map((worker) =>
               worker.shiftTime === 'night' ? (
-                <BasicWorkerItem
-                  isUsed={false}
+                <WorkerItem
+                  key={`unused-night-${worker._id}`}
+                  isLocked={false}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
             {workers.used.map((worker) =>
               worker.shiftTime === 'night' ? (
-                <BasicWorkerItem
-                  isUsed={true}
+                <WorkerItem
+                  key={`used-night-${worker._id}`}
+                  isLocked={true}
                   worker={worker}
-                  key={worker._id}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
@@ -88,19 +113,27 @@ export const WorkerList: React.FC<WorkerListProps> = ({ workers }) => {
           <div className="list-section-list">
             {workers.unused.map((worker) =>
               !worker.shiftTime ? (
-                <BasicWorkerItem
-                  isUsed={false}
-                  worker={worker}
+                <WorkerItem
                   key={worker._id}
+                  isLocked={false}
+                  worker={worker}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}
             {workers.used.map((worker) =>
               !worker.shiftTime ? (
-                <BasicWorkerItem
-                  isUsed={true}
-                  worker={worker}
+                <WorkerItem
                   key={worker._id}
+                  isLocked={true}
+                  worker={worker}
+                  disableLock
+                  disableRemove
+                  enableFirstDropLock
+                  disableDrop
                 />
               ) : null
             )}

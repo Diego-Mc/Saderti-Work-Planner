@@ -5,6 +5,7 @@ import { BrowserRouter, useRoutes } from 'react-router-dom'
 import 'rsuite/dist/rsuite.min.css'
 import './assets/styles/main.scss'
 import { Loader } from './cmps/Loader'
+import { ShiftsEdit } from './views/ShiftsEdit'
 
 const Header = lazy(() => import('./cmps/Header'))
 const Home = lazy(() => import('./views/Home'))
@@ -58,6 +59,10 @@ const App = () => {
       {
         path: '/new',
         element: <ScheduleSettings />,
+      },
+      {
+        path: '/shifts-edit/:scheduleId',
+        element: <ShiftsEdit />,
       },
     ])
     return router

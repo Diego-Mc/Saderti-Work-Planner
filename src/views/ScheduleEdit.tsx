@@ -16,6 +16,8 @@ import moment from 'moment'
 import { useGetStatisticsQuery } from '../features/statistics/statisticsSlice'
 
 import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
+import { MachineHeaderCell } from '../cmps/MachineHeaderCell'
+import { Cell } from '../cmps/Cell'
 
 interface Props {}
 
@@ -218,7 +220,6 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     for (let call of placeWorkerCalls) {
       await placeWorker(call).unwrap()
     }
-    console.log(placeWorkerCalls)
   }
 
   const handleSetDate = (date: DateRange | null) => {
@@ -281,7 +282,37 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
         <section className="table-section">
           {schedule ? (
             <Suspense>
-              <Table table={schedule.table} />
+              <Table headers={['מכונות', 'בוקר', 'ערב', 'לילה']}>
+                {schedule.table.map((row) => (
+                  <div className="row" key={row.machine._id}>
+                    {MachineHeaderCell ? <MachineHeaderCell row={row} /> : null}
+                    <Cell
+                      data={row.data.morning}
+                      locked={row.locked.morning}
+                      details={{
+                        machineId: row.machine._id,
+                        shiftTime: 'morning',
+                      }}
+                    />
+                    <Cell
+                      data={row.data.evening}
+                      locked={row.locked.evening}
+                      details={{
+                        machineId: row.machine._id,
+                        shiftTime: 'evening',
+                      }}
+                    />
+                    <Cell
+                      data={row.data.night}
+                      locked={row.locked.night}
+                      details={{
+                        machineId: row.machine._id,
+                        shiftTime: 'night',
+                      }}
+                    />
+                  </div>
+                ))}
+              </Table>
             </Suspense>
           ) : null}
         </section>
@@ -289,24 +320,5 @@ export const ScheduleEdit: React.FC<Props> = ({}) => {
     </div>
   )
 }
-//every worker has a rating per machine
-//rating:
-//if not worked in machine over 8 weeks = 100
-//if worked in machine in last x weeks = x
 
-//every worker has a rating per timeShift
-//rating:
-//every timeShift will timeShift++ in an array
-//for every round of [1,1,1] (or higher) reduce by 1 all
-
-//every machine has a rating for workers
-//rating:
-//if machine is rated x, x-1, x-2 ... => this is the order by which workers will be assigned(based on their own ratings for that specific machine)
-
-//workers are pre-assigned their timeShift (//TODO: add this step)
-
-//TODO LIST:
-//1. add lock mechanism to cells
-//2. add logic for generating the time shifts for the workers
-//3. connect to the backend & add authentication to the app (maybe use SQL??)
 export default ScheduleEdit

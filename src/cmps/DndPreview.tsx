@@ -13,7 +13,7 @@ export const DndPreview: React.FC<DndPreviewProps> = ({}) => {
     <div
       className="worker-item"
       style={{ ...style, transition: 'all 0.01s', zIndex: 100 }}>
-      {(item as { name: string }).name}
+      {(item as { details: { name: string } }).details.name}
     </div>
   )
 }

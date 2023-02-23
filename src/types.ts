@@ -1,12 +1,32 @@
+import { ItemTypes } from './constants'
+
 export type WorkerIdentifier = {
   machineId: string
   shiftTime: string
   idx: number
+  name?: string
 }
 
-export type WorkerType = {
-  name: string
+// export type WorkerType = {
+//   name: string
+//   shiftTime: string
+//   _id: string
+// }
+
+// type of item passed to cell for schedule...
+export type WorkerItemType = {
+  details: WorkerIdentifier | WorkerState
+  type: typeof ItemTypes[keyof typeof ItemTypes]
+}
+
+export interface WorkerState extends WorkerBase {
   _id: string
+}
+
+export type WorkerBase = {
+  ownerId: string
+  name: string
+  shiftTime: string
 }
 
 export type TableRow = {
@@ -17,10 +37,10 @@ export type TableRow = {
     importance: number
   }
   data: {
-    [key: string]: (WorkerType | null)[]
-    morning: (WorkerType | null)[]
-    evening: (WorkerType | null)[]
-    night: (WorkerType | null)[]
+    [key: string]: (WorkerState | null)[]
+    morning: (WorkerState | null)[]
+    evening: (WorkerState | null)[]
+    night: (WorkerState | null)[]
   }
   locked: {
     [key: string]: boolean[]
@@ -34,10 +54,10 @@ export type BaseTableRow = {
   //before backend population
   machine: string
   data: {
-    [key: string]: (WorkerType | null)[]
-    morning: (WorkerType | null)[]
-    evening: (WorkerType | null)[]
-    night: (WorkerType | null)[]
+    [key: string]: (WorkerState | null)[]
+    morning: (WorkerState | null)[]
+    evening: (WorkerState | null)[]
+    night: (WorkerState | null)[]
   }
   locked: {
     [key: string]: boolean[]
@@ -47,18 +67,27 @@ export type BaseTableRow = {
   }
 }
 
-export type ScheduleWorker = {
-  _id: string
-  name: string
-  shiftTime: string
+export type ShiftTableRow = {
+  date: {
+    from: number
+    to: number
+  }
+  data: {
+    [key: string]: (WorkerState | null)[]
+    morning: (WorkerState | null)[]
+    evening: (WorkerState | null)[]
+    night: (WorkerState | null)[]
+  }
 }
 
-export interface ScheduleState extends Omit<ScheduleBase, 'workers'> {
+// export type ScheduleWorker = {
+//   _id: string
+//   name: string
+//   shiftTime: string
+// }
+
+export interface ScheduleState extends ScheduleBase {
   _id: string
-  workers: {
-    used: ScheduleWorker[]
-    unused: ScheduleWorker[]
-  }
   updatedAt: Date
 }
 
@@ -70,8 +99,8 @@ export type ScheduleBase = {
   }
   table: TableRow[]
   workers: {
-    used: string[]
-    unused: string[]
+    used: WorkerState[]
+    unused: WorkerState[]
   }
 }
 
@@ -89,16 +118,6 @@ export type MachineBase = {
 export type sessionUser = {
   username: string
   _id: string
-}
-
-export interface WorkerState extends WorkerBase {
-  _id: string
-}
-
-export type WorkerBase = {
-  ownerId: string
-  name: string
-  shiftTime: string
 }
 
 export type StatisticsState = {

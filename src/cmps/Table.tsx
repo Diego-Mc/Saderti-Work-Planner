@@ -1,11 +1,10 @@
-import React from 'react'
-import { useMachineHandlers } from '../hooks/useMachineHandlers'
-import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
+import React, { Children } from 'react'
 import { TableRow } from '../types'
 import { Cell } from './Cell'
 
 interface TableProps {
-  table: TableRow[]
+  headers: string[]
+  children: React.ReactNode
 }
 
 type workerDetailsProps = {
@@ -21,34 +20,23 @@ export type moveWorkerFn = (
 
 export type setToggleLockFn = (details: workerDetailsProps) => void
 
-export const Table: React.FC<TableProps> = ({ table }) => {
-  // const { handleAmountOfWorkersChange, handleImportanceChange } =
-  //   useMachineHandlers()
-
-  const { handleAmountOfWorkersChange } = useScheduleHandlers()
-  const { handleImportanceChange } = useMachineHandlers()
-
+export const MachineScheduleTable: React.FC<TableProps> = ({
+  headers,
+  children,
+}) => {
   return (
     <div className="main-table">
       <div className="row row-header">
-        <div className="cell cell-header">מכונות</div>
-        <div className="cell cell-header">בוקר</div>
-        <div className="cell cell-header">ערב</div>
-        <div className="cell cell-header">לילה</div>
-      </div>
-      {table.map((row) => (
-        <div className="row" key={row.machine._id}>
-          <div className="cell cell-title">
-            <span className="title">{row.machine.name}</span>
-            <div className="info">
-              <span
-                onClick={() => handleImportanceChange(row.machine)}
-                className="importance">{`(${row.machine.importance})`}</span>
-              <span
-                onClick={() => handleAmountOfWorkersChange(row.machine)}
-                className="workers">{`(${row.machine.amountOfWorkers})`}</span>
-            </div>
+        {headers.map((title) => (
+          <div className="cell cell-header" key={title}>
+            {title}
           </div>
+        ))}
+      </div>
+      {children}
+      {/* {table.map((row) => (
+        <div className="row" key={row.machine._id}>
+          {RowHeaderCell ? <RowHeaderCell row={row} /> : null}
           <Cell
             data={row.data.morning}
             locked={row.locked.morning}
@@ -65,8 +53,8 @@ export const Table: React.FC<TableProps> = ({ table }) => {
             details={{ machineId: row.machine._id, shiftTime: 'night' }}
           />
         </div>
-      ))}
+      ))} */}
     </div>
   )
 }
-export default Table
+export default MachineScheduleTable

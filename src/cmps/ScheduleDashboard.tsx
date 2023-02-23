@@ -2,9 +2,11 @@ import moment from 'moment'
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useGetScheduleQuery } from '../features/schedules/schedulesSlice'
-import { Table } from './Table'
+import { MachineScheduleTable } from './Table'
 import { utilService } from '../services/util.service'
 import { useScheduleHandlers } from '../hooks/useScheduleHandlers'
+import { MachineHeaderCell } from './MachineHeaderCell'
+import { Cell } from './Cell'
 
 interface ScheduleDashboardProps {}
 
@@ -53,7 +55,37 @@ export const ScheduleDashboard: React.FC<ScheduleDashboardProps> = ({}) => {
             </p>
           </div>
           <div className="stat table-stat">
-            <Table table={schedule.table} />
+            <MachineScheduleTable headers={['מכונות', 'בוקר', 'ערב', 'לילה']}>
+              {schedule.table.map((row) => (
+                <div className="row" key={row.machine._id}>
+                  {MachineHeaderCell ? <MachineHeaderCell row={row} /> : null}
+                  <Cell
+                    data={row.data.morning}
+                    locked={row.locked.morning}
+                    details={{
+                      machineId: row.machine._id,
+                      shiftTime: 'morning',
+                    }}
+                  />
+                  <Cell
+                    data={row.data.evening}
+                    locked={row.locked.evening}
+                    details={{
+                      machineId: row.machine._id,
+                      shiftTime: 'evening',
+                    }}
+                  />
+                  <Cell
+                    data={row.data.night}
+                    locked={row.locked.night}
+                    details={{
+                      machineId: row.machine._id,
+                      shiftTime: 'night',
+                    }}
+                  />
+                </div>
+              ))}
+            </MachineScheduleTable>
           </div>
         </>
       ) : null}

@@ -22,6 +22,8 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
 }) => {
   const size = useWindowSize()
 
+  console.log('hey', statistics, worker, machines)
+
   const machineTimesStats: any = {
     morning: [],
     evening: [],
@@ -45,6 +47,8 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
     )
   })
 
+  console.log(machineTimesStats)
+
   for (let i = 0; i < machineTimesStats.morning.length; i++) {
     const sumWorked =
       machineTimesStats.morning[i].amountWorked +
@@ -52,6 +56,11 @@ export const ChartWorkerMachineTimes: React.FC<Props> = ({
       machineTimesStats.night[i].amountWorked
     if (maxAmountWorked < sumWorked) maxAmountWorked = sumWorked
   }
+
+  console.log(
+    maxAmountWorked,
+    (size?.width || 1200) < 720 ? size.width : (size?.width || 1200) - 400
+  )
 
   return (
     <VictoryChart

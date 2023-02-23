@@ -12,6 +12,7 @@ import {
   useSetShiftTimeMutation,
 } from '../features/workers/workersSlice'
 import { BaseTableRow } from '../types'
+import { scheduleService } from '../services/schedule.service'
 
 interface Props {
   //   workers: Worker[]
@@ -42,6 +43,37 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
     resetShiftTimes()
   }
 
+  const handleAdvancedSettings = async (e: React.MouseEvent) => {
+    if (!machines || !workers) return //TODO: add toast to try again
+    const table: BaseTableRow[] = []
+    machines.forEach((machine) => {
+      table.push({
+        machine: machine._id,
+        data: {
+          morning: new Array(machine.amountOfWorkers).fill(null),
+          evening: new Array(machine.amountOfWorkers).fill(null),
+          night: new Array(machine.amountOfWorkers).fill(null),
+        },
+        locked: {
+          morning: new Array(machine.amountOfWorkers).fill(false),
+          evening: new Array(machine.amountOfWorkers).fill(false),
+          night: new Array(machine.amountOfWorkers).fill(false),
+        },
+      })
+    })
+    const addedSchedule = await addSchedule({
+      date: scheduleService.getNextDates(),
+      table,
+      workers: {
+        used: [],
+        unused: workers,
+      },
+    })
+    if (!('data' in addedSchedule)) return //TODO: toast...
+    const scheduleId = addedSchedule.data._id as string
+    navigate(`/shifts-edit/${scheduleId}`)
+  }
+
   const handleNewSchedule = async () => {
     if (!machines || !workers) return //TODO: add toast to try again
     const table: BaseTableRow[] = []
@@ -61,10 +93,7 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
       })
     })
     const addedSchedule = await addSchedule({
-      date: {
-        from: +moment().day(6),
-        to: +moment().day(5 + 7),
-      },
+      date: scheduleService.getNextDates(),
       table,
       workers: {
         used: [],
@@ -116,6 +145,11 @@ export const ScheduleSettings: React.FC<Props> = ({}) => {
           className="btn outlined continue-btn"
           onClick={handleNewSchedule}>
           המשך
+        </button>
+        <button
+          className="btn outlined continue-btn"
+          onClick={handleAdvancedSettings}>
+          עריכה מתקדמת
         </button>
       </section>
     </section>

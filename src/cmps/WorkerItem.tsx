@@ -1,35 +1,49 @@
+import deepEqual from 'deep-equal'
 import React, { useRef, useState } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
-import { useParams } from 'react-router-dom'
+import { useDrag, useDragLayer, useDrop } from 'react-dnd'
 import { ItemTypes } from '../constants'
-import {
-  useMoveWorkersMutation,
-  usePlaceWorkerMutation,
-  useToggleLockMutation,
-  useUnplaceWorkerMutation,
-} from '../features/schedules/schedulesSlice'
-import { WorkerIdentifier, WorkerState, WorkerType } from '../types'
+import { WorkerIdentifier, WorkerItemType, WorkerState } from '../types'
 
+//TODO: improve TS - make conditional!!
 interface WorkerItemProps {
-  worker: WorkerType | null
+  worker: WorkerState | null
   isLocked: boolean
-  details: WorkerIdentifier
+  details?: WorkerIdentifier
+  disableLock?: boolean
+  disableRemove?: boolean
+  disableDrag?: boolean
+  disableDrop?: boolean
+  enableFirstDropLock?: boolean
+  onLockItem?: (details: WorkerIdentifier) => void
+  onRemoveItem?: (worker: WorkerState, details?: WorkerIdentifier) => void
+  onPlaceItem?: (
+    item: WorkerItemType,
+    details: WorkerItemType['details']
+  ) => void
+  onMoveItem?: (
+    item: WorkerItemType,
+    details: WorkerItemType['details']
+  ) => void
 }
+
+// type toggleLock
 
 export const WorkerItem: React.FC<WorkerItemProps> = ({
   worker,
   isLocked,
   details,
+  disableLock = false,
+  disableRemove = false,
+  disableDrag = false,
+  disableDrop = false,
+  enableFirstDropLock = false,
+  onLockItem,
+  onRemoveItem,
+  onMoveItem,
+  onPlaceItem,
 }) => {
-  const ref = useRef<HTMLElement>(null)
+  let ref = useRef<HTMLElement>(null)
   const [showLock, setShowLock] = useState(isLocked)
-
-  const params = useParams()
-
-  const [moveWorkers] = useMoveWorkersMutation()
-  const [toggleLock] = useToggleLockMutation()
-  const [placeWorker] = usePlaceWorkerMutation()
-  const [unplaceWorker] = useUnplaceWorkerMutation()
 
   const handleOver = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (isLocked) return
@@ -40,37 +54,53 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
     setShowLock(false)
   }
   const handleLockToggle = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    toggleLock({ workerDetails: details, scheduleId: params.scheduleId })
+    if (disableLock || !onLockItem || !details) return
+    onLockItem(details)
   }
   const handleRemove = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    unplaceWorker({
-      destinationDetails: details,
-      worker,
-      scheduleId: params.scheduleId,
-    })
+    if (disableRemove || !onRemoveItem || !worker) return
+    onRemoveItem(worker, details)
   }
+
+  const accType = details ? ItemTypes.WORKER_IDENTIFIER : ItemTypes.WORKER
+  const accDetails = details ? details : worker
+
+  const x = useDragLayer((monitor) => ({ x: monitor.getItem() }))
+
+  // console.log(x?.x?.details)
+
+  const currDragId = x?.x?.details._id
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: ItemTypes.WORKER,
+      type: accType,
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
       item: () => {
-        return { ...details, name: worker?.name }
+        return {
+          details: accDetails,
+          type: accType,
+        }
       },
       canDrag() {
         return !isLocked && !!worker
       },
+      end(draggedItem, monitor) {
+        if (showLock) return
+        if (!enableFirstDropLock) return
+
+        setShowLock(monitor.didDrop())
+      },
     }),
-    [isLocked, worker]
+    [isLocked, details, worker]
   )
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: ItemTypes.WORKER,
+      accept: [ItemTypes.WORKER, ItemTypes.WORKER_IDENTIFIER],
       collect(monitor) {
         return {
-          isOver: !!monitor.isOver() && !isLocked,
+          isOver: !!monitor.isOver() && !isLocked && !disableDrop,
           handlerId: monitor.getHandlerId(),
         }
       },
@@ -78,38 +108,23 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
         return !isLocked
       },
       drop(item: any) {
-        console.log('HEYY!!', item, details, worker)
-        if ('_id' in item) {
-          //the item is a worker
+        if (!ref.current) return
 
-          placeWorker({
-            destinationDetails: details,
-            worker: item,
-            scheduleId: params.scheduleId,
-          })
-
-          return
-        }
-
-        if (!ref.current) {
-          return
-        }
         // Don't replace items with themselves
-        if (
-          item.idx === details.idx &&
-          item.machineId === details.machineId &&
-          item.shiftTime === details.shiftTime
-        ) {
-          return
-        }
+        if (deepEqual(item.details, details)) return
 
-        moveWorkers({ from: details, to: item, scheduleId: params.scheduleId })
+        if (!accDetails) return
+
+        if (onPlaceItem && item.type === ItemTypes.WORKER)
+          onPlaceItem(item, accDetails)
+        else if (onMoveItem) onMoveItem(item, accDetails)
       },
     }),
     [isLocked]
   )
 
-  drag(drop(ref))
+  let dropRef = disableDrop ? ref : drop(ref)
+  disableDrag ? dropRef : drag(dropRef)
 
   return (
     <article
@@ -118,11 +133,13 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
       onMouseLeave={handleMouseLeave}
       className={`worker-item
       ${worker ? '' : 'empty'}
-      ${isLocked ? 'locked' : ''}
+      ${isLocked && showLock ? 'locked' : ''}
+      ${currDragId === worker?._id ? 'locked' : ''}
       ${isOver ? 'over' : ''}
+      ${disableDrag ? 'no-drag' : ''}
       ${isDragging ? 'drag' : ''}`}>
       {worker?.name}
-      {showLock ? (
+      {!disableLock && showLock ? (
         <span
           className={`material-symbols-outlined thick icon-lock icon ${
             isLocked ? 'active' : ''
@@ -131,11 +148,13 @@ export const WorkerItem: React.FC<WorkerItemProps> = ({
           lock
         </span>
       ) : null}
-      <span
-        className="material-symbols-outlined thick icon-remove icon"
-        onClick={handleRemove}>
-        &#xe5cd;
-      </span>
+      {!disableRemove ? (
+        <span
+          className="material-symbols-outlined thick icon-remove icon"
+          onClick={handleRemove}>
+          &#xe5cd;
+        </span>
+      ) : null}
     </article>
   )
 }
